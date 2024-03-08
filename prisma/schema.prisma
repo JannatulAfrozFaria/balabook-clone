@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String?  @unique// Optional email field
+  phone    String   @unique
+  name     String   
+  username String   @unique
+  password String
+  type     UserType // Enum for user type
+  status   Status // Enum for user Status
+  order    Order[]
+
+  @@map("users") // Maps to the "users" collection in MongoDB
+}
+
+
+
+
+// Define your Customer model
+model Customer {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String   
+  phone        String   @unique 
+  email        String?
+  address      String?
+  district     String   
+  division     String   
+  company      String?
+  designation  String?
+  attend       Boolean? @default(false)
+  status       Status   @default(Active)
+  createdAt    DateTime @default(now())
+  customerId   String   @unique
+  order        Order[]  
+}
+
+
+
+
+// Define your Offer model
+model Offer {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  photo       String?
+  price       String
+  offerId     String   @unique
+  status      Status
+  date        DateTime @default(now())
+  order       Order[]
+}
+
+
+// Define your Order model
+model Order {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  Customer      Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId    String    @db.ObjectId
+  User          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String   @db.ObjectId
+  Offer         Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  offerId       String   @db.ObjectId
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  amount        String?
+  paymentMethod paymentMethodType
+  status        Status
+}
+// Define your Setting model
+model Setting {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  site_title    String    
+  event_title   String   
+  logo          String?
+  banner        String?
+  add1          String?
+  add2          String?
+  add3          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// Define your Program model
+
+model Program {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String
+  time         DateTime
+  status       Status
+  
+}
+
+enum UserType {
+  Admin
+  Assistant
+}
+
+enum Status {
+  Active
+  Inactive
+}
+
+enum paymentMethodType {
+Cash
+Card
+MFS
+}
