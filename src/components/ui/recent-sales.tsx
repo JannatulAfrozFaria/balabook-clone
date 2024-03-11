@@ -2,23 +2,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import prisma from "@/index";
 
 export default async function RecentSales() {
-  const recentOrder = await prisma.order.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 5,
+  const recentOrder:any = []
+  // await prisma.order.findMany({
+  //   orderBy: {
+  //     createdAt: "desc",
+  //   },
+  //   take: 5,
 
-    select: {
-      id: true,
-      amount: true,
-      Customer: {
-        select: {
-          name: true,
-          phone: true,
-        },
-      },
-    },
-  });
+  //   select: {
+  //     id: true,
+  //     amount: true,
+  //     Customer: {
+  //       select: {
+  //         name: true,
+  //         phone: true,
+  //       },
+  //     },
+  //   },
+  // });
   return (
     <div className="space-y-8">
       {recentOrder &&

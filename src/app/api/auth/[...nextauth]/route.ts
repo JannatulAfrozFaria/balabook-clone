@@ -1,6 +1,6 @@
 import NextAuth , { type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
-import { config } from '../../../../../middleware';
+// import { config } from '../../../../../middleware';
 import prisma from "../../../../../prisma";
 import bcrypt from 'bcrypt'
 import { connectToDatabase } from "../../../../../helpers/server-helpers";
@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
                 id: token.id,
                 type: token.type,
                 phone: token.phone,
+                photo: token.photo,
 
                 }
             }
@@ -71,6 +72,7 @@ export const authOptions: NextAuthOptions = {
                 id: u.id,
                 type: u.type,
                 phone: u.phone,
+                photo: u.photo,
 
                 }
             }else{

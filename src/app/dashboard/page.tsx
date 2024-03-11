@@ -34,11 +34,11 @@ export default async function Dashboard() {
   lastMonthEndDate.setDate(0);
 
   // Offer
-  const offerCount = await prisma.offer.count();
+  // const offerCount = await prisma.offer.count();
   // Customers
   const customerAttendCount = await prisma.customer.count({
     where: {
-      attend: true,
+      status: "Active",
     },
   });
   const customerCount = await prisma.customer.count();
@@ -52,7 +52,7 @@ export default async function Dashboard() {
   });
 
   //Orders
-  const totalOrder = await prisma.order.count();
+  // const totalOrder = await prisma.order.count();
 
   // const totalSale = await prisma.order.aggregate({
   //   _sum: {
@@ -107,7 +107,7 @@ export default async function Dashboard() {
                   ৳
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  From {totalOrder} Orders
+                  From 0 Orders
                 </p>
               </CardContent>
             </Card>
@@ -184,7 +184,9 @@ export default async function Dashboard() {
                 </svg>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalOrder}</div>
+                <div className="text-2xl font-bold">
+                  0
+                  </div>
                 <p className="text-xs text-muted-foreground">Since last hour</p>
               </CardContent>
             </Card>
@@ -204,7 +206,7 @@ export default async function Dashboard() {
                   <Link href="/dashboard/orders">Recent Sales</Link>
                 </CardTitle>
                 <CardDescription>
-                  You made {totalOrder} sales this Event.
+                  You made 0 sales this Event.
                 </CardDescription>
               </CardHeader>
               <CardContent>

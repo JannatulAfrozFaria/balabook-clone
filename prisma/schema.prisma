@@ -11,6 +11,7 @@ datasource db {
 }
 
 
+// user model
 model User {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   email    String?  @unique// Optional email field
@@ -20,11 +21,21 @@ model User {
   password String
   type     UserType // Enum for user type
   status   Status // Enum for user Status
-  order    Order[]
+  photo String
+  purchaseOrder PurchaseOrder[]
+  grn GRN[]
+  // activityLog []
 
   @@map("users") // Maps to the "users" collection in MongoDB
+  @@index([phone, email, username])
 }
 
+//activity log model
+// model ActivityLog{
+//   id       String   @id @default(auto()) @map("_id") @db.ObjectId
+//   module ModuleName
+
+// }
 
 
 
@@ -34,78 +45,295 @@ model Customer {
   name         String   
   phone        String   @unique 
   email        String?
-  address      String?
-  district     String   
-  division     String   
+  address      Address[]
+  photo         String? 
+  username      String? 
+  password      String? 
+  type          CustomerType @default(Wholesale)
+  contactPerson String?
+  contactPersonPhone String?   
   company      String?
   designation  String?
-  attend       Boolean? @default(false)
   status       Status   @default(Active)
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   customerId   String   @unique
-  order        Order[]  
+
+  @@map("customers")
+  @@index([phone, email, username])
 }
 
-
-
-
-// Define your Offer model
-model Offer {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-  photo       String?
-  price       String
-  offerId     String   @unique
-  status      Status
-  date        DateTime @default(now())
-  order       Order[]
-}
-
-
-// Define your Order model
-model Order {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  Customer      Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  customerId    String    @db.ObjectId
-  User          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String   @db.ObjectId
-  Offer         Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
-  offerId       String   @db.ObjectId
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  amount        String?
-  paymentMethod paymentMethodType
-  status        Status
-}
-// Define your Setting model
-model Setting {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  site_title    String    
-  event_title   String   
-  logo          String?
-  banner        String?
-  add1          String?
-  add2          String?
-  add3          String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
-
-// Define your Program model
-
-model Program {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String
-  time         DateTime
-  status       Status
+// Define the Address model
+model Address {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId// MongoDB ObjectId
+  street    String
+  city      String
+  district  String
+  division  String
+  country   String
+  zip       String
+  type      String    // Assuming type is a string, you may adjust according to your needs
   
+  // Define the relationship to Customer
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  customerId    String    @db.ObjectId // MongoDB ObjectId reference to Customer
 }
+
+// Define your supplier model
+model Supplier {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String   
+  phone        String   @unique 
+  email        String?
+  address      String?
+  company      String?
+  designation  String?
+  status       Status   @default(Active)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  purchaseOrder PurchaseOrder []
+  grn GRN[]
+
+  @@map("suppliers")
+  @@index([name, phone])
+}
+
+//Product Model
+model Product {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId// MongoDB ObjectId
+  name          String
+  code          String      @unique
+  articleCode   String      @unique
+  masterCategory String
+  category      String
+ 
+  unit          Unit        @relation(fields: [unitId], references: [id])
+  unitId        String      @map("_unitId")  @db.ObjectId// MongoDB ObjectId reference to Unit
+
+  brand         Brand       @relation(fields: [brandId], references: [id])
+  brandId       String      @map("_brandId") @db.ObjectId// MongoDB ObjectId reference to Brand
+
+  vat           Float       // Assuming VAT is stored as a float value
+  hsCode        String
+  type          String
+  shipping      String
+  featured      Boolean   @default(false)
+  website       Boolean   @default(false)
+  status        Status    @default(Active)
+  slug          String      @unique
+  price         Float
+  promoPrice    Float
+  promoStart    DateTime?
+  promoEnd      DateTime?
+  photo         String      // Assuming photo is stored as a URL
+  gallery       String[]    // Array of photo URLs for gallery
+  supplier      String      // Assuming supplier is a string, you may adjust according to your needs
+
+// inventory
+  openingQty    Float
+  SoldQty       Float
+  ReturnQty     Float
+  DamageQty     Float
+  ClosingQty    Float
+  mrp           Float
+  tp            Float
+  Cogs          Float
+
+  closingStock  ClosingStock[]
+  productPO     ProductPO[]
+  grnProduct GRNProduct[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("products")
+  @@index([name, articleCode])
+}
+
+
+// Define the Category model
+// model Category {
+//   id          String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+//   name        String
+//   description String?
+//   code        String      @unique
+//   status      String
+//   photo       String      // Assuming photo is stored as a URL
+//   parentId    String?     @map("_parentId")  @db.ObjectId// Optional parent category id
+
+//   // Define the relationship for parent category
+//   parent      Category?   @relation("Subcategories", fields: [parentId], references: [id]) // Optional parent category
+
+//   // Define the relationship for subcategories
+//   subcategories Category[] @relation("Subcategories")
+
+//   createdAt   DateTime    @default(now())
+//   updatedAt   DateTime    @updatedAt
+// }
+
+
+
+// Define the Brand model
+model Brand {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name         String
+  description  String?
+  code         String      @unique
+  status       String
+  logo         String      // Assuming logo is stored as a URL
+
+  // Define the relationship for products
+  products     Product[]  
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+// Define the Unit model
+model Unit {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name         String
+  description  String?
+  code         String      @unique
+  status       String
+  symbol       String
+
+  // Define the relationship for products
+  products     Product[]  
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+// Define the ClosingStock model
+model ClosingStock {
+  id               String       @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  product          Product      @relation(fields: [productId], references: [id])
+  productId        String       @map("_productId")  @db.ObjectId// MongoDB ObjectId reference to Product
+  quantity         Int
+  date             DateTime
+}
+
+// Define the PurchaseOrder model
+model PurchaseOrder {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  poNo            String
+  date            DateTime
+  supplier        Supplier       @relation(fields: [supplierId], references: [id])
+  supplierId      String         @map("_supplierId")  @db.ObjectId // MongoDB ObjectId reference to Supplier
+  containerId     String?
+  products        ProductPO[]    // Array of products in the purchase order
+  grn GRN[]
+
+
+  totalItem       Float
+  total           Float
+  tax             Float
+  discount        Float
+  grossTotal      Float
+  grossTotalRound Float
+
+  status          String
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String         @map("_userId")  @db.ObjectId // MongoDB ObjectId reference to User
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// Define the ProductPO model (representing products within a PurchaseOrder)
+model ProductPO {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name            String
+  articleCode     String
+  qty             Int
+  mrp             Float
+  tp              Float
+  total           Float
+  vat             Float
+  stock           Int
+  hsCode          String
+  supplier        String
+  tax             Float
+
+  // Define the relationship to the parent PurchaseOrder
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  purchaseOrderId String        @map("_purchaseOrderId")  @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+
+  // Define the relationship with the Product model
+  product         Product       @relation(fields: [productId], references: [id])
+  productId       String        @map("_productId") @db.ObjectId// MongoDB ObjectId reference to Product
+
+}
+
+
+
+// Define the GRN model
+model GRN {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  grnNo           String
+  date            DateTime
+  supplier        Supplier       @relation(fields: [supplierId], references: [id])
+  supplierId      String         @map("_supplierId")  @db.ObjectId// MongoDB ObjectId reference to Supplier
+  poNo            PurchaseOrder? @relation(fields: [poNoId], references: [id])
+  poNoId          String?        @map("_poNoId")  @db.ObjectId// MongoDB ObjectId reference to PurchaseOrder
+  containerNo     String?
+  products        GRNProduct[]   // Array of products in the GRN
+
+  total           Float
+  grossTotal      Float
+  grossTotalRound Float
+  totalItem       Int
+  tax             Float
+  discount        Float
+  status          String
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String         @map("_userId")  @db.ObjectId// MongoDB ObjectId reference to User
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// Define the GRNProduct model (representing products within a GRN)
+model GRNProduct {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name            String
+  articleCode     String
+  qty             Int
+  mrp             Float
+  tp              Float
+  total           Float
+  vat             Float
+  stock           Int
+  hsCode          String
+  supplier        String
+  totalItem       Int
+  tax             Float
+  discount        Float
+
+  // Define the relationship with the parent GRN
+  grn             GRN           @relation(fields: [grnId], references: [id])
+  grnId           String        @map("_grnId")  @db.ObjectId// MongoDB ObjectId reference to GRN
+
+  // Define the relationship with the Product model
+  product         Product       @relation(fields: [productId], references: [id])
+  productId       String        @map("_productId")  @db.ObjectId// MongoDB ObjectId reference to Product
+
+
+}
+
 
 enum UserType {
   Admin
-  Assistant
+  Manager
+  Marketing
+  Sales
+  stuff
+}
+
+enum CustomerType {
+  Wholesale
+  Retail
 }
 
 enum Status {
@@ -113,8 +341,21 @@ enum Status {
   Inactive
 }
 
+enum DataStatus {
+  Complete
+  Pending
+  Delete
+}
+
+// enum ModuleName {
+//     Sales
+//     products
+//     adjust
+
+// }
+
 enum paymentMethodType {
-Cash
-Card
-MFS
+  Cash
+  Card
+  MFS
 }

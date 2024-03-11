@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
-import { handleDelete } from "./_action";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -32,13 +31,13 @@ export type Offer = {
 };
 
 const handleDeleteTigger = async (id: string) => {
-  const del = await handleDelete(id);
-  if (del) {
-    console.log(`Offer Delete Successful!`);
-    // toast.success(`${del.name} deleted successful!`);
-  } else {
-    console.log(`Deleted Faild!`);
-  }
+  // const del = await handleDelete(id);
+  // if (del) {
+  //   console.log(`Offer Delete Successful!`);
+  //   // toast.success(`${del.name} deleted successful!`);
+  // } else {
+  //   console.log(`Deleted Faild!`);
+  // }
 };
 
 export const columns: ColumnDef<Offer>[] = [

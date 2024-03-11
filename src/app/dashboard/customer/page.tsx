@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { UserDataTable } from "./data-table";
 import { Customer, columns } from "./columns";
 import Link from "next/link";
-import prisma from "../../../../prisma";
+import prisma from "@/prisma";
 import { Download, User, UserPlus } from "lucide-react";
 
 export default async function CustomerPage() {
