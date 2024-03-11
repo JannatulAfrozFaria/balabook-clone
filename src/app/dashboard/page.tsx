@@ -18,6 +18,7 @@ import prisma from "../../../prisma";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
 
 export default async function Dashboard() {
   // Get the current date
@@ -66,12 +67,16 @@ export default async function Dashboard() {
     <main className="flex min-h-screen flex-col gap-6 w-full">
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex-cols md:flex items-center justify-between space-y-2">
             <PageTitle title="Dashboard" />
             
-            <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              {/* <Button variant="ghost" onClick={logOutHandler}>Logout</Button> */}
+            <div className="flex-row md:flex items-center justify-center md:space-x-2">
+              <CalenderDateRangePicker className="w-full " />
+              <div className="flex justify-between mt-3 md:mt-0 gap-2">
+                <Button variant="default" >Last 7 days</Button>
+                <Button variant="default" >Last 30 days</Button>
+                <Button variant="default" >Last 1 year</Button>
+              </div>
             </div>
           </div>
 
@@ -185,7 +190,7 @@ export default async function Dashboard() {
             </Card>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
+            <Card className="md:col-span-4 col-span-2">
               <CardHeader>
                 <CardTitle>Overview</CardTitle>
               </CardHeader>
@@ -193,7 +198,7 @@ export default async function Dashboard() {
                 <Overview />
               </CardContent>
             </Card>
-            <Card className="col-span-3">
+            <Card className="md:col-span-3 col-span-2">
               <CardHeader>
                 <CardTitle>
                   <Link href="/dashboard/orders">Recent Sales</Link>
