@@ -5,7 +5,7 @@ import CreateOfferSheet from "./createOfferSheet";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
 
-export default async function OfferPage() {
+export default async function ProductsPage() {
   const data: any = await prisma.offer.findMany();
 
   return (
@@ -13,7 +13,7 @@ export default async function OfferPage() {
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
-            <PageTitle title="Offers" />
+            <PageTitle title="Products" />
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               <CreateOfferSheet />
