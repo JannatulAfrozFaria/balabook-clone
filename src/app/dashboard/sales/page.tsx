@@ -7,26 +7,27 @@ import prisma from "../../../../prisma";
 import Link from "next/link";
 
 export default async function OrderPage() {
-  const data: any = await prisma.order.findMany({
-    include: {
-      Customer: {
-        select: {
-          name: true,
-          phone: true,
-        }
-      },
-      User: {
-        select: {
-          name: true,
-        }
-      },
-      Offer: {
-        select: {
-          name: true,
-        }
-      },
-    },
-  });
+  const data: any = []
+  // await prisma.order.findMany({
+  //   include: {
+  //     Customer: {
+  //       select: {
+  //         name: true,
+  //         phone: true,
+  //       }
+  //     },
+  //     User: {
+  //       select: {
+  //         name: true,
+  //       }
+  //     },
+  //     Offer: {
+  //       select: {
+  //         name: true,
+  //       }
+  //     },
+  //   },
+  // });
 
   // console.log(data)
 

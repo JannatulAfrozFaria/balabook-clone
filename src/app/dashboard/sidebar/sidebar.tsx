@@ -49,12 +49,10 @@ function Sidebar() {
         <div className="flex gap-3 justify-center">
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              
               <AvatarImage src={
                 //@ts-ignore
                 session?.user?.photo ? session?.user?.photo : `https://github.com/shadcn.png`
-              } 
-                alt="@shadcn" />
+                } alt="@shadcn" />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
           </Button>
@@ -64,8 +62,9 @@ function Sidebar() {
                 {session?.user?.name}
               </p>
               <p className="text-xs leading-none text-muted-foreground">
-                {//@ts-ignore
-                session?.user?.phone
+                {
+                  //@ts-ignore
+                session?.user?.type
                 }
               </p>
             </div>

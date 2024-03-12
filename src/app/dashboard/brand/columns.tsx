@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { handleDelete } from "./_action";
+import axios from "axios";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -20,43 +20,38 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-export type Product = {
+export type Brand = {
   id: string;
   name: string;
-  photo: string;
-  status: "Active" | "Inactive";
-  mrp: number;
-  articleCode: string;
-  stock: number;
+  logo: string;
+  status: "active" | "deactive";
+  code: number;
+  description: string;
 };
 
 const handleDeleteTigger = async (id: string) => {
-  const del = await handleDelete(id);
-  if (del) {
-    console.log(`Offer Delete Successful!`);
-    // toast.success(`${del.name} deleted successful!`);
-  } else {
-    console.log(`Deleted Faild!`);
-  }
+  // const del = await handleDelete(id);
+  // if (del) {
+  //   console.log(`Brand Delete Successful!`);
+  //   // toast.success(`${del.name} deleted successful!`);
+  // } else {
+  //   console.log(`Deleted Faild!`);
+  // }
 };
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Brand>[] = [
   {
-    accessorKey:"barCode",
-    header:"BC"
-  },
-  {
-    accessorKey: "photo",
-    header: "Photo",
+    accessorKey: "logo",
+    header: "Logo",
     cell: ({ row }) => {
-      const offer = row.original;
+      const brand = row.original;
 
       return (
         <>
         <div className="w-1/2 ">
             <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image src={offer.photo !== "" ? `/img/${offer.photo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
+              {/* <>{brand.photo}</> */}
+              <Image src={brand.logo !== "" ? `/img/${brand.logo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
             </AspectRatio>
         </div>
         {/* <Avatar>
@@ -68,20 +63,17 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey:"articleCode",
-    header:"Article Code"
+    accessorKey: "code",
+    header: "Code"
   },
+
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "closingQty",
-    header: "Stock",
-  },
-  {
-    accessorKey: "mrp",
-    header: "Price",
+    accessorKey: "description",
+    header: "Description",
   },
   {
     accessorKey: "status",
@@ -104,11 +96,11 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(offer.id)}
             >
               View Details
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>

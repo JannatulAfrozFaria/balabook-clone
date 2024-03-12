@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { UserDataTable } from "./data-table";
 import { Customer, columns } from "./columns";
 import Link from "next/link";
-import prisma from "@/prisma";
 import { Download, User, UserPlus } from "lucide-react";
+import prisma from "@/index";
 
 export default async function CustomerPage() {
   // const [toggelAttend, setToggleAttend] = useState();
@@ -25,16 +25,7 @@ export default async function CustomerPage() {
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               {/* <CreateCustomerSheet /> */}
-              <Link href={"/dashboard/customer/attend"}>
-                <Button>
-                  <User size="16" className="mr-2" /> Attend
-                </Button>
-              </Link>
-              <Link href={"/dashboard/customer/import"}>
-                <Button>
-                  <Download size="16" className="mr-2" /> Import
-                </Button>
-              </Link>
+              
               <Link href={"/registration"}>
                 <Button>
                   <UserPlus size="16" className="mr-2" /> Create New Customer

@@ -110,14 +110,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
               <TooltipTrigger asChild>
                 <Button
                   onClick={logOutHandler}
-                  className={cn(
-                    buttonVariants({
-                      variant: "default",
-                      size: "icon",
-                    }),
-                    "h-9 w-9",
-                    
-                  )}
+                  variant="ghost"
+                  className="h-9 w-9 p-0"
                 >
                   <Power className="h-4 w-4" />
                   <span className="sr-only">Logout</span>
@@ -133,20 +127,15 @@ export function Nav({ links, isCollapsed }: NavProps) {
           ) : (
             <Button
               onClick={logOutHandler}
-              className={cn(
-                buttonVariants({
-                  variant:  "default",
-                  size: "lg",
-                }),
-                
-              )}
+              variant="ghost"
+              className="justify-start "
             >
-              <Power className="mr-2 h-4 w-4" />
-              Logout
+              <Power className="mr-2 ml-4 h-4 w-4" />
+                Logout
               
                 {/* <span
                   className={cn(
-                    "ml-auto",
+                    // "ml-auto",
                   )}
                 >
                   Logout
@@ -155,16 +144,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
           )
         }
       </nav>
-      {/* <div className="flex justify-center">
-        <Button
-          variant="ghost"
-          className="absolute bottom-20"
-          onClick={logOutHandler}
-        >
-          <Power className="h-4 w-4" />{" "}
-          <div className={`${isCollapsed && "hidden"}`}> Logout</div>
-        </Button>
-      </div> */}
+ 
     </div>
   );
 }

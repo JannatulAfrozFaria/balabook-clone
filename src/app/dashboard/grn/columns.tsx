@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { handleDelete } from "./_action";
+import axios from "axios";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -20,31 +20,27 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-export type Product = {
+export type Offer = {
   id: string;
   name: string;
   photo: string;
-  status: "Active" | "Inactive";
-  mrp: number;
-  articleCode: string;
-  stock: number;
+  status: "active" | "deactive";
+  price: number;
+  offerID: string;
+  description: string;
 };
 
 const handleDeleteTigger = async (id: string) => {
-  const del = await handleDelete(id);
-  if (del) {
-    console.log(`Offer Delete Successful!`);
-    // toast.success(`${del.name} deleted successful!`);
-  } else {
-    console.log(`Deleted Faild!`);
-  }
+  // const del = await handleDelete(id);
+  // if (del) {
+  //   console.log(`Offer Delete Successful!`);
+  //   // toast.success(`${del.name} deleted successful!`);
+  // } else {
+  //   console.log(`Deleted Faild!`);
+  // }
 };
 
-export const columns: ColumnDef<Product>[] = [
-  {
-    accessorKey:"barCode",
-    header:"BC"
-  },
+export const columns: ColumnDef<Offer>[] = [
   {
     accessorKey: "photo",
     header: "Photo",
@@ -68,24 +64,35 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey:"articleCode",
-    header:"Article Code"
+    accessorKey: "offerId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          OfferID
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
+
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "closingQty",
-    header: "Stock",
-  },
-  {
-    accessorKey: "mrp",
-    header: "Price",
+    accessorKey: "description",
+    header: "Description",
   },
   {
     accessorKey: "status",
     header: "Status",
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
   },
   {
     accessorKey: "action",
@@ -104,11 +111,11 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(offer.id)}
             >
               View Details
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>
