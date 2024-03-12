@@ -103,8 +103,59 @@ export function Nav({ links, isCollapsed }: NavProps) {
             </Link>
           )
         )}
+        
+        {
+          isCollapsed ? (
+            <Tooltip  delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={logOutHandler}
+                  className={cn(
+                    buttonVariants({
+                      variant: "default",
+                      size: "icon",
+                    }),
+                    "h-9 w-9",
+                    
+                  )}
+                >
+                  <Power className="h-4 w-4" />
+                  <span className="sr-only">Logout</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="flex items-center gap-4">
+                Logout
+                  {/* <span className="ml-auto text-muted-foreground">
+                    Logout
+                  </span> */}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button
+              onClick={logOutHandler}
+              className={cn(
+                buttonVariants({
+                  variant:  "default",
+                  size: "lg",
+                }),
+                
+              )}
+            >
+              <Power className="mr-2 h-4 w-4" />
+              Logout
+              
+                {/* <span
+                  className={cn(
+                    "ml-auto",
+                  )}
+                >
+                  Logout
+                </span> */}
+            </Button>
+          )
+        }
       </nav>
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <Button
           variant="ghost"
           className="absolute bottom-20"
@@ -113,7 +164,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
           <Power className="h-4 w-4" />{" "}
           <div className={`${isCollapsed && "hidden"}`}> Logout</div>
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }
