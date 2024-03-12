@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Barcode, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { handleDelete } from "./_action";
 import { toast } from "sonner";
@@ -43,7 +43,12 @@ const handleDeleteTigger = async (id: string) => {
 export const columns: ColumnDef<Product>[] = [
   {
     accessorKey:"barCode",
-    header:"BC"
+    header:(()=>{
+      return (
+      <div className="flex items-center">
+      <Barcode className="h-4 w-4 mr-2" /> BC
+      </div>)
+    })
   },
   {
     accessorKey: "photo",
