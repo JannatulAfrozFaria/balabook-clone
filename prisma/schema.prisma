@@ -82,7 +82,7 @@ model Address {
   
   // Define the relationship to Customer
   customer      Customer      @relation(fields: [customerId], references: [id])
-  customerId    String    @db.ObjectId // MongoDB ObjectId reference to Customer
+  customerId    String    @map("customerId") @db.ObjectId // MongoDB ObjectId reference to Customer
 }
 
 // Define your supplier model
@@ -115,10 +115,10 @@ model Product {
   category      String
  
   unit          Unit        @relation(fields: [unitId], references: [id])
-  unitId        String      @db.ObjectId// MongoDB ObjectId reference to Unit
+  unitId        String      @map("unitId") @db.ObjectId// MongoDB ObjectId reference to Unit
 
   brand         Brand       @relation(fields: [brandId], references: [id])
-  brandId       String      @db.ObjectId// MongoDB ObjectId reference to Brand
+  brandId       String     @map("brandId")  @db.ObjectId// MongoDB ObjectId reference to Brand
 
   vat           Float       // Assuming VAT is stored as a float value
   hsCode        String
@@ -178,7 +178,7 @@ model Category {
 
   // Define the relationship for parent category
   parent      Category?   @relation("Subcategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Optional parent category
-  parentId    String?     @db.ObjectId// Optional parent category id
+  parentId    String?     @map("Subcategories") @db.ObjectId// Optional parent category id
 
 
   // Define the relationship for subcategories
@@ -226,7 +226,7 @@ model Unit {
 model ClosingStock {
   id               String       @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   product          Product      @relation(fields: [productId], references: [id])
-  productId        String       @db.ObjectId// MongoDB ObjectId reference to Product
+  productId        String       @map("productId") @db.ObjectId// MongoDB ObjectId reference to Product
   quantity         Int
   date             DateTime
 }
@@ -236,7 +236,7 @@ model Sales {
   id                String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   invoiceNo         String
   customer          Customer       @relation(fields: [customerId], references: [id])
-  customerId        String         @map("_customerId")  @db.ObjectId// MongoDB ObjectId reference to Customer
+  customerId        String         @map("customerId")  @db.ObjectId// MongoDB ObjectId reference to Customer
   products          SalesProduct[] // Array of products in the sale
 
   total             Float
@@ -248,7 +248,7 @@ model Sales {
   promoDiscount     Float
   status            String
   user              User           @relation(fields: [userId], references: [id])
-  userId            String         @db.ObjectId // MongoDB ObjectId reference to User
+  userId            String         @map("userId") @db.ObjectId // MongoDB ObjectId reference to User
 
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
@@ -273,11 +273,11 @@ model SalesProduct {
 
   // Define the relationship with the parent Sales
   sales             Sales        @relation(fields: [salesId], references: [id])
-  salesId           String       @db.ObjectId // MongoDB ObjectId reference to Sales
+  salesId           String       @map("saleId") @db.ObjectId // MongoDB ObjectId reference to Sales
 
   // Define the relationship with the Product model
   product           Product      @relation(fields: [productId], references: [id])
-  productId         String       @db.ObjectId // MongoDB ObjectId reference to Product
+  productId         String       @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
 
 }
 
@@ -286,7 +286,7 @@ model PurchaseOrder {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   poNo            String
   supplier        Supplier       @relation(fields: [supplierId], references: [id])
-  supplierId      String         @db.ObjectId // MongoDB ObjectId reference to Supplier
+  supplierId      String         @map("supplierId") @db.ObjectId // MongoDB ObjectId reference to Supplier
   containerId     String?
   products        POProduct[]    // Array of products in the purchase order
   grn GRN[]
@@ -301,7 +301,7 @@ model PurchaseOrder {
 
   status          String
   user            User           @relation(fields: [userId], references: [id])
-  userId          String         @db.ObjectId // MongoDB ObjectId reference to User
+  userId          String         @map("userId") @db.ObjectId // MongoDB ObjectId reference to User
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -324,7 +324,7 @@ model POProduct {
 
   // Define the relationship to the parent PurchaseOrder
   purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
-  purchaseOrderId String        @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+  purchaseOrderId String        @map("purchaseId") @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
 
   // Define the relationship with the Product model
   product         Product       @relation(fields: [productId], references: [id])
@@ -339,9 +339,9 @@ model GRN {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   grnNo           String
   supplier        Supplier       @relation(fields: [supplierId], references: [id])
-  supplierId      String         @db.ObjectId// MongoDB ObjectId reference to Supplier
+  supplierId      String         @map("supplierId") @db.ObjectId// MongoDB ObjectId reference to Supplier
   poNo            PurchaseOrder? @relation(fields: [poNoId], references: [id])
-  poNoId          String?        @db.ObjectId// MongoDB ObjectId reference to PurchaseOrder
+  poNoId          String?        @map("poNoId") @db.ObjectId// MongoDB ObjectId reference to PurchaseOrder
   containerNo     String?
   products        GRNProduct[]   // Array of products in the GRN
 
@@ -353,7 +353,7 @@ model GRN {
   discount        Float
   status          String
   user            User           @relation(fields: [userId], references: [id])
-  userId          String         @db.ObjectId// MongoDB ObjectId reference to User
+  userId          String         @map("userId") @db.ObjectId// MongoDB ObjectId reference to User
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -403,7 +403,7 @@ model TPN {
   discount        Float
   status          String
   user            User           @relation(fields: [userId], references: [id])
-  userId          String          @db.ObjectId // MongoDB ObjectId reference to User
+  userId          String         @map("userId") @db.ObjectId // MongoDB ObjectId reference to User
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -428,11 +428,11 @@ model TPNProduct {
 
   // Define the relationship with the parent TPN
   tpn             TPN           @relation(fields: [tpnId], references: [id])
-  tpnId           String        @db.ObjectId
+  tpnId           String        @map("tpnId") @db.ObjectId
 
   // Define the relationship with the Product model
   product         Product       @relation(fields: [productId], references: [id])
-  productId       String        @db.ObjectId
+  productId       String        @map("_productId") @db.ObjectId
 
 }
 
@@ -442,7 +442,7 @@ model RTV {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   rtvNo           String
   supplier        Supplier       @relation(fields: [supplierId], references: [id])
-  supplierId      String          @db.ObjectId // MongoDB ObjectId reference to Supplier
+  supplierId      String         @map("supplierId") @db.ObjectId // MongoDB ObjectId reference to Supplier
   containerNo     String?
   products        RTVProduct[]   // Array of products in the RTV
 
@@ -454,7 +454,7 @@ model RTV {
   discount        Float
   status          String
   user            User           @relation(fields: [userId], references: [id])
-  userId          String          @db.ObjectId // MongoDB ObjectId reference to User
+  userId          String         @map("userId") @db.ObjectId // MongoDB ObjectId reference to User
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -479,7 +479,7 @@ model RTVProduct {
 
   // Define the relationship with the parent RTV
   rtv             RTV           @relation(fields: [rtvId], references: [id])
-  rtvId           String         @db.ObjectId // MongoDB ObjectId reference to RTV
+  rtvId           String        @map("rtvId") @db.ObjectId // MongoDB ObjectId reference to RTV
 
   // Define the relationship with the Product model
   product         Product       @relation(fields: [productId], references: [id])
@@ -503,7 +503,7 @@ model Damage {
   discount        Float
   status          String
   user            User           @relation(fields: [userId], references: [id])
-  userId          String         @db.ObjectId // MongoDB ObjectId reference to User
+  userId          String         @map("userId") @db.ObjectId // MongoDB ObjectId reference to User
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -528,11 +528,11 @@ model DamageProduct {
 
   // Define the relationship with the parent Damage
   damage          Damage        @relation(fields: [damageId], references: [id])
-  damageId        String         @db.ObjectId // MongoDB ObjectId reference to Damage
+  damageId        String        @map("damageId") @db.ObjectId // MongoDB ObjectId reference to Damage
 
   // Define the relationship with the Product model
   product         Product       @relation(fields: [productId], references: [id])
-  productId       String         @db.ObjectId // MongoDB ObjectId reference to Product
+  productId       String        @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
 }
 
 
@@ -573,7 +573,7 @@ model Adjust {
   discount         Float
   status           String
   user             User           @relation(fields: [userId], references: [id])
-  userId           String         @map("_userId") @db.ObjectId// MongoDB ObjectId reference to User
+  userId           String         @map("userId") @db.ObjectId// MongoDB ObjectId reference to User
 
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
@@ -599,7 +599,7 @@ model AdjustProduct {
 
   // Define the relationship with the parent Adjust
   adjust           Adjust        @relation(fields: [adjustId], references: [id])
-  adjustId         String        @db.ObjectId // MongoDB ObjectId reference to Adjust
+  adjustId         String        @map("adjustId") @db.ObjectId // MongoDB ObjectId reference to Adjust
 
   // Define the relationship with the Product model
   product          Product       @relation(fields: [productId], references: [id])

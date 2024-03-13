@@ -10,8 +10,8 @@ import Sidebar from "./sidebar/sidebar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Online Registration",
-  description: "App for RASA",
+  title: "Import Management System",
+  description: "App for CITIZEN",
 };
 
 export default async function RootLayout({

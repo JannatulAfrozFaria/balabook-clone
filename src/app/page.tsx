@@ -16,40 +16,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-interface ProgramCardProps {
-  title: string;
-  description: string;
-  time: string;
-  date: string;
-}
-
-export const ProgramCard: FC<ProgramCardProps> = ({
-  title,
-  description,
-  time,
-  date,
-}) => (
-  <Card>
-    <CardContent className="pt-4 pb-4">
-      <div className="flex justify-between">
-        <div>
-          <h3 className="text-md font-semibold">{title}</h3>
-          <p className="text-sm">{description}</p>
-        </div>
-        <div className="flex-col items-start mt-2">
-          <div className="flex text-sm">
-            <Clock className="text-gray-500 h-4 w-4 mr-1" />
-            <span className="text-gray-500">{time}</span>
-          </div>
-          <div className="flex text-sm">
-            <Calendar className="text-gray-500 h-4 w-4 mr-1" />
-            <span className="text-gray-500">{date}</span>
-          </div>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
 
 export default async function Home() {
   // const data = await getServerSession(authOptions)
