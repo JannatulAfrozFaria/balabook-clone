@@ -59,10 +59,10 @@ export function UserDataTable<TData, TValue>({
         {/* Search */}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter Name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Search GRN No..."
+          value={(table.getColumn("grnNo")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("grnNo")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

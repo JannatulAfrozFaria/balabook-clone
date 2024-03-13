@@ -61,15 +61,14 @@ export const columns: ColumnDef<Brand>[] = [
         </>
       );
     },
+  }, 
+  {
+    accessorKey: "name",
+    header: "Name",
   },
   {
     accessorKey: "code",
     header: "Code"
-  },
-
-  {
-    accessorKey: "name",
-    header: "Name",
   },
   {
     accessorKey: "description",

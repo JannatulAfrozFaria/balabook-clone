@@ -70,12 +70,12 @@ export function UserDataTable<TData, TValue>({
           </div>
           <div className="flex items-center py-4">
             <Input
-              placeholder="Filter District"
+              placeholder="Filter Name..."
               value={
-                (table.getColumn("district")?.getFilterValue() as string) ?? ""
+                (table.getColumn("name")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table.getColumn("district")?.setFilterValue(event.target.value)
+                table.getColumn("name")?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />

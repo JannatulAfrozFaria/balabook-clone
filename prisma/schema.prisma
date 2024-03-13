@@ -24,6 +24,11 @@ model User {
   photo    String
   purchaseOrder PurchaseOrder[]
   grn GRN[]
+  tpn TPN[]
+  rtv RTV[]
+  damage Damage[]
+  adjust Adjust[]
+  sale Sales[]
   // activityLog []
 
   @@map("users") // Maps to the "users" collection in MongoDB
@@ -58,6 +63,7 @@ model Customer {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   customerId   String   @unique
+  sales Sales[]
 
   @@map("customers")
   @@index([phone, email, username])
@@ -93,6 +99,7 @@ model Supplier {
   updatedAt    DateTime @updatedAt
   purchaseOrder PurchaseOrder []
   grn GRN[]
+  rtv RTV[]
 
   @@map("suppliers")
   @@index([name, phone])
@@ -132,7 +139,10 @@ model Product {
 
 // inventory
   openingQty    Float
+  grnQty        Float
   soldQty       Float
+  rtvQty        Float
+  tpnQty        Float
   returnQty     Float
   damageQty     Float
   closingQty    Float
@@ -142,7 +152,12 @@ model Product {
 
   closingStock  ClosingStock[]
   productPO     POProduct[]
-  grnProduct GRNProduct[]
+  grnProduct    GRNProduct[]
+  tpnProduct    TPNProduct[]
+  damageProduct    DamageProduct[]
+  adjstProduct    AdjustProduct[]
+  rtvProduct    RTVProduct[]
+  saleProduct    SalesProduct[]
 
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -214,6 +229,56 @@ model ClosingStock {
   productId        String       @db.ObjectId// MongoDB ObjectId reference to Product
   quantity         Int
   date             DateTime
+}
+
+// Define the Sales model
+model Sales {
+  id                String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  invoiceNo         String
+  customer          Customer       @relation(fields: [customerId], references: [id])
+  customerId        String         @map("_customerId")  @db.ObjectId// MongoDB ObjectId reference to Customer
+  products          SalesProduct[] // Array of products in the sale
+
+  total             Float
+  grossTotal        Float
+  grossTotalRound   Float
+  totalItem         Int
+  tax               Float
+  discount          Float
+  promoDiscount     Float
+  status            String
+  user              User           @relation(fields: [userId], references: [id])
+  userId            String         @db.ObjectId // MongoDB ObjectId reference to User
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+// Define the SalesProduct model (representing products within a sale)
+model SalesProduct {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name              String
+  articleCode       String
+  qty               Int
+  mrp               Float
+  tp                Float
+  total             Float
+  vat               Float
+  stock             Int
+  hsCode            String
+  promoDiscount     Float
+  totalItem         Int
+  tax               Float
+  discount          Float
+
+  // Define the relationship with the parent Sales
+  sales             Sales        @relation(fields: [salesId], references: [id])
+  salesId           String       @db.ObjectId // MongoDB ObjectId reference to Sales
+
+  // Define the relationship with the Product model
+  product           Product      @relation(fields: [productId], references: [id])
+  productId         String       @db.ObjectId // MongoDB ObjectId reference to Product
+
 }
 
 // Define the PurchaseOrder model
@@ -322,12 +387,237 @@ model GRNProduct {
 }
 
 
+// Define the TPN model
+model TPN {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  tpnNo           String
+  warehouse       Warehouse      @relation(fields: [warehouseId], references: [id])
+  warehouseId     String         @db.ObjectId // MongoDB ObjectId reference to Warehouse
+  products        TPNProduct[]   // Array of products in the TPN
+
+  total           Float
+  grossTotal      Float
+  grossTotalRound Float
+  totalItem       Int
+  tax             Float
+  discount        Float
+  status          String
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String          @db.ObjectId // MongoDB ObjectId reference to User
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// Define the TPNProduct model (representing products within a TPN)
+model TPNProduct {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name            String
+  articleCode     String
+  qty             Int
+  mrp             Float
+  tp              Float
+  total           Float
+  vat             Float
+  stock           Int
+  hsCode          String
+  warehouse       String
+  totalItem       Int
+  tax             Float
+  discount        Float
+
+  // Define the relationship with the parent TPN
+  tpn             TPN           @relation(fields: [tpnId], references: [id])
+  tpnId           String        @db.ObjectId
+
+  // Define the relationship with the Product model
+  product         Product       @relation(fields: [productId], references: [id])
+  productId       String        @db.ObjectId
+
+}
+
+
+// Define the RTV model
+model RTV {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  rtvNo           String
+  supplier        Supplier       @relation(fields: [supplierId], references: [id])
+  supplierId      String          @db.ObjectId // MongoDB ObjectId reference to Supplier
+  containerNo     String?
+  products        RTVProduct[]   // Array of products in the RTV
+
+  total           Float
+  grossTotal      Float
+  grossTotalRound Float
+  totalItem       Int
+  tax             Float
+  discount        Float
+  status          String
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String          @db.ObjectId // MongoDB ObjectId reference to User
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// Define the RTVProduct model (representing products within an RTV)
+model RTVProduct {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name            String
+  articleCode     String
+  qty             Int
+  mrp             Float
+  tp              Float
+  total           Float
+  vat             Float
+  stock           Int
+  hsCode          String
+  supplier        String
+  totalItem       Int
+  tax             Float
+  discount        Float
+
+  // Define the relationship with the parent RTV
+  rtv             RTV           @relation(fields: [rtvId], references: [id])
+  rtvId           String         @db.ObjectId // MongoDB ObjectId reference to RTV
+
+  // Define the relationship with the Product model
+  product         Product       @relation(fields: [productId], references: [id])
+  productId       String        @map("_productId") @db.ObjectId// MongoDB ObjectId reference to Product
+
+}
+
+
+// Define the Damage model
+model Damage {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  damageNo        String
+
+  products        DamageProduct[]   // Array of products in the damage report
+
+  total           Float
+  grossTotal      Float
+  grossTotalRound Float
+  totalItem       Int
+  tax             Float
+  discount        Float
+  status          String
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String         @db.ObjectId // MongoDB ObjectId reference to User
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// Define the DamageProduct model (representing products within a damage report)
+model DamageProduct {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name            String
+  articleCode     String
+  qty             Int
+  mrp             Float
+  tp              Float
+  total           Float
+  vat             Float
+  stock           Int
+  hsCode          String
+  supplier        String
+  totalItem       Int
+  tax             Float
+  discount        Float
+
+  // Define the relationship with the parent Damage
+  damage          Damage        @relation(fields: [damageId], references: [id])
+  damageId        String         @db.ObjectId // MongoDB ObjectId reference to Damage
+
+  // Define the relationship with the Product model
+  product         Product       @relation(fields: [productId], references: [id])
+  productId       String         @db.ObjectId // MongoDB ObjectId reference to Product
+}
+
+
+// Define the Warehouse model
+model Warehouse {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name        String
+  code        String      @unique
+  address     String
+  phone       String
+  company     String
+  type        String
+  store       String
+  warehouse   String
+  status      String
+
+  // Define the relationship with TPNs
+  tpns        TPN[]       // Array of TPNs associated with this warehouse
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// Define the Adjust model
+model Adjust {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  adjustNo         String
+  date             DateTime
+ 
+  containerNo      String?
+  products         AdjustProduct[] // Array of products in the adjustment
+
+  total            Float
+  grossTotal       Float
+  grossTotalRound  Float
+  totalItem        Int
+  tax              Float
+  discount         Float
+  status           String
+  user             User           @relation(fields: [userId], references: [id])
+  userId           String         @map("_userId") @db.ObjectId// MongoDB ObjectId reference to User
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+// Define the AdjustProduct model (representing products within an adjustment)
+model AdjustProduct {
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name             String
+  articleCode      String
+  qty              Int
+  mrp              Float
+  tp               Float
+  total            Float
+  vat              Float
+  stock            Int
+  hsCode           String
+  Type             AdjustType @default(Positive)
+  supplier         String
+  totalItem        Int
+  tax              Float
+  discount         Float
+
+  // Define the relationship with the parent Adjust
+  adjust           Adjust        @relation(fields: [adjustId], references: [id])
+  adjustId         String        @db.ObjectId // MongoDB ObjectId reference to Adjust
+
+  // Define the relationship with the Product model
+  product          Product       @relation(fields: [productId], references: [id])
+  productId        String        @map("_productId") @db.ObjectId// MongoDB ObjectId reference to Product
+
+}
+
 enum UserType {
   Admin
   Manager
   Marketing
   Sales
   stuff
+}
+
+enum AdjustType {
+  Positive
+  Negative
 }
 
 enum CustomerType {

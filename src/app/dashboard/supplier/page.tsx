@@ -3,6 +3,7 @@ import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
 
 export default async function ProductsPage() {
   const data: any = []
@@ -14,7 +15,7 @@ export default async function ProductsPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="Supplier" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
+              <Button>Create Supplier</Button>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">

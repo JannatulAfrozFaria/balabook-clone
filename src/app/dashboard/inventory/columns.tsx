@@ -23,11 +23,19 @@ import Image from "next/image";
 export type Offer = {
   id: string;
   name: string;
-  photo: string;
+  articleCode: string;
+  openingQty:  number;
+  grnQty:      number;
+  rtvQty:      number;
+  tpnQty:      number;
+  soldQty:     number;
+  returnQty:   number;
+  damageQty:   number;
+  closingQty:  number;
+  mrp:         number;
+  tp:          number;
+  cogs:        number;
   status: "active" | "deactive";
-  price: number;
-  code: string;
-  description: string;
 };
 
 const handleDeleteTigger = async (id: string) => {
@@ -42,55 +50,57 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Offer>[] = [
   {
-    accessorKey: "photo",
-    header: "Photo",
-    cell: ({ row }) => {
-      const offer = row.original;
-
-      return (
-        <>
-          <div className="w-1/2 ">
-            <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image
-                src={
-                  offer.photo !== ""
-                    ? `/img/${offer.photo}`
-                    : "/img/offer-photo.png"
-                }
-                width="300"
-                height="150"
-                alt="Image"
-                className="rounded-md object-cover"
-              />
-            </AspectRatio>
-          </div>
-          {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
-        </>
-      );
-    },
+    accessorKey: "articleCode",
+    header: "Article Code",
   },
-  {
-    accessorKey: "code",
-    header: "Code",
-  },
-
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "openingQty",
+    header: "Opening Qty",
+  },
+  {
+    accessorKey: "grnQty",
+    header: "GRN Qty",
+  },
+  {
+    accessorKey: "rtvQty",
+    header: "RTV Qty",
+  },
+  {
+    accessorKey: "soldQty",
+    header: "Sold Qty",
+  },
+  {
+    accessorKey: "returnQty",
+    header: "Return Qty",
+  },
+  {
+    accessorKey: "damageQty",
+    header: "Damage Qty",
+  },
+  {
+    accessorKey: "closingQty",
+    header: "Closing Qty",
+  },
+  {
+    accessorKey: "mrp",
+    header: "MRP",
+  },
+  {
+    accessorKey: "tp",
+    header: "TP",
+  },
+  {
+    accessorKey: "cogs",
+    header: "COGS",
   },
   {
     accessorKey: "status",
     header: "Status",
   },
-
   {
     accessorKey: "action",
     header: () => <div className="">Action</div>,

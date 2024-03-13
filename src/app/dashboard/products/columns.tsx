@@ -37,7 +37,7 @@ const handleDeleteTigger = async (id: string) => {
     // toast.success(`${del.name} deleted successful!`);
   } else {
     console.log(`Deleted Faild!`);
-  }
+  } 
 };
 
 export const columns: ColumnDef<Product>[] = [

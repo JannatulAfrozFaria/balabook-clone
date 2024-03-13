@@ -3,6 +3,9 @@ import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
+import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function ProductsPage() {
   const data: any = []
@@ -14,7 +17,10 @@ export default async function ProductsPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="GRN" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
+              <CalenderDateRangePicker className="w-full " />
+              <Link href="/dashboard/orders/create-order">
+                <Button>Create GRN</Button>
+              </Link>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">

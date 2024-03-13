@@ -32,10 +32,10 @@ export type Customer = {
   id: string;
   name: string;
   phone: string;
-  status: "pending" | "processing" | "success" | "failed";
+  status: "Active" | "Inactive";
   email: string;
-  district: string;
-  division: string;
+  company: string;
+  customerId: string;
   attend: boolean;
 };
 
@@ -97,12 +97,8 @@ export const columns: ColumnDef<Customer>[] = [
     },
   },
   {
-    accessorKey: "district",
-    header: "District",
-  },
-  {
-    accessorKey: "division",
-    header: "Division",
+    accessorKey: "company",
+    header: "Company",
   },
   {
     accessorKey: "attend",

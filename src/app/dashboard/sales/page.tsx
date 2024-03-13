@@ -5,6 +5,7 @@ import { Order, columns } from "./columns";
 import CreateOrderSheet from "./createOrderSheet";
 import prisma from "../../../../prisma";
 import Link from "next/link";
+import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
 
 export default async function OrderPage() {
   const data: any = []
@@ -38,8 +39,7 @@ export default async function OrderPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="Sales" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              {/* <CreateOrderSheet /> */}
+              <CalenderDateRangePicker className="w-full " />
               <Link href="/dashboard/orders/create-order">
                 <Button>Create Order</Button>
               </Link>

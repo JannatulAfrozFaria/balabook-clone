@@ -20,9 +20,9 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-export type Offer = {
+export type PO = {
   id: string;
-  pono: string;
+  poNo: string;
   supplier: string;
   supplierId: string;
   cantainerID: string;
@@ -40,30 +40,21 @@ export type Offer = {
 const handleDeleteTigger = async (id: string) => {
   // const del = await handleDelete(id);
   // if (del) {
-  //   console.log(`Offer Delete Successful!`);
+  //   console.log(`PO Delete Successful!`);
   //   // toast.success(`${del.name} deleted successful!`);
   // } else {
   //   console.log(`Deleted Faild!`);
   // }
 };
 
-export const columns: ColumnDef<Offer>[] = [
+export const columns: ColumnDef<PO>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
-  },
-
-  {
-    accessorKey: "pono",
+    accessorKey: "poNo",
     header: "PoNo",
   },
   {
     accessorKey: "supplier",
     header: "Supplier",
-  },
-  {
-    accessorKey: "containerId",
-    header: "ContainerId",
   },
   {
     accessorKey: "totalItem",

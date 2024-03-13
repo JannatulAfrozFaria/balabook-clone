@@ -3,6 +3,9 @@ import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Plus } from "lucide-react";
 
 export default async function ProductsPage() {
   const data: any = []
@@ -12,9 +15,12 @@ export default async function ProductsPage() {
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
-            <PageTitle title="Adjust" />
+            <PageTitle title="Adjustment" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
+              <Link href="/dashboard/inventory">
+                <Button><ArrowLeft />BACK</Button>
+              </Link>
+              <Button><Plus />Create New</Button>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
