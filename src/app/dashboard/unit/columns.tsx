@@ -23,11 +23,10 @@ import Image from "next/image";
 export type Offer = {
   id: string;
   name: string;
-  photo: string;
-  status: "active" | "deactive";
-  price: number;
-  offerID: string;
+  status: "Active" | "Inactive";
+  code: string;
   description: string;
+  symbol: string;
 };
 
 const handleDeleteTigger = async (id: string) => {
@@ -42,46 +41,18 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Offer>[] = [
   {
-    accessorKey: "photo",
-    header: "Photo",
-    cell: ({ row }) => {
-      const offer = row.original;
-
-      return (
-        <>
-        <div className="w-1/2 ">
-            <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image src={offer.photo !== "" ? `/img/${offer.photo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
-            </AspectRatio>
-        </div>
-        {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
-        </>
-      );
-    },
-  },
-  {
-    accessorKey: "offerId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          OfferID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-
-  {
     accessorKey: "name",
     header: "Name",
   },
+  {
+    accessorKey: "symbol",
+    header: "Symbol",
+  },
+  {
+    accessorKey: "code",
+    header: "Code",
+  },
+
   {
     accessorKey: "description",
     header: "Description",
@@ -89,10 +60,6 @@ export const columns: ColumnDef<Offer>[] = [
   {
     accessorKey: "status",
     header: "Status",
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
   },
   {
     accessorKey: "action",

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Nav } from "@/components/nav";
 import {
   Archive,
@@ -49,10 +49,16 @@ function Sidebar() {
         <div className="flex gap-3 justify-center">
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={
-                //@ts-ignore
-                session?.user?.photo ? session?.user?.photo : `https://github.com/shadcn.png`
-                } alt="@shadcn" />
+              <AvatarImage
+                src={
+                  //@ts-ignore
+                  session?.user?.photo
+                    ? //@ts-ignore
+                      session?.user?.photo
+                    : `https://github.com/shadcn.png`
+                }
+                alt="@shadcn"
+              />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
           </Button>
@@ -64,14 +70,14 @@ function Sidebar() {
               <p className="text-xs leading-none text-muted-foreground">
                 {
                   //@ts-ignore
-                session?.user?.type
+                  session?.user?.type
                 }
               </p>
             </div>
           </div>
         </div>
 
-        <div className="pt-12">
+        <div className="pt-12 md:pt-4">
           <Nav
             isCollapsed={isCollapsed}
             links={[
@@ -81,7 +87,7 @@ function Sidebar() {
                 icon: LayoutDashboard,
                 variant: "default",
                 href: "/dashboard",
-              },          
+              },
               {
                 title: "Sales",
                 label: "",
@@ -168,10 +174,8 @@ function Sidebar() {
               },
             ]}
           />
-
-          
         </div>
-        <div className={`${isCollapsed && "hidden"}`}>
+        {/* <div className={`${isCollapsed && "hidden"}`}>
           <p className={`md:flex text-sm absolute bottom-5`}>
             {" "}
             <small>Powred By:</small>{" "}
@@ -181,7 +185,7 @@ function Sidebar() {
               </i>
             </b>
           </p>
-        </div>
+        </div> */}
         {!mobileWidth && (
           <div className="absolute right-[5px] bottom-10  h-4 w-4">
             <Button
