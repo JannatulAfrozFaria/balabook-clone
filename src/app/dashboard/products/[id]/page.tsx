@@ -2,14 +2,14 @@ import PageTitle from "@/components/ui/PageTitle";
 import prisma from "../../../../../prisma";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import OfferForm from "../offerForm";
+import OfferForm from "../productForm";
 
-export default async function OfferPage({
+export default async function CreateProductPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const offer = await prisma.offer.findFirst({ where: { id: params.id } });
+  const offer = await prisma.product.findFirst({ where: { id: params.id } });
 
   // console.log(offer)
 

@@ -31,7 +31,7 @@ export type User = {
   name: string;
   username: string;
   phone: string;
-  status: "pending" | "processing" | "success" | "failed";
+  status: "AActive" | "Deactive";
   email: string;
   type: string;
 };

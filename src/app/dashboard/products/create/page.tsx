@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import Link from "next/link";
 
-export default async function ProductsPage() {
-  const data: any = [] //await prisma.offer.findMany();
+export default async function CreateProductsPage() {
+  const data: any = []; //await prisma.offer.findMany();
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -14,7 +14,9 @@ export default async function ProductsPage() {
             <PageTitle title="Create New Products" />
             <div className="flex items-center space-x-2">
               <Link href="/dashboard/products">
-                <Button><X className="mr-2" /> Cancle</Button>
+                <Button>
+                  <X className="mr-2" /> Cancle
+                </Button>
               </Link>
             </div>
           </div>

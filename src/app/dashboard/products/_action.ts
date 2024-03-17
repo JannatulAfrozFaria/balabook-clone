@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
-import { OfferFormSchema } from "./offerFormSchema";
+import { OfferFormSchema } from "./productFormSchema";
 import { z } from "zod";
 
 export type Offer = z.infer<typeof OfferFormSchema>;

@@ -20,6 +20,7 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
+import { handleDelete } from "./_action";
 export type Brand = {
   id: string;
   name: string;
@@ -30,13 +31,13 @@ export type Brand = {
 };
 
 const handleDeleteTigger = async (id: string) => {
-  // const del = await handleDelete(id);
-  // if (del) {
-  //   console.log(`Brand Delete Successful!`);
-  //   // toast.success(`${del.name} deleted successful!`);
-  // } else {
-  //   console.log(`Deleted Faild!`);
-  // }
+  const del = await handleDelete(id);
+  if (del) {
+    console.log(`Brand Delete Successful!`);
+    toast.success(`Deleted successful!`);
+  } else {
+    console.log(`Deleted Faild!`);
+  }
 };
 
 export const columns: ColumnDef<Brand>[] = [
@@ -48,23 +49,29 @@ export const columns: ColumnDef<Brand>[] = [
 
       return (
         <>
-        <div className="w-1/2 ">
+          <div className="w-1/2 ">
             <AspectRatio ratio={16 / 9}>
               {/* <>{brand.photo}</> */}
-              <Image src={brand.logo !== "" ? `/img/${brand.logo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
+              <Image
+                src={
+                  brand.logo !== ""
+                    ? `/img/${brand.logo}`
+                    : "/img/offer-photo.png"
+                }
+                width="300"
+                height="150"
+                alt="Image"
+                className="rounded-md object-cover"
+              />
             </AspectRatio>
-        </div>
-        {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
+          </div>
         </>
       );
     },
   },
   {
     accessorKey: "code",
-    header: "Code"
+    header: "Code",
   },
 
   {
@@ -84,7 +91,7 @@ export const columns: ColumnDef<Brand>[] = [
     header: () => <div className="">Action</div>,
     id: "actions",
     cell: ({ row }) => {
-      const offer = row.original;
+      const brand = row.original;
 
       return (
         <DropdownMenu>
@@ -97,15 +104,15 @@ export const columns: ColumnDef<Brand>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
+              onClick={() => navigator.clipboard.writeText(brand.id)}
             >
               View Details
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>
+              <Link href={`/dashboard/brand/${brand.id}`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(offer.id)}>
+            <DropdownMenuItem onClick={() => handleDeleteTigger(brand.id)}>
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

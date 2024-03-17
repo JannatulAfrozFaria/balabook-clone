@@ -38,7 +38,7 @@ export const createUser = async (data: User) => {
     password = await bcrypt.hash(password, 10);
 
     const createUser = await prisma.user.create({
-      //@ts-nocheck
+      //@ts-ignore
       data: { name, phone, email, username, password, type, status },
     });
     if (createUser) {

@@ -27,7 +27,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { OfferFormSchema } from "./offerFormSchema";
+import { OfferFormSchema } from "./productFormSchema";
 import { createOffer, updateOffer } from "./_action";
 
 import PhotoUpload from "./photoUpload";

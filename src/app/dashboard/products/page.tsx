@@ -1,5 +1,5 @@
 import PageTitle from "@/components/ui/PageTitle";
-import { UserDataTable } from "./data-table";
+import { ProductDataTable } from "./data-table";
 import { columns } from "./columns";
 import {
   Menubar,
@@ -9,14 +9,20 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
-} from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Archive, BadgeCheck, BoxIcon, Boxes, PencilRuler } from "lucide-react";
-
+import {
+  Archive,
+  BadgeCheck,
+  BoxIcon,
+  Boxes,
+  PencilRuler,
+  UploadCloud,
+} from "lucide-react";
 
 export default async function ProductsPage() {
-  const data: any = [] //await prisma.offer.findMany();
+  const data: any = []; //await prisma.offer.findMany();
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -31,24 +37,34 @@ export default async function ProductsPage() {
                     <BoxIcon className="mr-2 h-3 w-3" />
                     <Link href="/dashboard/category"> Category </Link>
                   </MenubarTrigger>
-                 
                 </MenubarMenu>
                 <MenubarMenu>
-                  <MenubarTrigger><BadgeCheck className="mr-2 h-3 w-3" /> <Link href="/dashboard/brand">Brand</Link></MenubarTrigger>
+                  <MenubarTrigger>
+                    <BadgeCheck className="mr-2 h-3 w-3" />{" "}
+                    <Link href="/dashboard/brand">Brand</Link>
+                  </MenubarTrigger>
                 </MenubarMenu>
                 <MenubarMenu>
-                  <MenubarTrigger><PencilRuler className="mr-2 h-3 w-3" /> <Link href="/dashboard/unit">Units</Link></MenubarTrigger>
-                  
+                  <MenubarTrigger>
+                    <PencilRuler className="mr-2 h-3 w-3" />{" "}
+                    <Link href="/dashboard/unit">Units</Link>
+                  </MenubarTrigger>
                 </MenubarMenu>
-               
               </Menubar>
-              <Link href="/dashboard/products">
-                <Button><Archive className="mr-2 h-4 w-4" /> Create New</Button>
+              <Link href="/dashboard/products/create">
+                <Button>
+                  <UploadCloud className="mr-2 h-4 w-4" /> Import
+                </Button>
+              </Link>
+              <Link href="/dashboard/products/create">
+                <Button>
+                  <Archive className="mr-2 h-4 w-4" /> Create New
+                </Button>
               </Link>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-            <UserDataTable columns={columns} data={data} />
+            <ProductDataTable columns={columns} data={data} />
           </div>
         </div>
       </div>

@@ -182,7 +182,7 @@ model Brand {
   description  String?
   code         String      @unique
   status       String
-  logo         String      // Assuming logo is stored as a URL
+  logo         String?      // Assuming logo is stored as a URL
 
   // Define the relationship for products
   products     Product[]  

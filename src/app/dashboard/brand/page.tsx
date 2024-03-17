@@ -4,9 +4,10 @@ import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import CreateBrandSheet from "./createBrandSheet";
 
-export default async function ProductsPage() {
-  const data: any = []
+export default async function BrandPage() {
+  const data: any = await prisma.brand.findMany({});
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -15,8 +16,7 @@ export default async function ProductsPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="Brand" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              <Button>Create Brand</Button>
+              <CreateBrandSheet />
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
