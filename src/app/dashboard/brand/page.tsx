@@ -2,8 +2,6 @@ import PageTitle from "@/components/ui/PageTitle";
 import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
-import { Toast } from "@/components/ui/toast";
-import { Button } from "@/components/ui/button";
 import CreateBrandSheet from "./createBrandSheet";
 
 export default async function BrandPage() {
