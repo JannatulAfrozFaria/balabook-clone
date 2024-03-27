@@ -41,36 +41,8 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Offer>[] = [
   {
-    accessorKey: "photo",
-    header: "Photo",
-    cell: ({ row }) => {
-      const offer = row.original;
-
-      return (
-        <>
-          <div className="w-1/2 ">
-            <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image
-                src={
-                  offer.photo !== ""
-                    ? `/img/${offer.photo}`
-                    : "/img/offer-photo.png"
-                }
-                width="300"
-                height="150"
-                alt="Image"
-                className="rounded-md object-cover"
-              />
-            </AspectRatio>
-          </div>
-          {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
-        </>
-      );
-    },
+    accessorKey: "name",
+    header: "Name",
   },
   {
     accessorKey: "code",
@@ -78,8 +50,8 @@ export const columns: ColumnDef<Offer>[] = [
   },
 
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "parent",
+    header: "Parent",
   },
   {
     accessorKey: "description",

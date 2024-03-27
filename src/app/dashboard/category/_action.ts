@@ -1,11 +1,10 @@
 "use server";
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
-import bcrypt from "bcrypt";
 import { z } from "zod";
-import { BrandFormSchema } from "./BrandFormSchema";
+import { CategoryFormSchema } from "./CategoryFormSchema";
 
-export type Brand = z.infer<typeof BrandFormSchema>;
+export type Category = z.infer<typeof CategoryFormSchema>;
 
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);

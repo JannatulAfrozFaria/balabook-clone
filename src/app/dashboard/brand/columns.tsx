@@ -21,6 +21,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import { handleDelete } from "./_action";
+import { useState } from "react";
+import EditBrandSheet from "./editBrandSheet";
 export type Brand = {
   id: string;
   name: string;
@@ -92,31 +94,35 @@ export const columns: ColumnDef<Brand>[] = [
     id: "actions",
     cell: ({ row }) => {
       const brand = row.original;
-
+      const [open, setOpen] = useState(false);
+      const handleEdit = () => setOpen(true);
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {/* <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(brand.id)}
             >
               View Details
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/brand/${brand.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(brand.id)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleEdit()}>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDeleteTigger(brand.id)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <EditBrandSheet open={open} setOpen={setOpen} entry={brand as any} />
+        </>
       );
     },
   },

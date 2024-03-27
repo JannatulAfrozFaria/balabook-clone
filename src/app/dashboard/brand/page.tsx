@@ -3,6 +3,9 @@ import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import CreateBrandSheet from "./createBrandSheet";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default async function BrandPage() {
   const data: any = await prisma.brand.findMany({});
@@ -12,7 +15,14 @@ export default async function BrandPage() {
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
-            <PageTitle title="Brand" />
+            <div className="flex">
+              <Link href="/dashboard/products">
+                <Button variant="ghost">
+                  <ArrowLeft />
+                </Button>
+              </Link>
+              <PageTitle title="Brand" />
+            </div>
             <div className="flex items-center space-x-2">
               <CreateBrandSheet />
             </div>

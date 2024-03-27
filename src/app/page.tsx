@@ -13,7 +13,7 @@ import {
   Box,
   LayoutDashboard,
 } from "lucide-react";
-import rasa from "../../public/img/logo.png";
+import logo from "../../public/img/logo.png";
 import { FC } from "react";
 import { Clock, Calendar } from "lucide-react";
 import {
@@ -29,18 +29,18 @@ export default async function Home() {
   const data = await getServerSession(authOptions);
   return (
     <main className="flex min-h-screen h-screen flex-col">
-      Session:{JSON.stringify(data)}
+      {/* Session:{JSON.stringify(data)} */}
       {/* Header */}
       <header className="h-16 py-2 flex justify-between items-center px-8">
-        <div className="flex items-center">
+        <div className="flex items-center mt-1">
           {/* Your logo goes here */}
-          <Image alt="Rasa Logo" src={rasa} height={80} width={80} />
+          <Image alt="Logo" src={logo} height={60} width={60} />
           <span className="ml-2 font-semibold">Import Management System</span>
         </div>
         <div className="flex justify-center items-center hover:text-[#f15f23]">
-          {data?.user ? (
-            <div>
-              <LogIn className=" duration-300" />
+          {!data?.user ? (
+            <div className="flex justify-center items-center">
+              <LogIn className="h-4 w-4 duration-300" />
               <Link
                 href="/login"
                 className="px-2 py-2 rounded-full font-semibold duration-300"
@@ -49,8 +49,8 @@ export default async function Home() {
               </Link>
             </div>
           ) : (
-            <div>
-              <LayoutDashboard className=" duration-300" />
+            <div className="flex justify-center items-center">
+              <LayoutDashboard className="h-4 w-4 duration-300" />
               <Link
                 href="/dashboard"
                 className="px-2 py-2 rounded-full font-semibold duration-300"

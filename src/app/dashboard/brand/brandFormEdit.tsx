@@ -27,13 +27,19 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createBrand } from "./_action";
+import { createBrand, updateBrand } from "./_action";
 import { BrandFormSchema } from "./BrandFormSchema";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect } from "react";
 
-function BrandForm() {
+interface BrandFormEditProps {
+  entry: any;
+  setOpen: React.Dispatch<React.SetStateAction<any>>;
+}
+
+function BrandFormEdit({ entry, setOpen }: BrandFormEditProps) {
   const router = useRouter();
+  console.log(entry);
 
   const form = useForm<z.infer<typeof BrandFormSchema>>({
     resolver: zodResolver(BrandFormSchema),
@@ -46,14 +52,26 @@ function BrandForm() {
     },
   });
 
+  useEffect(() => {
+    // console.log(data);
+    if (entry?.id) {
+      form.setValue("name", entry.name);
+      form.setValue("description", entry.description);
+      form.setValue("code", entry.code);
+      form.setValue("logo", entry.logo);
+      form.setValue("status", entry.status);
+    }
+  }, []);
+
   async function onSubmit(data: z.infer<typeof BrandFormSchema>) {
     try {
       //@ts-ignore
-      const newBrand = await createBrand(data);
+      const newBrand = await updateBrand(entry.id, data);
       console.log("brand", newBrand);
 
       if (newBrand) {
         form.reset();
+        setOpen(false);
         toast.success("Brand Creation Success");
       } else {
         toast.error("Brand Creatation faield!");
@@ -78,9 +96,7 @@ function BrandForm() {
                 <FormControl>
                   <Input placeholder="Brand Name" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
+                {/* <FormDescription>{JSON.stringify(entry)}</FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -145,4 +161,4 @@ function BrandForm() {
   );
 }
 
-export default BrandForm;
+export default BrandFormEdit;

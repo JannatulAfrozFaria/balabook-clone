@@ -28,25 +28,41 @@ import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createBrand } from "./_action";
-import { BrandFormSchema } from "./BrandFormSchema";
+import { CategoryFormSchema } from "./CategoryFormSchema";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect } from "react";
 
-function BrandForm() {
-  const router = useRouter();
+interface CategoryFormEditProps {
+  entry: any;
+  setOpen: React.Dispatch<React.SetStateAction<any>>;
+}
 
-  const form = useForm<z.infer<typeof BrandFormSchema>>({
-    resolver: zodResolver(BrandFormSchema),
+function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
+  const form = useForm<z.infer<typeof CategoryFormSchema>>({
+    resolver: zodResolver(CategoryFormSchema),
     defaultValues: {
       name: "",
       description: "",
       code: "",
-      logo: "",
+      photo: "",
+      parent: "",
       status: "Active",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof BrandFormSchema>) {
+  useEffect(() => {
+    // console.log(data);
+    if (entry?.id) {
+      form.setValue("name", entry.name);
+      form.setValue("description", entry.description);
+      form.setValue("code", entry.code);
+      form.setValue("photo", entry.photo);
+      form.setValue("parent", entry.parent);
+      form.setValue("status", entry.status);
+    }
+  }, []);
+
+  async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
     try {
       //@ts-ignore
       const newBrand = await createBrand(data);
@@ -74,7 +90,7 @@ function BrandForm() {
             name="name"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Brand Name</FormLabel>
+                <FormLabel>Category Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Brand Name" {...field} />
                 </FormControl>
@@ -117,6 +133,28 @@ function BrandForm() {
             name="status"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Parent Category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="">
+                      <SelectValue placeholder="Active" />
+                    </SelectTrigger>
+                  </FormControl>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
                 <FormLabel>Status</FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -145,4 +183,4 @@ function BrandForm() {
   );
 }
 
-export default BrandForm;
+export default CategoryForm;
