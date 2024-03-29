@@ -27,8 +27,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { saveCategory } from "./_action";
-import { CategoryFormSchema } from "./CategoryFormSchema";
+import { saveUnit } from "./_action";
+import { UnitFormSchema } from "./UnitFormSchema";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import CustomSelect from "@/components/ui/CustomSelect";
@@ -38,17 +38,15 @@ interface CategoryFormEditProps {
   setOpen: React.Dispatch<React.SetStateAction<any>>;
 }
 
-function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
-  const [parent, setParent] = useState<string>("");
+function UnitForm({ entry, setOpen }: CategoryFormEditProps) {
   const [id, setId] = useState<string>("");
-  const form = useForm<z.infer<typeof CategoryFormSchema>>({
-    resolver: zodResolver(CategoryFormSchema),
+  const form = useForm<z.infer<typeof UnitFormSchema>>({
+    resolver: zodResolver(UnitFormSchema),
     defaultValues: {
       name: "",
       description: "",
       code: "",
-      photo: "",
-      parentId: parent || "",
+      symbol: "",
       status: "Active",
     },
   });
@@ -59,32 +57,23 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
       form.setValue("name", entry.name);
       form.setValue("description", entry.description);
       form.setValue("code", entry.code);
-      form.setValue("photo", entry.photo);
-      form.setValue("parentId", entry.parentId || "");
+      form.setValue("symbol", entry.symbol);
       form.setValue("status", entry.status);
       setId(entry?.id);
     }
   }, []);
 
-  useEffect(() => {
-    form.setValue("parentId", parent);
-  }, [parent]);
-
-  async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
+  async function onSubmit(data: z.infer<typeof UnitFormSchema>) {
     try {
       //@ts-ignore
-      const category = await saveCategory(id, data);
+      const category = await saveUnit(id, data);
 
       if (category) {
         form.reset();
         setOpen(false);
-        toast.success(
-          id ? "Category Update Success" : "Category Creation Success"
-        );
+        toast.success(id ? "Unit Update Success" : "Unit Creation Success");
       } else {
-        toast.error(
-          id ? "Category Update Success" : "Category Creation faield!"
-        );
+        toast.error(id ? "Unit Update faield!" : "Unit Creation faield!");
       }
     } catch (error) {
       console.error(error);
@@ -103,9 +92,9 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
             name="name"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Category Name</FormLabel>
+                <FormLabel>Unit Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Category Name" {...field} />
+                  <Input placeholder="Unit Name" {...field} />
                 </FormControl>
                 {/* <FormDescription>
                                 This is your public display name.
@@ -143,19 +132,13 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
 
           <FormField
             control={form.control}
-            name="parentId"
+            name="symbol"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Parent Category</FormLabel>
-                {/* <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                > */}
+                <FormLabel>Symbol</FormLabel>
                 <FormControl>
-                  <CustomSelect handleSelect={setParent} />
+                  <Input placeholder="Symbol" {...field} />
                 </FormControl>
-                {/* </Select> */}
-
                 <FormMessage />
               </FormItem>
             )}
@@ -194,4 +177,4 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
   );
 }
 
-export default CategoryForm;
+export default UnitForm;

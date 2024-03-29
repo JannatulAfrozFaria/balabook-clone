@@ -11,15 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import axios from "axios";
 import { toast } from "sonner";
-import { Toast } from "@/components/ui/toast";
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Image from "next/image";
 import EditCategorySheet from "./editCategorySheet";
 import { useState } from "react";
 import { handleDelete } from "./_action";

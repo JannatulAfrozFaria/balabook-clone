@@ -2,21 +2,21 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { CategoryFormSchema } from "./CategoryFormSchema";
+import { UnitFormSchema } from "./UnitFormSchema";
 
-export type Category = z.infer<typeof CategoryFormSchema>;
+export type Unit = z.infer<typeof UnitFormSchema>;
 
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);
   try {
-    const user = await prisma.category.delete({
+    const unit = await prisma.unit.delete({
       where: {
         id: id,
       },
     });
-    if (user) {
+    if (unit) {
       console.log(`Deleted successful!`);
-      revalidatePath("/dashboard/category");
+      revalidatePath("/dashboard/unit");
       return true;
     }
   } catch (err) {
@@ -25,55 +25,52 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveCategory = async (id: string, data: Category) => {
+export const saveUnit = async (id: string, data: Unit) => {
   try {
     //ts-ignore
     console.log("action", data);
-    let { name, code, photo, parentId, description, status } = data;
+    let { name, code, symbol, description, status } = data;
 
-    if (!name || !code) return false;
+    if (!name || !symbol) return false;
 
     if (id !== "") {
-      const updateCategory = await prisma.category.update({
+      const updateUnit = await prisma.unit.update({
         where: {
           id: id,
         },
         data: {
           name,
           code,
-          photo,
           //@ts-ignore
-          parentId: parentId || null,
+          symbol,
           description,
           status,
         },
       });
 
-      if (updateCategory) {
-        console.log(`${updateCategory.name} Create successful!`);
+      if (updateUnit) {
+        console.log(`${updateUnit.name} Update successful!`);
 
-        revalidatePath("/dashboard/category");
-        return updateCategory;
+        revalidatePath("/dashboard/unit");
+        return updateUnit;
       }
     } else {
-      const createCategory = await prisma.category.create({
+      const createUnit = await prisma.unit.create({
         data: {
           name,
           code,
           description,
           //@ts-ignore
-          photo,
-          //@ts-ignore
-          parentId: parentId || null,
+          symbol,
           status,
         },
       });
 
-      if (createCategory) {
-        console.log(`${createCategory.name} Create successful!`);
+      if (createUnit) {
+        console.log(`${createUnit.name} Create successful!`);
 
-        revalidatePath("/dashboard/category");
-        return createCategory;
+        revalidatePath("/dashboard/unit");
+        return createUnit;
       }
     }
   } catch (err) {
@@ -82,11 +79,11 @@ export const saveCategory = async (id: string, data: Category) => {
   }
 };
 
-export const parentCategory = async () => {
+export const unitDw = async () => {
   try {
-    const categories = await prisma.category.findMany({
+    const units = await prisma.unit.findMany({
       where: {
-        parentId: null,
+        status: "Active",
       },
       select: {
         id: true,
@@ -101,8 +98,8 @@ export const parentCategory = async () => {
       },
     ];
 
-    // console.log(categories);
-    categories.map(
+    // console.log(units);
+    units.map(
       (category) =>
         (dw = [
           ...dw,
@@ -114,7 +111,7 @@ export const parentCategory = async () => {
     );
     return dw;
   } catch (error) {
-    console.error("Error fetching parent categories:", error);
-    throw new Error("Failed to fetch categories");
+    console.error("Error fetching parent unit:", error);
+    throw new Error("Failed to fetch unit");
   }
 };

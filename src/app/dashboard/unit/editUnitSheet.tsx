@@ -9,9 +9,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import React from "react";
-import CategoryForm from "./categoryForm";
+import UnitForm from "./unitForm";
 
-function EditCategorySheet({
+function EditUnitSheet({
   entry,
   open,
   setOpen,
@@ -29,9 +29,9 @@ function EditCategorySheet({
         </SheetTrigger> */}
         <SheetContent className="w-[1000px]">
           <SheetHeader>
-            <SheetTitle>Edit Category</SheetTitle>
+            <SheetTitle>Edit Unit</SheetTitle>
             <SheetDescription>
-              <CategoryForm entry={entry} setOpen={setOpen} />
+              <UnitForm entry={entry} setOpen={setOpen} />
             </SheetDescription>
           </SheetHeader>
         </SheetContent>
@@ -40,4 +40,4 @@ function EditCategorySheet({
   );
 }
 
-export default EditCategorySheet;
+export default EditUnitSheet;
