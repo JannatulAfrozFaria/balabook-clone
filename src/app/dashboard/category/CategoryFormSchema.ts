@@ -5,6 +5,6 @@ export const CategoryFormSchema = z.object({
   photo: z.string().optional(),
   description: z.string().optional(),
   code: z.string().min(1, "Code Required"),
-  parent: z.string(),
+  parentId: z.string(),
   status: z.string(),
 });

@@ -27,10 +27,11 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createBrand } from "./_action";
+import { saveCategory } from "./_action";
 import { CategoryFormSchema } from "./CategoryFormSchema";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 interface CategoryFormEditProps {
   entry: any;
@@ -38,6 +39,8 @@ interface CategoryFormEditProps {
 }
 
 function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
+  const [parent, setParent] = useState<string>("");
+  const [id, setId] = useState<string>("");
   const form = useForm<z.infer<typeof CategoryFormSchema>>({
     resolver: zodResolver(CategoryFormSchema),
     defaultValues: {
@@ -45,7 +48,7 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
       description: "",
       code: "",
       photo: "",
-      parent: "",
+      parentId: parent || "",
       status: "Active",
     },
   });
@@ -57,27 +60,33 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
       form.setValue("description", entry.description);
       form.setValue("code", entry.code);
       form.setValue("photo", entry.photo);
-      form.setValue("parent", entry.parent);
+      form.setValue("parentId", entry.parentId || "");
       form.setValue("status", entry.status);
+      setId(entry?.id);
     }
   }, []);
+
+  useEffect(() => {
+    form.setValue("parentId", parent);
+  }, [parent]);
 
   async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
     try {
       //@ts-ignore
-      const newBrand = await createBrand(data);
-      console.log("brand", newBrand);
+      const category = await saveCategory(id, data);
 
-      if (newBrand) {
+      if (category) {
         form.reset();
-        toast.success("Brand Creation Success");
+        setOpen(false);
+        toast.success("Category Creation Success");
       } else {
-        toast.error("Brand Creatation faield!");
+        toast.error("Category Creatation faield!");
       }
     } catch (error) {
       console.error(error);
     }
   }
+
   return (
     <div>
       <Form {...form}>
@@ -92,7 +101,7 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
               <FormItem className="w-full">
                 <FormLabel>Category Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Brand Name" {...field} />
+                  <Input placeholder="Category Name" {...field} />
                 </FormControl>
                 {/* <FormDescription>
                                 This is your public display name.
@@ -130,20 +139,18 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
 
           <FormField
             control={form.control}
-            name="status"
+            name="parentId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Parent Category</FormLabel>
-                <Select
+                {/* <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="">
-                      <SelectValue placeholder="Active" />
-                    </SelectTrigger>
-                  </FormControl>
-                </Select>
+                > */}
+                <FormControl>
+                  <CustomSelect handleSelect={setParent} />
+                </FormControl>
+                {/* </Select> */}
 
                 <FormMessage />
               </FormItem>

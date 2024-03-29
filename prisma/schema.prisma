@@ -162,12 +162,12 @@ model Category {
   photo       String      // Assuming photo is stored as a URL
 
   // Define the relationship for parent category
-  parent      Category?   @relation("Subcategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Optional parent category
-  parentId    String?     @db.ObjectId// Optional parent category id
+  parent      Category?   @relation("subcategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Optional parentId category
+  parentId    String?     @db.ObjectId // Optional parent category id
 
 
   // Define the relationship for subcategories
-  subcategories Category[] @relation("Subcategories")
+  subcategories Category[] @relation("subcategories")
 
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt

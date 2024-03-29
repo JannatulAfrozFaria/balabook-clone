@@ -9,7 +9,15 @@ import { ArrowLeft } from "lucide-react";
 import CreateCategorySheet from "./categorySheet";
 
 export default async function ProductsPage() {
-  const data: any = await prisma.category.findMany({});
+  const data: any = await prisma.category.findMany({
+    include: {
+      parent: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

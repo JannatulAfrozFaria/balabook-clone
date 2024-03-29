@@ -9,15 +9,15 @@ export type Category = z.infer<typeof CategoryFormSchema>;
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);
   try {
-    const user = await prisma.brand.delete({
+    const user = await prisma.category.delete({
       where: {
         id: id,
       },
     });
     if (user) {
       console.log(`Deleted successful!`);
-      revalidatePath("/dashboard/brnad");
-      return user;
+      revalidatePath("/dashboard/category");
+      return true;
     }
   } catch (err) {
     console.log(err);
@@ -25,23 +25,56 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const createBrand = async (data: Brand) => {
+export const saveCategory = async (id: string, data: Category) => {
   try {
     //ts-ignore
     console.log("action", data);
-    let { name, code, logo, description, status } = data;
+    let { name, code, photo, parentId, description, status } = data;
 
     if (!name || !code) return false;
 
-    const createBrand = await prisma.brand.create({
-      //@ts-ignore
-      data: { name, code, description, logo, status },
-    });
-    if (createBrand) {
-      console.log(`${createBrand.name} Create successful!`);
+    if (id !== "") {
+      const updateCategory = await prisma.category.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name,
+          code,
+          photo,
+          //@ts-ignore
+          parentId: parentId || null,
+          description,
+          status,
+        },
+      });
 
-      revalidatePath("/dashboard/brand");
-      return createBrand;
+      if (updateCategory) {
+        console.log(`${updateCategory.name} Create successful!`);
+
+        revalidatePath("/dashboard/brand");
+        return updateCategory;
+      }
+    } else {
+      const createCategory = await prisma.category.create({
+        data: {
+          name,
+          code,
+          description,
+          //@ts-ignore
+          photo,
+          //@ts-ignore
+          parentId: parentId || null,
+          status,
+        },
+      });
+
+      if (createCategory) {
+        console.log(`${createCategory.name} Create successful!`);
+
+        revalidatePath("/dashboard/brand");
+        return createCategory;
+      }
     }
   } catch (err) {
     console.log(err);
@@ -49,31 +82,39 @@ export const createBrand = async (data: Brand) => {
   }
 };
 
-export const updateBrand = async (id: string, data: Brand) => {
+export const parentCategory = async () => {
   try {
-    const { name, code, logo, description, status } = data;
-
-    if (!name || !code) {
-      return false;
-    }
-
-    //ts-ignore
-    // const { id, ...data } = data;
-    const updateUser = await prisma.brand.update({
+    const categories = await prisma.category.findMany({
       where: {
-        id: id,
+        parentId: null,
       },
-      //@ts-ignore
-      data: { name, code, logo, description, status },
+      select: {
+        id: true,
+        name: true,
+      },
     });
-    console.log(updateUser);
-    if (updateUser) {
-      console.log(`${updateUser.name} Update successful!`);
-      revalidatePath("/dashboard/users");
-      return updateUser;
-    }
-  } catch (err) {
-    console.log("err", err);
-    return err;
+
+    let dw = [
+      {
+        value: "",
+        label: "Select Category",
+      },
+    ];
+
+    // console.log(categories);
+    categories.map(
+      (category) =>
+        (dw = [
+          ...dw,
+          {
+            value: category.id,
+            label: category.name,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent categories:", error);
+    throw new Error("Failed to fetch categories");
   }
 };

@@ -11,7 +11,7 @@ import {
 import React from "react";
 import CategoryForm from "./categoryForm";
 
-function EditBrandSheet({
+function EditCategorySheet({
   entry,
   open,
   setOpen,
@@ -31,7 +31,7 @@ function EditBrandSheet({
           <SheetHeader>
             <SheetTitle>Edit Brand</SheetTitle>
             <SheetDescription>
-              <CategoryForm />
+              <CategoryForm entry={entry} setOpen={setOpen} />
             </SheetDescription>
           </SheetHeader>
         </SheetContent>
@@ -40,4 +40,4 @@ function EditBrandSheet({
   );
 }
 
-export default EditBrandSheet;
+export default EditCategorySheet;
