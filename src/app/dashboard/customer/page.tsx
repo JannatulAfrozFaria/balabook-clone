@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { UserDataTable } from "./data-table";
 import { Customer, columns } from "./columns";
 import Link from "next/link";
-import { Download, User, UserPlus } from "lucide-react";
+import { Download, UploadCloud, User, UserPlus } from "lucide-react";
 import prisma from "@/index";
+import CreateCustomerSheet from "./createCusromerSheet";
 
 export default async function CustomerPage() {
   // const [toggelAttend, setToggleAttend] = useState();
@@ -23,14 +24,12 @@ export default async function CustomerPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="Customers" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              {/* <CreateCustomerSheet /> */}
-              
-              <Link href={"/registration"}>
+              <Link href={"/dashboard/customer/import"}>
                 <Button>
-                  <UserPlus size="16" className="mr-2" /> Create New Customer
+                  <UploadCloud size="16" className="mr-2" /> Import
                 </Button>
               </Link>
+              <CreateCustomerSheet />
             </div>
           </div>
 

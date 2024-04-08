@@ -49,11 +49,6 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Offer>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
-  },
-
-  {
     accessorKey: "pono",
     header: "PoNo",
   },

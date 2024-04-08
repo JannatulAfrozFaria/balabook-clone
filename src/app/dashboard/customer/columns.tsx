@@ -14,6 +14,9 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 import { handleDelete } from "./_action";
+import { useState } from "react";
+import EditCustomerSheet from "./editCustomerSheet";
+import { Toaster } from "sonner";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -30,90 +33,47 @@ const handleDeleteAction = async (id: string) => {
 
 export type Customer = {
   id: string;
+  customerId: string;
   name: string;
   phone: string;
-  status: "pending" | "processing" | "success" | "failed";
+  status: "Active" | "Inactive";
   email: string;
-  district: string;
-  division: string;
   attend: boolean;
 };
 
 export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Name",
+  },
+  {
+    accessorKey: "username",
+    header: "UserName",
   },
   {
     accessorKey: "customerId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Customer ID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Customer ID",
   },
   {
     accessorKey: "phone",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Phone
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Phone",
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Email",
   },
   {
-    accessorKey: "district",
-    header: "District",
+    accessorKey: "type",
+    header: "Type",
   },
   {
-    accessorKey: "division",
-    header: "Division",
-  },
-  {
-    accessorKey: "attend",
-    header: " Attend",
+    accessorKey: "addreass",
+    header: "Address",
+    id: "address",
     cell: ({ row }) => {
-      const attend = row.original.attend;
-      return (
-        <div className={attend ? "text-green-500" : "text-red-600"}>
-          {attend ? "Attend" : "Absent"}
-        </div>
-      );
+      const customer = row.original;
+
+      return <>Address</>;
     },
   },
   {
@@ -126,31 +86,31 @@ export const columns: ColumnDef<Customer>[] = [
     id: "actions",
     cell: ({ row }) => {
       const customer = row.original;
-
+      const [open, setOpen] = useState(false);
+      const handleEdit = () => setOpen(true);
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              View Details
-            </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/customer/${customer.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteAction(customer.id)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleEdit()}>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDeleteAction(customer.id)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <EditCustomerSheet entry={customer} open={open} setOpen={setOpen} />
+          <Toaster />
+        </>
       );
     },
   },

@@ -65,6 +65,7 @@ export default function CustomerImportPage() {
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               {/* <CreateCustomerSheet /> */}
+              <CsvUpload setCSV={setCSV} handelImport={handelImport} />
               <Link href={"/dashboard/customer"}>
                 <Button>
                   <X size="16" className="mr-2" /> Cancle
@@ -73,10 +74,7 @@ export default function CustomerImportPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-            <CsvUpload setCSV={setCSV} handelImport={handelImport} />
-          </div>
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
+          <div className="">
             <UserDataTable
               columns={columns}
               data={CSV}

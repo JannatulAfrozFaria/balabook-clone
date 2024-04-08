@@ -2,11 +2,12 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { toast } from "sonner";
-import { RegistrationFormSchema } from "./RegistrationFormSchema";
+import { CustomerFormSchema } from "./CustomerFormSchema";
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
-export type Customer = z.infer<typeof RegistrationFormSchema>;
+export type Customer = z.infer<typeof CustomerFormSchema>;
 
 // Helper function to generate a random 6-digit unique ID
 const generateCustomerId = async (prisma: PrismaClient) => {
@@ -52,52 +53,111 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const createCustomer = async (data: Customer) => {
+export const saveCustomer = async (id: string, data: Customer) => {
   try {
+    //ts-ignore
+    console.log("action", data);
     const {
       name,
       phone,
       email,
-      address,
-      district,
-      division,
+      photo,
+      username,
+      password,
+      type,
+      contactPerson,
+      contactPersonPhone,
       company,
       designation,
-      // @ts-ignore
-      attend,
+      bin,
+      tin,
+      treadLicense,
+      creditOption,
+      cLimitAmount,
+      cLimitDay,
       status,
     } = data;
 
-    // Check if required fields are present
-    if (!name || !phone || !district || !division) {
-      return false;
+    if (!name || !phone) return false;
+
+    let userData = {};
+    let hashedPassword = "";
+    if (password !== "") {
+      hashedPassword = await bcrypt.hash(password || "", 10);
+      userData = { ...userData, password: hashedPassword };
     }
+
+    userData = {
+      ...userData,
+      name,
+      phone,
+      email,
+      photo,
+      username,
+      type,
+      contactPerson,
+      contactPersonPhone,
+      company,
+      designation,
+      bin,
+      tin,
+      treadLicense,
+      creditOption,
+      cLimitAmount,
+      cLimitDay,
+      status,
+    };
 
     // Generate a random 6-digit unique customer ID
     const customerId = await generateCustomerId(prisma);
 
-    const customer = await prisma.customer.create({
-      data: {
-        name,
-        phone,
-        email,
-        address,
-        district,
-        division,
-        company,
-        designation,
-        attend,
-        // @ts-ignore
-        status,
-        customerId,
-      },
-    });
-    //ts-ignore
-    console.log(customer);
-    if (customer) {
-      console.log(`${customer.name} Create successful!`);
-      revalidatePath("/dashboard/customer");
-      return customer;
+    if (id !== "") {
+      const updateCustomer = await prisma.customer.update({
+        where: {
+          id: id,
+        },
+        data: userData,
+      });
+
+      if (updateCustomer) {
+        console.log(`${updateCustomer.name} Update successful!`);
+
+        revalidatePath("/dashboard/customer");
+        return updateCustomer;
+      }
+    } else {
+      const createUser = await prisma.customer.create({
+        data: {
+          name,
+          phone,
+          email,
+          photo,
+          username,
+          password: hashedPassword,
+          customerId: customerId,
+          //@ts-ignore
+          type,
+          contactPerson,
+          contactPersonPhone,
+          company,
+          designation,
+          bin,
+          tin,
+          treadLicense,
+          creditOption,
+          cLimitAmount,
+          cLimitDay,
+          //@ts-ignore
+          status,
+        },
+      });
+
+      if (createUser) {
+        console.log(`${createUser.name} Create successful!`);
+
+        revalidatePath("/dashboard/customer");
+        return createUser;
+      }
     }
   } catch (err) {
     console.log(err);
@@ -105,13 +165,104 @@ export const createCustomer = async (data: Customer) => {
   }
 };
 
+// export const createCustomer = async (data: Customer) => {
+//   try {
+//     let {
+//       name,
+//       phone,
+//       email,
+//       photo,
+//       username,
+//       password,
+//       type,
+//       contactPerson,
+//       contactPersonPhone,
+//       company,
+//       designation,
+//       bin,
+//       tin,
+//       treadLicense,
+//       creditOption,
+//       cLimitAmount,
+//       cLimitDay,
+//       status,
+//     } = data;
+
+//     // Check if required fields are present
+//     if (!name || !phone) return false;
+//     let passwordGen = password ? password : "12345";
+//     password = await bcrypt.hash(passwordGen, 10);
+
+//     // Generate a random 6-digit unique customer ID
+//     const customerId = await generateCustomerId(prisma);
+
+//     const customer = await prisma.customer.create({
+//       data: {
+//         name,
+//         phone,
+//         email,
+//         photo,
+//         username,
+//         password,
+//         customerId: customerId,
+//         //@ts-ignore
+//         type,
+//         contactPerson,
+//         contactPersonPhone,
+//         company,
+//         designation,
+//         bin,
+//         tin,
+//         treadLicense,
+//         creditOption,
+//         cLimitAmount,
+//         cLimitDay,
+//         //@ts-ignore
+//         status,
+//       },
+//     });
+//     //ts-ignore
+//     console.log(customer);
+//     if (customer) {
+//       console.log(`${customer.name} Create successful!`);
+//       revalidatePath("/dashboard/customer");
+//       return customer;
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     return false;
+//   }
+// };
+
 export const importCustomer = async (data: any) => {
   try {
     data.map(async (customerData: Customer) => {
-      const { name, phone, email, district, division } = customerData;
+      const {
+        name,
+        phone,
+        email,
+        photo,
+        username,
+        password,
+        // customerId,
+        //@ts-ignore
+        type,
+        contactPerson,
+        contactPersonPhone,
+        company,
+        designation,
+        bin,
+        tin,
+        treadLicense,
+        creditOption,
+        cLimitAmount,
+        cLimitDay,
+        //@ts-ignore
+        status,
+      } = customerData;
 
       // Check if required fields are present
-      if (!name || !phone || !district || !division) {
+      if (!name || !phone) {
         return false;
       }
 
@@ -119,7 +270,7 @@ export const importCustomer = async (data: any) => {
       const customerId = await generateCustomerId(prisma);
 
       const customer = await prisma.customer.create({
-        data: { name, phone, email, district, division, customerId },
+        data: { name, phone, email, customerId },
       });
 
       console.log(customer);
@@ -138,48 +289,48 @@ export const importCustomer = async (data: any) => {
   }
 };
 
-export const updateCustomer = async (id: string, data: Customer) => {
-  try {
-    console.log(data);
-    const {
-      name,
-      phone,
-      email,
-      address,
-      district,
-      division,
-      company,
-      designation,
-      // @ts-ignore
-      attend,
-      status,
-    } = data;
-    if (!name || !phone) {
-      return false;
-    }
-    const updatedUser = await prisma.customer.update({
-      where: { id: id },
-      data: {
-        name,
-        phone,
-        email,
-        address,
-        district,
-        division,
-        company,
-        designation,
-        attend,
-        // @ts-ignore
-        status,
-      },
-    });
-    if (updatedUser) {
-      console.log(`${updatedUser.name} Update successful!`);
-      revalidatePath("/dashboard/customer");
-      return updatedUser;
-    }
-  } catch (err) {
-    console.log("err", err);
-    return false;
-  }
-};
+// export const updateCustomer = async (id: string, data: Customer) => {
+//   try {
+//     console.log(data);
+//     const {
+//       name,
+//       phone,
+//       email,
+//       address,
+//       district,
+//       division,
+//       company,
+//       designation,
+//       // @ts-ignore
+//       attend,
+//       status,
+//     } = data;
+//     if (!name || !phone) {
+//       return false;
+//     }
+//     const updatedUser = await prisma.customer.update({
+//       where: { id: id },
+//       data: {
+//         name,
+//         phone,
+//         email,
+//         address,
+//         district,
+//         division,
+//         company,
+//         designation,
+//         attend,
+//         // @ts-ignore
+//         status,
+//       },
+//     });
+//     if (updatedUser) {
+//       console.log(`${updatedUser.name} Update successful!`);
+//       revalidatePath("/dashboard/customer");
+//       return updatedUser;
+//     }
+//   } catch (err) {
+//     console.log("err", err);
+//     return false;
+//   }
+// };

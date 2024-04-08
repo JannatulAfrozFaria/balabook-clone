@@ -42,7 +42,7 @@ function UserForm() {
       phone: "",
       password: "",
       confirmPassword: "",
-      type: "Assistant",
+      type: "Stuff",
       status: "Active",
     },
   });
@@ -215,12 +215,15 @@ function UserForm() {
                 >
                   <FormControl>
                     <SelectTrigger className="">
-                      <SelectValue placeholder="Assistan" />
+                      <SelectValue placeholder="Stuff" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="Admin">Admin</SelectItem>
-                    <SelectItem value="Assistant">Assistan</SelectItem>
+                    <SelectItem value="Manager">Manager</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="Sales">Sales</SelectItem>
+                    <SelectItem value="Stuff">Stuff</SelectItem>
                   </SelectContent>
                 </Select>
 

@@ -12,119 +12,89 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
 import { toast } from "sonner";
-import { Toast } from "@/components/ui/toast";
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-export type Offer = {
+import { handleDelete } from "./_action";
+import { useState } from "react";
+import EditSupplierSheet from "./editSupplierSheet";
+import { Toaster } from "@/components/ui/toaster";
+export type Supplier = {
   id: string;
   name: string;
-  photo: string;
-  status: "active" | "deactive";
-  price: number;
-  offerID: string;
+  phone: string;
+  email: number;
+  address: string;
+  company: string;
+  designation: string;
   description: string;
+  status: "active" | "deactive";
 };
 
 const handleDeleteTigger = async (id: string) => {
-  // const del = await handleDelete(id);
-  // if (del) {
-  //   console.log(`Offer Delete Successful!`);
-  //   // toast.success(`${del.name} deleted successful!`);
-  // } else {
-  //   console.log(`Deleted Faild!`);
-  // }
+  const del = await handleDelete(id);
+  if (del) {
+    console.log(`Supplier Delete Successful!`);
+    toast.success(`Deleted successful!`);
+  } else {
+    console.log(`Deleted Faild!`);
+  }
 };
 
-export const columns: ColumnDef<Offer>[] = [
-  {
-    accessorKey: "photo",
-    header: "Photo",
-    cell: ({ row }) => {
-      const offer = row.original;
-
-      return (
-        <>
-        <div className="w-1/2 ">
-            <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image src={offer.photo !== "" ? `/img/${offer.photo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
-            </AspectRatio>
-        </div>
-        {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
-        </>
-      );
-    },
-  },
-  {
-    accessorKey: "offerId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          OfferID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-
+export const columns: ColumnDef<Supplier>[] = [
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "phone",
+    header: "Phone",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "company",
+    header: "Company",
+  },
+  {
+    accessorKey: "country",
+    header: "Country",
   },
   {
     accessorKey: "status",
     header: "Status",
   },
   {
-    accessorKey: "price",
-    header: "Price",
-  },
-  {
     accessorKey: "action",
     header: () => <div className="">Action</div>,
     id: "actions",
     cell: ({ row }) => {
-      const offer = row.original;
-
+      const supplier = row.original;
+      const [open, setOpen] = useState(false);
+      const handleEdit = () => setOpen(true);
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
-            >
-              View Details
-            </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(offer.id)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDeleteTigger(supplier.id)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <EditSupplierSheet open={open} entry={supplier} setOpen={setOpen} />
+          <Toaster />
+        </>
       );
     },
   },

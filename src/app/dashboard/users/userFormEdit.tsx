@@ -204,6 +204,7 @@ function UserFormEdit({ user }: { user: any }) {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="">
@@ -212,7 +213,10 @@ function UserFormEdit({ user }: { user: any }) {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="Admin">Admin</SelectItem>
-                    <SelectItem value="Assistant">Assistan</SelectItem>
+                    <SelectItem value="Manager">Manager</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="Sales">Sales</SelectItem>
+                    <SelectItem value="Stuff">Stuff</SelectItem>
                   </SelectContent>
                 </Select>
 
