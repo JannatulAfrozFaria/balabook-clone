@@ -38,52 +38,61 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ProductFormSchema } from "./ProductFormSchema";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import productPhoto from "./img/product.jpg";
+import Image from "next/image";
+import { DevTool } from "@hookform/devtools";
+import SelectSupplier from "@/components/ui/SelectSupplier";
+import SelectMc from "@/components/ui/SelectMc";
+import SelectCategory from "@/components/ui/SelectCategory";
+import SelectBrand from "@/components/ui/SelectBrand";
+import SelectUnit from "@/components/ui/SelectUnit";
+import { saveProduct } from "../_action";
+import { ProductFormSchema } from "./productFormSchema";
 interface ProductFormEditProps {
   entry: any;
 }
 
 function ProductForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
+  const [mcId, setMcId] = useState<string>("");
   const form = useForm<z.infer<typeof ProductFormSchema>>({
     resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       name: "",
-      salesType: "",
+      salesType: "Standerd",
       articleCode: "",
       ean: "",
       masterCategoryId: "",
       categoryId: "",
       unitId: "",
       brandId: "",
-      vat: "",
+      vat: 0,
       vatMethod: false,
       hsCode: "",
       type: "",
       shipping: "",
-      featured: "",
-      website: "",
+      featured: "false",
+      website: "true",
       slug: "",
       description: "",
       specification: "",
-      price: "",
-      promoPrice: "",
+      // price: 0,
+      promoPrice: 0,
       promoStart: new Date(),
       promoEnd: new Date(),
       photo: "",
-      gallery: "",
+      // gallery: `${[""]}`,
       supplierId: "",
-      openingQty: "",
-      soldQty: "",
-      returnQty: "",
-      damageQty: "",
-      closingQty: "",
-      mrp: "",
-      tp: "",
-      cogs: "",
-      pisInPackege: "",
+      openingQty: 0,
+      soldQty: 0,
+      returnQty: 0,
+      damageQty: 0,
+      closingQty: 0,
+      mrp: 0,
+      tp: 0,
+      cogs: 0,
+      pisInPackege: 0,
       status: "Active",
     },
   });
@@ -109,12 +118,12 @@ function ProductForm({ entry }: ProductFormEditProps) {
       form.setValue("slug", entry.slug);
       form.setValue("description", entry.description);
       form.setValue("specification", entry.specification);
-      form.setValue("price", entry.price);
+      // form.setValue("price", entry.price);
       form.setValue("promoPrice", entry.promoPrice);
       form.setValue("promoStart", entry.promoStart);
       form.setValue("promoEnd", entry.promoEnd);
       form.setValue("photo", entry.photo);
-      form.setValue("gallery", entry.gallery);
+      // form.setValue("gallery", entry.gallery);
       form.setValue("supplierId", entry.supplierId);
       form.setValue("openingQty", entry.openingQty);
       form.setValue("soldQty", entry.soldQty);
@@ -130,20 +139,45 @@ function ProductForm({ entry }: ProductFormEditProps) {
     }
   }, []);
 
+  const handleSlug = (name: string) => {
+    const slug = name.split(" ").join("-");
+    form.setValue("slug", slug);
+  };
+
+  const handleSupplierId = (id: string) => {
+    form.setValue("supplierId", id);
+  };
+
+  const handleMcId = (id: string) => {
+    form.setValue("masterCategoryId", id);
+    setMcId(id);
+  };
+  const handleCategoryId = (id: string) => {
+    form.setValue("categoryId", id);
+    setMcId(id);
+  };
+  const handleBrandId = (id: string) => {
+    form.setValue("brandId", id);
+    setMcId(id);
+  };
+  const handleUnitId = (id: string) => {
+    form.setValue("unitId", id);
+    setMcId(id);
+  };
+
   async function onSubmit(data: z.infer<typeof ProductFormSchema>) {
     try {
+      console.log("product", data);
       //@ts-ignore
-      const category = await saveSupplier(id, data);
+      const product = await saveProduct(id, data);
 
-      if (category) {
+      if (product) {
         form.reset();
         toast.success(
-          id ? "Supplier Update Success" : "Supplier Creation Success"
+          id ? "Product Update Success" : "Product Creation Success"
         );
       } else {
-        toast.error(
-          id ? "Supplier Update faield!" : "Supplier Creation faield!"
-        );
+        toast.error(id ? "Product Update faield!" : "Product Creation faield!");
       }
     } catch (error) {
       console.error(error);
@@ -167,21 +201,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Master Category</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="Standard" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Standerd">Standerd</SelectItem>
-                          <SelectItem value="Combo">Combo</SelectItem>
-                          <SelectItem value="Offer">Offer</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                      <FormControl>
+                        <SelectMc handleSelect={handleMcId} />
+                      </FormControl>
 
                       <FormMessage />
                     </FormItem>
@@ -238,11 +261,12 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem className="md:col-span-4 col-span-1">
                       <FormLabel>Product Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Product Name" {...field} />
+                        <Input
+                          placeholder="Product Name"
+                          {...field}
+                          onChangeCapture={(e) => handleSlug(e?.target?.value)}
+                        />
                       </FormControl>
-                      {/* <FormDescription>
-                                  This is your public display name.
-                              </FormDescription> */}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -270,21 +294,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Brand</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="Standard" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Standerd">Standerd</SelectItem>
-                          <SelectItem value="Combo">Combo</SelectItem>
-                          <SelectItem value="Offer">Offer</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                      <FormControl>
+                        <SelectBrand handleSelect={handleBrandId} />
+                      </FormControl>
 
                       <FormMessage />
                     </FormItem>
@@ -297,21 +310,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="Standard" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Standerd">Standerd</SelectItem>
-                          <SelectItem value="Combo">Combo</SelectItem>
-                          <SelectItem value="Offer">Offer</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                      <FormControl>
+                        <SelectCategory
+                          handleSelect={handleCategoryId}
+                          mcId={mcId}
+                        />
+                      </FormControl>
 
                       <FormMessage />
                     </FormItem>
@@ -343,21 +348,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Unit</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="Standard" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Standerd">Standerd</SelectItem>
-                          <SelectItem value="Combo">Combo</SelectItem>
-                          <SelectItem value="Offer">Offer</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                      <FormControl>
+                        <SelectUnit handleSelect={handleUnitId} />
+                      </FormControl>
 
                       <FormMessage />
                     </FormItem>
@@ -397,7 +391,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem className="">
                       <FormLabel>Pics in Pack</FormLabel>
                       <FormControl>
-                        <Input placeholder="01" {...field} />
+                        <Input
+                          placeholder={`${6}`}
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
                       </FormControl>
                       {/* <FormDescription>
                                   This is your public display name.
@@ -428,9 +428,15 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   name="mrp"
                   render={({ field }) => (
                     <FormItem className="">
-                      <FormLabel>Mrp</FormLabel>
+                      <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input placeholder="305" {...field} />
+                        <Input
+                          placeholder={`${350}`}
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -443,7 +449,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem className="">
                       <FormLabel>TP</FormLabel>
                       <FormControl>
-                        <Input placeholder="250" {...field} />
+                        <Input
+                          placeholder={`${250}`}
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -457,7 +469,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
                       <FormItem className="">
                         <FormLabel>Vat</FormLabel>
                         <FormControl>
-                          <Input placeholder="5" {...field} />
+                          <Input
+                            placeholder={`${0}`}
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(parseInt(e.target.value))
+                            }
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -490,7 +508,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem className="">
                       <FormLabel>Promo Price </FormLabel>
                       <FormControl>
-                        <Input placeholder="300" {...field} />
+                        <Input
+                          placeholder="300"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -605,14 +629,42 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   )}
                 />
               </div>
-              {/* supplier, status */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              {/* show on website, is featured, supplier, status */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <FormField
                   control={form.control}
-                  name="supplierId"
+                  name="website"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Supplier</FormLabel>
+                      <FormLabel>Show website</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          // Convert the string value to boolean before calling field.onChange
+                          field.onChange(value === "true");
+                        }}
+                        value={field.value ? "true" : "false"}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="">
+                            <SelectValue placeholder="Standard" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="true">Show</SelectItem>
+                          <SelectItem value="false">Hide</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="featured"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Featured</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -623,11 +675,36 @@ function ProductForm({ entry }: ProductFormEditProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
+                          <SelectItem value="true">Featured</SelectItem>
+                          <SelectItem value="false">Not Featured</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="supplierId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Supplier</FormLabel>
+                      {/* <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      > */}
+                      <FormControl>
+                        {/* <SelectTrigger className="">
+                            <SelectValue placeholder="Standard" />
+                          </SelectTrigger> */}
+                        <SelectSupplier handleSelect={handleSupplierId} />
+                      </FormControl>
+                      {/* <SelectContent>
                           <SelectItem value="Standerd">Standerd</SelectItem>
                           <SelectItem value="Combo">Combo</SelectItem>
                           <SelectItem value="Offer">Offer</SelectItem>
                         </SelectContent>
-                      </Select>
+                      </Select> */}
 
                       <FormMessage />
                     </FormItem>
@@ -661,11 +738,39 @@ function ProductForm({ entry }: ProductFormEditProps) {
               </div>
             </div>
             {/* photo */}
-            <div className="w-2/6"></div>
+            <div className="w-2/6 flex justify-start items-center gap-4 flex-col mt-4">
+              <Image
+                alt="product"
+                src="/img/product.jpg"
+                height={250}
+                width={250}
+              />
+              <div className="flex gap-2">
+                <Image
+                  alt="product"
+                  src="/img/product.jpg"
+                  height={80}
+                  width={80}
+                />
+                <Image
+                  alt="product"
+                  src="/img/product.jpg"
+                  height={80}
+                  width={80}
+                />
+                <Image
+                  alt="product"
+                  src="/img/product.jpg"
+                  height={80}
+                  width={80}
+                />
+              </div>
+            </div>
           </div>
 
           <Button type="submit">Submit</Button>
         </form>
+        {/* <DevTool control={form.control} /> */}
       </Form>
       <Toaster />
     </div>

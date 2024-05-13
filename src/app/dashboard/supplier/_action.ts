@@ -96,3 +96,40 @@ export const saveSupplier = async (id: string, data: Supplier) => {
     return false;
   }
 };
+
+export const SupplierDw = async () => {
+  try {
+    const suppliers = await prisma.supplier.findMany({
+      where: {
+        status: "Active",
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    let dw = [
+      {
+        value: "",
+        label: "Select Supplier",
+      },
+    ];
+
+    // console.log(suppliers);
+    suppliers.map(
+      (supplier) =>
+        (dw = [
+          ...dw,
+          {
+            value: supplier.id,
+            label: supplier.name,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent suppliers:", error);
+    throw new Error("Failed to fetch suppliers");
+  }
+};

@@ -78,3 +78,40 @@ export const updateBrand = async (id: string, data: Brand) => {
     return err;
   }
 };
+
+export const brandDw = async () => {
+  try {
+    const brands = await prisma.brand.findMany({
+      where: {
+        status: "Active",
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    let dw = [
+      {
+        value: "",
+        label: "Select Brand",
+      },
+    ];
+
+    // console.log(brands);
+    brands.map(
+      (brand) =>
+        (dw = [
+          ...dw,
+          {
+            value: brand.id,
+            label: brand.name,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent categories:", error);
+    throw new Error("Failed to fetch categories");
+  }
+};

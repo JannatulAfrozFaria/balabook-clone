@@ -42,39 +42,46 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey:"barCode",
-    header:(()=>{
+    accessorKey: "barCode",
+    header: () => {
       return (
-      <div className="flex items-center">
-      <Barcode className="h-4 w-4 mr-2" /> BC
-      </div>)
-    })
+        <div className="flex items-center">
+          <Barcode className="h-4 w-4 mr-2" /> BC
+        </div>
+      );
+    },
   },
   {
     accessorKey: "photo",
     header: "Photo",
     cell: ({ row }) => {
-      const offer = row.original;
+      const product = row.original;
 
       return (
         <>
-        <div className="w-1/2 ">
+          <div className="w-1/2 ">
             <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image src={offer.photo !== "" ? `/img/${offer.photo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
+              {/* <>{product.photo}</> */}
+              <Image
+                src={
+                  product.photo !== ""
+                    ? `/img/${product.photo}`
+                    : "/img/offer-photo.png"
+                }
+                width="300"
+                height="150"
+                alt="Image"
+                className="rounded-md object-cover"
+              />
             </AspectRatio>
-        </div>
-        {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
+          </div>
         </>
       );
     },
   },
   {
-    accessorKey:"articleCode",
-    header:"Article Code"
+    accessorKey: "articleCode",
+    header: "Article Code",
   },
   {
     accessorKey: "name",
@@ -97,7 +104,7 @@ export const columns: ColumnDef<Product>[] = [
     header: () => <div className="">Action</div>,
     id: "actions",
     cell: ({ row }) => {
-      const offer = row.original;
+      const product = row.original;
 
       return (
         <DropdownMenu>
@@ -110,15 +117,15 @@ export const columns: ColumnDef<Product>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
               View Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>
+              <Link href={`/dashboard/products/${product.id}`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(offer.id)}>
+            <DropdownMenuItem onClick={() => handleDeleteTigger(product.id)}>
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -94,18 +94,18 @@ export const unitDw = async () => {
     let dw = [
       {
         value: "",
-        label: "Select Category",
+        label: "Select Unit",
       },
     ];
 
     // console.log(units);
     units.map(
-      (category) =>
+      (unit) =>
         (dw = [
           ...dw,
           {
-            value: category.id,
-            label: category.name,
+            value: unit.id,
+            label: unit.name,
           },
         ])
     );

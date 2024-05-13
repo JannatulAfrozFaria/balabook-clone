@@ -118,3 +118,54 @@ export const parentCategory = async () => {
     throw new Error("Failed to fetch categories");
   }
 };
+
+export const categoryDw = async (id: string) => {
+  try {
+    let categories;
+
+    if (id !== "") {
+      categories = await prisma.category.findMany({
+        where: {
+          parentId: id,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+    } else {
+      categories = await prisma.category.findMany({
+        where: {
+          parentId: { not: null },
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+    }
+
+    let dw = [
+      {
+        value: "",
+        label: "Select Category",
+      },
+    ];
+
+    // console.log(categories);
+    categories.map(
+      (category) =>
+        (dw = [
+          ...dw,
+          {
+            value: category.id,
+            label: category.name,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent categories:", error);
+    throw new Error("Failed to fetch categories");
+  }
+};

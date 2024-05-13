@@ -20,9 +20,10 @@ import {
   PencilRuler,
   UploadCloud,
 } from "lucide-react";
+import prisma from "@/index";
 
 export default async function ProductsPage() {
-  const data: any = []; //await prisma.offer.findMany();
+  const data: any = await prisma.product.findMany({});
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

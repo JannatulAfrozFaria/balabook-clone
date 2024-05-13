@@ -9,7 +9,7 @@ export const ProductFormSchema = z.object({
   categoryId: z.string().optional(), //done
   unitId: z.string().optional(), //done
   brandId: z.string().optional(), //done
-  vat: z.string().optional(), //done
+  vat: z.number().optional(), //done
   vatMethod: z.boolean().default(false).optional(), //done
   hsCode: z.string().optional(), //done
   type: z.string().optional(), //done
@@ -19,23 +19,23 @@ export const ProductFormSchema = z.object({
   slug: z.string().optional(), //done
   description: z.string(), //done
   specification: z.string(), //done
-  price: z.string().optional(),
-  promoPrice: z.string().optional(), //done
+  // price: z.number().optional(),
+  promoPrice: z.number().optional(), //done
   promoStart: z.date().optional(), //done
   promoEnd: z.date().optional(), //done
   photo: z.string().optional(),
-  gallery: z.string().optional(),
+  // gallery: z.string().optional(),
   supplierId: z.string().optional(), //done
 
-  openingQty: z.string().optional(),
-  soldQty: z.string().optional(),
-  returnQty: z.string().optional(),
-  damageQty: z.string().optional(),
-  closingQty: z.string().optional(),
-  cogs: z.string().optional(),
-  mrp: z.string().optional(), //done
-  tp: z.string().optional(), //done
+  openingQty: z.number().optional(),
+  soldQty: z.number().optional(),
+  returnQty: z.number().optional(),
+  damageQty: z.number().optional(),
+  closingQty: z.number().optional(),
+  cogs: z.number().optional(),
+  mrp: z.number().optional(), //done
+  tp: z.number().optional(), //done
 
-  pisInPackege: z.string().optional(), //done
+  pisInPackege: z.number().optional(), //done
   status: z.string(), //done
 });

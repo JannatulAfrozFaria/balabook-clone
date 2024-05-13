@@ -121,37 +121,37 @@ model Product {
   brand   Brand  @relation(fields: [brandId], references: [id])
   brandId String @db.ObjectId // MongoDB ObjectId reference to Brand
 
-  vat          Float // Assuming VAT is stored as a float value
+  vat          Int? // Assuming VAT is stored as a Int? value
   vatMethod    Boolean
   hsCode       String
   type         String
   shipping     String
-  featured     Boolean   @default(false)
-  website      Boolean   @default(false)
+  featured     String   @default("false")
+  website      String   @default("true")
   status       Status    @default(Active)
   slug         String    @unique
-  price        Float
-  promoPrice   Float
+  price        Int?
+  promoPrice   Int?
   promoStart   DateTime?
   promoEnd     DateTime?
   photo        String // Assuming photo is stored as a URL
-  gallery      String[] // Array of photo URLs for gallery
+  // gallery      String[] @default([""]) // Array of photo URLs for gallery
   supplier     Supplier  @relation(fields: [supplierId], references: [id])
   supplierId   String    @db.ObjectId // MongoDB ObjectId reference to Brand
 
-  pisInPackege Int // Assuming supplier is a string, you may adjust according to your needs
-  description String
-  specification String
+  pisInPackege Int? // Assuming supplier is a string, you may adjust according to your needs
+  description String?
+  specification String?
 
   // inventory
-  openingQty Float
-  soldQty    Float
-  returnQty  Float
-  damageQty  Float
-  closingQty Float
-  mrp        Float
-  tp         Float
-  cogs       Float
+  openingQty Int? @default(0)
+  soldQty    Int? @default(0)
+  returnQty  Int? @default(0)
+  damageQty  Int? @default(0)
+  closingQty Int? @default(0)
+  mrp        Int?
+  tp         Int?
+  cogs       Int? @default(0)
 
   closingStock ClosingStock[]
   productPO    POProduct[]
@@ -239,12 +239,12 @@ model PurchaseOrder {
   products    POProduct[] // Array of products in the purchase order
   grn         GRN[]
 
-  totalItem       Float
-  total           Float
-  tax             Float
-  discount        Float
-  grossTotal      Float
-  grossTotalRound Float
+  totalItem       Int?
+  total           Int?
+  tax             Int?
+  discount        Int?
+  grossTotal      Int?
+  grossTotalRound Int?
 
   status String
   user   User   @relation(fields: [userId], references: [id])
@@ -260,14 +260,14 @@ model POProduct {
   name        String
   articleCode String
   qty         Int
-  mrp         Float
-  tp          Float
-  total       Float
-  vat         Float
+  mrp         Int?
+  tp          Int?
+  total       Int?
+  vat         Int?
   stock       Int
   hsCode      String
   supplier    String
-  tax         Float
+  tax         Int?
 
   // Define the relationship to the parent PurchaseOrder
   purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
@@ -289,12 +289,12 @@ model GRN {
   containerNo String?
   products    GRNProduct[] // Array of products in the GRN
 
-  total           Float
-  grossTotal      Float
-  grossTotalRound Float
+  total           Int?
+  grossTotal      Int?
+  grossTotalRound Int?
   totalItem       Int
-  tax             Float
-  discount        Float
+  tax             Int?
+  discount        Int?
   status          String
   user            User   @relation(fields: [userId], references: [id])
   userId          String @db.ObjectId // MongoDB ObjectId reference to User
@@ -309,16 +309,16 @@ model GRNProduct {
   name        String
   articleCode String
   qty         Int
-  mrp         Float
-  tp          Float
-  total       Float
-  vat         Float
+  mrp         Int?
+  tp          Int?
+  total       Int?
+  vat         Int?
   stock       Int
   hsCode      String
   supplier    String
   totalItem   Int
-  tax         Float
-  discount    Float
+  tax         Int?
+  discount    Int?
 
   // Define the relationship with the parent GRN
   grn   GRN    @relation(fields: [grnId], references: [id])
