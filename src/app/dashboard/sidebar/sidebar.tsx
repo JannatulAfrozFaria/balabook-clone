@@ -169,6 +169,13 @@ function Sidebar() {
                 href: "/dashboard/users",
               },
               {
+                title: "Warehouse",
+                label: "",
+                icon: Users2,
+                variant: "ghost",
+                href: "/dashboard/warehouse",
+              },
+              {
                 title: "Setting",
                 label: "",
                 icon: Cog,

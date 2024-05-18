@@ -48,7 +48,7 @@ import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
 import SelectUnit from "@/components/ui/SelectUnit";
 import { saveProduct } from "../_action";
-import { ProductFormSchema } from "./productFormSchema";
+import { ProductFormSchema } from "./ProductFormSchema";
 interface ProductFormEditProps {
   entry: any;
 }

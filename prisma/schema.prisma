@@ -318,7 +318,7 @@ model WareHouse {
   company  String
   code     String
   address  String
-  type     String
+  type     WareHouseType
   email    String?
   phone    String?
   status   String
@@ -424,6 +424,10 @@ enum AddressType {
 enum CustomerType {
   Wholesale
   Retail
+}
+enum WareHouseType {
+  Store
+  Warehouse
 }
 
 enum Status {
