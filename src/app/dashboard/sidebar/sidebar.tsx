@@ -17,6 +17,7 @@ import {
   Power,
   SearchCheck,
   ShoppingCart,
+  Trash2Icon,
   Users,
   Users2,
 } from "lucide-react";
@@ -28,6 +29,7 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 function Sidebar() {
   const { data: session } = useSession();
@@ -137,6 +139,7 @@ function Sidebar() {
                 variant: "ghost",
                 href: "/dashboard/rtv",
               },
+             
               {
                 title: "Accounts",
                 label: "",

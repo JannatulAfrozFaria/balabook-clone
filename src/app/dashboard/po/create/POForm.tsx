@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, SendHorizonal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -46,14 +46,15 @@ import SelectSupplier from "@/components/ui/SelectSupplier";
 import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
-import SelectUnit from "@/components/ui/SelectUnit";
 import { saveProduct } from "../_action";
 import { POFormSchema } from "./POFormSchema";
+import { PoDataTable } from "./data-tables";
+import { columns } from "./columns";
 
 interface ProductFormEditProps {
     entry: any;
 }
-
+const data: any = []
 function ProductForm({ entry }: ProductFormEditProps) {
     const [id, setId] = useState<string>("");
     const [mcId, setMcId] = useState<string>("");
@@ -123,10 +124,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
     //     form.setValue("categoryId", id);
     //     setMcId(id);
     //   };
-      const handleBrandId = (id: string) => {
+    const handleBrandId = (id: string) => {
         form.setValue("brandId", id);
         setMcId(id);
-      };
+    };
     //   const handleUnitId = (id: string) => {
     //     form.setValue("unitId", id);
     //     setMcId(id);
@@ -159,9 +160,9 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     className="w-full space-y-4"
                 >
                     <div className="flex w-full">
-                        <div className="w-4/6">
+                        <div className="w-full mx-4 ">
                             {/* masterCategory, shCode, salesType */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-0 ">
                                 <FormField
                                     control={form.control}
                                     name="supplierId"
@@ -195,9 +196,35 @@ function ProductForm({ entry }: ProductFormEditProps) {
                                     name="qty"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Quantity</FormLabel>
+                                            <FormLabel>LC No</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="qty"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>PI No</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Quantity" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="supplierId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Country</FormLabel>
+                                            <FormControl>
+                                                <SelectBrand handleSelect={handleBrandId} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -218,87 +245,22 @@ function ProductForm({ entry }: ProductFormEditProps) {
                                     )}
                                 />
                             </div>
-                            {/* product name, articleCode */}
+                            {/* table, search, import */}
+                            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
+                                <PoDataTable columns={columns} data={data} />
+                            </div>
 
-                            {/* <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
                                 <FormField
                                     control={form.control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem className="md:col-span-4 col-span-1">
-                                            <FormLabel>Product Name</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Product Name"
-                                                    {...field}
-                                                    onChangeCapture={(e) => handleSlug(e?.target?.value)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="articleCode"
-                                    render={({ field }) => (
-                                        <FormItem className="md:col-span-2 col-span-1">
-                                            <FormLabel>Article Code</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Article Code" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div> */}
-
-                            {/* brand, category, slug */}
-
-                            
-                            
-                            {/* unit, alartQty, pices in packeges, HS Code */}
-
-
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                                {/* <FormField
-                                    control={form.control}
-                                    name="unitId"
+                                    name="qty"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Unit</FormLabel>
-
+                                            <FormLabel>Discount</FormLabel>
                                             <FormControl>
-                                                <SelectUnit handleSelect={handleUnitId} />
+                                                <Input placeholder="" {...field} />
                                             </FormControl>
-
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                /> */}
-                                <FormField
-                                    control={form.control}
-                                    name="type"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Type</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className="">
-                                                        <SelectValue placeholder="Standerd" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="Standerd">Standerd</SelectItem>
-                                                    <SelectItem value="Combo">Combo</SelectItem>
-                                                    <SelectItem value="Offer">Offer</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -306,34 +268,52 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
                                 <FormField
                                     control={form.control}
-                                    name="mrp"
+                                    name="qty"
                                     render={({ field }) => (
-                                        <FormItem className="">
-                                            <FormLabel>Pics in Pack</FormLabel>
+                                        <FormItem>
+                                            <FormLabel>Tax</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    placeholder={`${6}`}
-                                                    {...field}
-                                                    onChange={(e) =>
-                                                        field.onChange(parseInt(e.target.value))
-                                                    }
-                                                />
+                                                <Input placeholder="" {...field} />
                                             </FormControl>
-                                            {/* <FormDescription>
-                                  This is your public display name.
-                              </FormDescription> */}
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-
                                 <FormField
-                                    name="hsCode"
+                                    control={form.control}
+                                    name="qty"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>HS Code</FormLabel>
+                                            <FormLabel>Total</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="HS Code" {...field} />
+                                                <Input placeholder="Total" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                
+                                <FormField
+                                    control={form.control}
+                                    name="qty"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Gross Total</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Total" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="qty"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Gross Total Round</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Quantity" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -341,253 +321,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
                                 />
                             </div>
 
-                            
-                            {/* mrp,tp,vat, isVatIn */}
-                            
-                            {/* promo -> price, start, end */}
-                            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <FormField
-                                    control={form.control}
-                                    name="promoPrice"
-                                    render={({ field }) => (
-                                        <FormItem className="">
-                                            <FormLabel>Promo Price </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="300"
-                                                    {...field}
-                                                    onChange={(e) =>
-                                                        field.onChange(parseInt(e.target.value))
-                                                    }
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="promoStart"
-                                    render={({ field }) => (
-                                        <FormItem className="">
-                                            <FormLabel>Promo Start Date </FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-[240px] pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP")
-                                                            ) : (
-                                                                <span>Pick a date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
-                                                        mode="single"
-                                                        selected={field.value}
-                                                        onSelect={field.onChange}
-                                                        disabled={(date) => date < new Date()}
-                                                        initialFocus
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="promoEnd"
-                                    render={({ field }) => (
-                                        <FormItem className="">
-                                            <FormLabel>Promo End Date </FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-[240px] pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP")
-                                                            ) : (
-                                                                <span>Pick a date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
-                                                        mode="single"
-                                                        selected={field.value}
-                                                        onSelect={field.onChange}
-                                                        disabled={(date) => date < new Date()}
-                                                        initialFocus
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div> */}
-                            {/* description,specifaction */}
-                            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Description</FormLabel>
-                                            <FormControl>
-                                                <Textarea placeholder="description" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="specification"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Specification</FormLabel>
-                                            <FormControl>
-                                                <Textarea placeholder="Specification" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div> */}
-                            {/* show on website, is featured, supplier, status */}
-                            {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                                <FormField
-                                    control={form.control}
-                                    name="website"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Show website</FormLabel>
-                                            <Select
-                                                onValueChange={(value) => {
-                                                    // Convert the string value to boolean before calling field.onChange
-                                                    field.onChange(value === "true");
-                                                }}
-                                                value={field.value ? "true" : "false"}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className="">
-                                                        <SelectValue placeholder="Standard" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="true">Show</SelectItem>
-                                                    <SelectItem value="false">Hide</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="featured"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Featured</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className="">
-                                                        <SelectValue placeholder="Standard" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="true">Featured</SelectItem>
-                                                    <SelectItem value="false">Not Featured</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="status"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Status</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className="">
-                                                        <SelectValue placeholder="Active" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="Active">Active</SelectItem>
-                                                    <SelectItem value="Inactive">Inactive</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div> */}
                         </div>
-                        {/* photo */}
-                        {/* <div className="w-2/6 flex justify-start items-center gap-4 flex-col mt-4">
-                            <Image
-                                alt="product"
-                                src="/img/product.jpg"
-                                height={250}
-                                width={250}
-                            />
-                            <div className="flex gap-2">
-                                <Image
-                                    alt="product"
-                                    src="/img/product.jpg"
-                                    height={80}
-                                    width={80}
-                                />
-                                <Image
-                                    alt="product"
-                                    src="/img/product.jpg"
-                                    height={80}
-                                    width={80}
-                                />
-                                <Image
-                                    alt="product"
-                                    src="/img/product.jpg"
-                                    height={80}
-                                    width={80}
-                                />
-                            </div>
-                        </div> */}
+
                     </div>
 
-                    <Button type="submit">Submit</Button>
+                    <div className="w-full flex justify-end">
+                    <Button type="submit" className="mr-4">Submit <SendHorizonal className="ml-2 h-4 w-4" /></Button>
+                    </div>
                 </form>
                 {/* <DevTool control={form.control} /> */}
             </Form>

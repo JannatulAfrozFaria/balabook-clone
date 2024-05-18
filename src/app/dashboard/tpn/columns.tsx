@@ -10,9 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Barcode, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
+import { handleDelete } from "./_action";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -20,86 +20,62 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-export type Offer = {
+export type Product = {
   id: string;
   name: string;
   photo: string;
-  status: "active" | "deactive";
-  price: number;
-  offerID: string;
-  description: string;
+  status: "Active" | "Inactive";
+  mrp: number;
+  articleCode: string;
+  stock: number;
 };
 
 const handleDeleteTigger = async (id: string) => {
-  // const del = await handleDelete(id);
-  // if (del) {
-  //   console.log(`Offer Delete Successful!`);
-  //   // toast.success(`${del.name} deleted successful!`);
-  // } else {
-  //   console.log(`Deleted Faild!`);
-  // }
+  const del = await handleDelete(id);
+  if (del) {
+    console.log(`Offer Delete Successful!`);
+    // toast.success(`${del.name} deleted successful!`);
+  } else {
+    console.log(`Deleted Faild!`);
+  }
 };
 
-export const columns: ColumnDef<Offer>[] = [
+export const columns: ColumnDef<Product>[] = [
+  
   {
-    accessorKey: "photo",
-    header: "Photo",
-    cell: ({ row }) => {
-      const offer = row.original;
-
-      return (
-        <>
-        <div className="w-1/2 ">
-            <AspectRatio ratio={16 / 9}>
-              {/* <>{offer.photo}</> */}
-              <Image src={offer.photo !== "" ? `/img/${offer.photo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
-            </AspectRatio>
-        </div>
-        {/* <Avatar>
-          <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
-        </>
-      );
-    },
+    accessorKey: "",
+    header: "#",
   },
   {
-    accessorKey: "offerId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          OfferID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-
-  {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "tpnNo",
+    header: "TPN No",
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "user",
+    header: "User",
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "WHTo",
+    header: "WH To",
   },
   {
-    accessorKey: "price",
-    header: "Price",
+    accessorKey: "WHFrom",
+    header: "WH From",
+  },
+  {
+    accessorKey: "totalItem",
+    header: "Total Item",
+  },
+  {
+    accessorKey: "total",
+    header: "Total",
   },
   {
     accessorKey: "action",
     header: () => <div className="">Action</div>,
     id: "actions",
     cell: ({ row }) => {
-      const offer = row.original;
+      const product = row.original;
 
       return (
         <DropdownMenu>
@@ -111,16 +87,16 @@ export const columns: ColumnDef<Offer>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
               View Details
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>
+              <Link href={`/dashboard/products/${product.id}`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(offer.id)}>
+            <DropdownMenuItem onClick={() => handleDeleteTigger(product.id)}>
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

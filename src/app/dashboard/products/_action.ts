@@ -2,7 +2,8 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { ProductFormSchema } from "./create/productFormSchema";
+import { ProductFormSchema } from "./create/ProductFormSchema";
+// import { ProductFormSchema } from "./create/productFormSchema";
 
 export type Product = z.infer<typeof ProductFormSchema>;
 
@@ -154,3 +155,91 @@ export const saveProduct = async (id: string, data: Product) => {
     return false;
   }
 };
+
+//import product from csv function
+export const importProduct = async (data: any) => {
+  try {
+    await Promise.all(data.map(async (productData: Product) => {
+      const {
+        name,
+        salesType,
+        articleCode,
+        categoryId,
+        brandId,
+        supplierId,
+        price,
+        ean,
+        vat,
+        vatMethod,
+        hsCode,
+        shipping,
+        featured,
+        website,
+        slug,
+        description,
+        specification,
+        promoPrice,
+        promoStart,
+        promoEnd,
+        photo,
+        mrp,
+        tp,
+        pisInPackege,
+        status,
+        type
+      } = productData;
+
+      // Check if required fields are present
+      if (!name || !articleCode) {
+        return false;
+      }
+
+      // Create the product
+      const product = await prisma.product.create({
+        data: { 
+          name, 
+          categoryId, 
+          brandId, 
+          supplierId, 
+          price, 
+          salesType: salesType || '', // Default value or check for undefined
+          articleCode,
+          ean: ean || '', // Default value or check for undefined
+          vat: vat || 0, // Default value or check for undefined
+          vatMethod: vatMethod || '', // Default value or check for undefined
+          hsCode: hsCode || '', // Default value or check for undefined
+          shipping: shipping || '', // Default value or check for undefined
+          featured,
+          website,
+          slug: slug || '', // Default value or check for undefined
+          description,
+          specification,
+          promoPrice,
+          promoStart,
+          promoEnd,
+          photo,
+          mrp,
+          tp,
+          pisInPackege,
+          status,
+          type
+        },
+      });
+
+      console.log(product);
+    }));
+
+    // if (products?.length > 0) {
+    //   console.log(products);
+    //   return "Product Import Successful!";
+    // }
+  } catch (err) {
+    console.log(err);
+    return false;
+  } finally {
+    revalidatePath("/dashboard/products");
+    return true;
+  }
+};
+
+

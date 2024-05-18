@@ -3,6 +3,9 @@ import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { BadgePlus } from "lucide-react";
 
 export default async function ProductsPage() {
   const data: any = []
@@ -15,6 +18,9 @@ export default async function ProductsPage() {
             <PageTitle title="TPN" />
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
+              <Link href="/dashboard/tpn/create">
+                <Button><BadgePlus className="mr-2 h-4 w-4"/> Create TPN</Button>
+              </Link>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">

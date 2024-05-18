@@ -52,7 +52,7 @@ export default async function ProductsPage() {
                   </MenubarTrigger>
                 </MenubarMenu>
               </Menubar>
-              <Link href="/dashboard/products/create">
+              <Link href="/dashboard/products/import">
                 <Button>
                   <UploadCloud className="mr-2 h-4 w-4" /> Import
                 </Button>

@@ -29,7 +29,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function UserDataTable<TData, TValue>({
+export function DamageDataTable<TData, TValue>({
   columns,
   data,
   

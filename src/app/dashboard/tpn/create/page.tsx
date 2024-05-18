@@ -2,9 +2,11 @@ import PageTitle from "@/components/ui/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Toast } from "@/components/ui/toast";
 import Link from "next/link";
-import PoForm from "./POForm";
+// import PoForm from "./POForm";
 import { useState } from "react";
 import { ArrowLeft, X } from "lucide-react";
+import ProductForm from "../../po/create/POForm";
+import TPNForm from "./TPNForm";
 
 export default async function ProductsPage() {
   const data: any = [];
@@ -15,17 +17,17 @@ export default async function ProductsPage() {
         <div className="flex-1 space-y-4 p-4 pt-4">
           <div className="flex items-center justify-between space-y-2">
           <div className="flex">
-              <Link href="/dashboard/po">
+              <Link href="/dashboard/tpn">
                 <Button variant="ghost">
                   <ArrowLeft />
                 </Button>
               </Link>
-              <PageTitle title="Create Purchase Order" />
+              <PageTitle title="Product TPN" />
             </div>
             
             <div className="flex items-center space-x-2">
-              <Link href="/dashboard/po">
-                <Button><X className="mr-2 h-4 w-4" /> Cancle</Button>
+              <Link href="/dashboard/tpn">
+                <Button><X className="mr-2 h-4 w-4"/> Cancle</Button>
               </Link>
             </div>
           </div>
@@ -35,7 +37,8 @@ export default async function ProductsPage() {
         </div>
       </div>
       <div className="grid gap-0 md:grid-cols-1 lg:grid-cols-1">
-            <PoForm entry={""} />
+            <TPNForm entry={""} />
+            
           </div>
     </main>
   );
