@@ -319,6 +319,8 @@ model WareHouse {
   code     String
   address  String
   type     String
+  email    String?
+  phone    String?
   status   String
     // Define the relationship with products
   whToTpn   TPN[] @relation("whTo")
