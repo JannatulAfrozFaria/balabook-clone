@@ -56,12 +56,12 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
   useEffect(() => {
     // console.log(data);
     if (entry?.id) {
-      form.setValue("name", entry.name);
-      form.setValue("description", entry.description);
-      form.setValue("code", entry.code);
-      form.setValue("photo", entry.photo);
-      form.setValue("parentId", entry.parentId || "");
-      form.setValue("status", entry.status);
+      // form.setValue("name", entry.name);
+      // form.setValue("description", entry.description);
+      // form.setValue("code", entry.code);
+      // form.setValue("photo", entry.photo);
+      // form.setValue("parentId", entry.parentId || "");
+      // form.setValue("status", entry.status);
       setId(entry?.id);
     }
   }, []);

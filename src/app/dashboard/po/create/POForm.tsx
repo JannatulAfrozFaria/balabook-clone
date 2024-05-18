@@ -47,9 +47,9 @@ import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
 import { saveProduct } from "../_action";
-import { POFormSchema } from "./POFormSchema";
 import { PoDataTable } from "./data-tables";
 import { columns } from "./columns";
+import { POFormSchema } from "./PoFormSchema";
 
 interface ProductFormEditProps {
     entry: any;
@@ -84,25 +84,25 @@ function ProductForm({ entry }: ProductFormEditProps) {
     useEffect(() => {
         // console.log(data);
         if (entry?.id) {
-            form.setValue("name", entry.name);
-            form.setValue("articleCode", entry.articleCode);
-            form.setValue("qty", entry.qty);
-            form.setValue("mrp", entry.mrp);
-            form.setValue("tp", entry.tp);
-            form.setValue("total", entry.total);
-            form.setValue("vat", entry.vat);
-            form.setValue("stock", entry.stock);
-            form.setValue("hsCode", entry.hsCode);
-            form.setValue("supplier", entry.supplier);
-            form.setValue("supplierId", entry.supplierId);
-            form.setValue("tax", entry.tax);
-            form.setValue("hsCode", entry.hsCode);
-            form.setValue("country", entry.country);
-            form.setValue("grosTotal", entry.grosTotal);
-            form.setValue("grossTotalRound", entry.grossTotalRound);
-            form.setValue("note", entry.note);
-            // form.setValue("price", entry.price);
-            form.setValue("containerId", entry.containerId);
+            // form.setValue("name", entry.name);
+            // form.setValue("articleCode", entry.articleCode);
+            // form.setValue("qty", entry.qty);
+            // form.setValue("mrp", entry.mrp);
+            // form.setValue("tp", entry.tp);
+            // form.setValue("total", entry.total);
+            // form.setValue("vat", entry.vat);
+            // form.setValue("stock", entry.stock);
+            // form.setValue("hsCode", entry.hsCode);
+            // form.setValue("supplier", entry.supplier);
+            // form.setValue("supplierId", entry.supplierId);
+            // form.setValue("tax", entry.tax);
+            // form.setValue("hsCode", entry.hsCode);
+            // form.setValue("country", entry.country);
+            // form.setValue("grosTotal", entry.grosTotal);
+            // form.setValue("grossTotalRound", entry.grossTotalRound);
+            // form.setValue("note", entry.note);
+            // // form.setValue("price", entry.price);
+            // form.setValue("containerId", entry.containerId);
             setId(entry?.id);
         }
     }, []);

@@ -59,22 +59,22 @@ const CustomerForm = ({ entry, setOpen }: { entry: any; setOpen: any }) => {
   useEffect(() => {
     // console.log(data);
     if (entry?.id) {
-      form.setValue("name", entry.name);
-      form.setValue("phone", entry.phone);
-      form.setValue("email", entry.email);
-      form.setValue("photo", entry.photo);
-      form.setValue("username", entry.username);
-      form.setValue("type", entry.type);
-      form.setValue("contactPersonPhone", entry.contactPersonPhone);
-      form.setValue("company", entry.company);
-      form.setValue("designation", entry.designation);
-      form.setValue("bin", entry.bin);
-      form.setValue("tin", entry.tin);
-      form.setValue("treadLicense", entry.treadLicense);
-      form.setValue("creditOption", entry.creditOption);
-      form.setValue("cLimitAmount", entry.cLimitAmount);
-      form.setValue("cLimitDay", entry.cLimitDay);
-      form.setValue("status", entry.status);
+      // form.setValue("name", entry.name);
+      // form.setValue("phone", entry.phone);
+      // form.setValue("email", entry.email);
+      // form.setValue("photo", entry.photo);
+      // form.setValue("username", entry.username);
+      // form.setValue("type", entry.type);
+      // form.setValue("contactPersonPhone", entry.contactPersonPhone);
+      // form.setValue("company", entry.company);
+      // form.setValue("designation", entry.designation);
+      // form.setValue("bin", entry.bin);
+      // form.setValue("tin", entry.tin);
+      // form.setValue("treadLicense", entry.treadLicense);
+      // form.setValue("creditOption", entry.creditOption);
+      // form.setValue("cLimitAmount", entry.cLimitAmount);
+      // form.setValue("cLimitDay", entry.cLimitDay);
+      // form.setValue("status", entry.status);
       setId(entry?.id);
     }
   }, []);

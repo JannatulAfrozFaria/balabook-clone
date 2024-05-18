@@ -1,5 +1,5 @@
 "use client";
-
+import  {useState}  from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -14,7 +14,6 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 import { handleDelete } from "./_action";
-import { useState } from "react";
 import EditCustomerSheet from "./editCustomerSheet";
 import { Toaster } from "sonner";
 // This type is used to define the shape of our data.

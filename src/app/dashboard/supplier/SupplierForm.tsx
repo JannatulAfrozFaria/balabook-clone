@@ -60,15 +60,15 @@ function SupplierForm({ entry, setOpen }: SupplierFormEditProps) {
     // console.log(data);
 
     if (entry?.id) {
-      form.setValue("name", entry.name);
-      form.setValue("description", entry.description);
-      form.setValue("phone", entry.phone);
-      form.setValue("email", entry.email);
-      form.setValue("address", entry.address);
-      form.setValue("company", entry.company);
-      form.setValue("country", entry.country);
-      form.setValue("designation", entry.designation);
-      form.setValue("status", entry.status);
+      form.setValue("name", entry?.name);
+      form.setValue("description", entry?.description);
+      form.setValue("phone", entry?.phone);
+      form.setValue("email", entry?.email);
+      form.setValue("address", entry?.address);
+      form.setValue("company", entry?.company);
+      form.setValue("country", entry?.country);
+      form.setValue("designation", entry?.designation);
+      form.setValue("status", entry?.status);
       setId(entry?.id);
     }
   }, []);
