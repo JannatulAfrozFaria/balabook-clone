@@ -23,6 +23,7 @@ model User {
   photo         String?
   purchaseOrder PurchaseOrder[]
   grn           GRN[]
+  tpn           TPN[]
   // activityLog []
 
   @@index([phone, email, username])
@@ -106,7 +107,7 @@ model Product {
   name             String
   salesType        String
   articleCode      String   @unique
-  ean              String   
+  ean              String
   // Define the relationship with master category
   masterCategory   Category @relation(fields: [masterCategoryId], references: [id], name: "masterCategory")
   masterCategoryId String   @db.ObjectId
@@ -121,26 +122,26 @@ model Product {
   brand   Brand  @relation(fields: [brandId], references: [id])
   brandId String @db.ObjectId // MongoDB ObjectId reference to Brand
 
-  vat          Int? // Assuming VAT is stored as a Int? value
-  vatMethod    Boolean
-  hsCode       String
-  type         String
-  shipping     String
-  featured     String   @default("false")
-  website      String   @default("true")
-  status       Status    @default(Active)
-  slug         String    @unique
-  price        Int?
-  promoPrice   Int?
-  promoStart   DateTime?
-  promoEnd     DateTime?
-  photo        String // Assuming photo is stored as a URL
+  vat        Int? // Assuming VAT is stored as a Int? value
+  vatMethod  Boolean
+  hsCode     String
+  type       String
+  shipping   String
+  featured   String    @default("false")
+  website    String    @default("true")
+  status     Status    @default(Active)
+  slug       String    @unique
+  price      Int?
+  promoPrice Int?
+  promoStart DateTime?
+  promoEnd   DateTime?
+  photo      String // Assuming photo is stored as a URL
   // gallery      String[] @default([""]) // Array of photo URLs for gallery
-  supplier     Supplier  @relation(fields: [supplierId], references: [id])
-  supplierId   String    @db.ObjectId // MongoDB ObjectId reference to Brand
+  supplier   Supplier  @relation(fields: [supplierId], references: [id])
+  supplierId String    @db.ObjectId // MongoDB ObjectId reference to Brand
 
-  pisInPackege Int? // Assuming supplier is a string, you may adjust according to your needs
-  description String?
+  pisInPackege  Int? // Assuming supplier is a string, you may adjust according to your needs
+  description   String?
   specification String?
 
   // inventory
@@ -156,6 +157,7 @@ model Product {
   closingStock ClosingStock[]
   productPO    POProduct[]
   grnProduct   GRNProduct[]
+  tpnProduct   TPNProduct[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -278,14 +280,86 @@ model POProduct {
   productId String  @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
 }
 
+// Define the PurchaseOrder model
+model TPN {
+  id       String       @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  tpnNo    String
+  // supplier    Supplier    @relation(fields: [supplierId], references: [id])
+  // supplierId  String      @db.ObjectId // MongoDB ObjectId reference to Supplier
+  // containerId String?
+  products TPNProduct[] // Array of products in the purchase order
+  grn      GRN[]
+
+  totalItem       Int?
+  total           Int?
+  tax             Int?
+  discount        Int?
+  grossTotal      Int?
+  grossTotalRound Int?
+
+  status String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId // MongoDB ObjectId reference to User
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  whTo   WareHouse @relation(fields: [whToId], references: [id], name: "whTo")
+  whToId String   @db.ObjectId
+
+  // Define the relationship with WareHouse
+  whFrom   WareHouse @relation(fields: [whFromId], references: [id], name: "whFrom") // Relation to category
+  whFromId String   @db.ObjectId
+}
+
+model WareHouse {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name     String
+  company  String
+  code     String
+  address  String
+  type     String
+  status   String
+    // Define the relationship with products
+  whToTpn   TPN[] @relation("whTo")
+  whFromTpn TPN[] @relation("whFrom")
+}
+
+// Define the ProductPO model (representing products within a PurchaseOrder)
+model TPNProduct {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name        String
+  articleCode String
+  qty         Int
+  mrp         Int?
+  tp          Int?
+  total       Int?
+  vat         Int?
+  stock       Int
+  hsCode      String
+  supplier    String
+  tax         Int?
+
+  // Define the relationship to the parent PurchaseOrder
+  tpn   TPN    @relation(fields: [tpnId], references: [id])
+  tpnId String @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+
+  // Define the relationship with the Product model
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
+}
+
 // Define the GRN model
 model GRN {
-  id          String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  grnNo       String
-  supplier    Supplier       @relation(fields: [supplierId], references: [id])
-  supplierId  String         @db.ObjectId // MongoDB ObjectId reference to Supplier
-  poNo        PurchaseOrder? @relation(fields: [poNoId], references: [id])
-  poNoId      String?        @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  grnNo      String
+  supplier   Supplier       @relation(fields: [supplierId], references: [id])
+  supplierId String         @db.ObjectId // MongoDB ObjectId reference to Supplier
+  poNo       PurchaseOrder? @relation(fields: [poNoId], references: [id])
+  poNoId     String?        @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+
+  tpnNo       TPN?         @relation(fields: [tpnId], references: [id])
+  tpnId       String?      @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
   containerNo String?
   products    GRNProduct[] // Array of products in the GRN
 
@@ -360,13 +434,6 @@ enum DataStatus {
   Pending
   Delete
 }
-
-// enum ModuleName {
-//     Sales
-//     products
-//     adjust
-
-// }
 
 enum paymentMethodType {
   Cash
