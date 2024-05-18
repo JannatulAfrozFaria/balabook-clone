@@ -9,14 +9,14 @@ export type Unit = z.infer<typeof WireHouseFormSchema>;
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);
   try {
-    const unit = await prisma.unit.delete({
+    const unit = await prisma.wareHouse.delete({
       where: {
         id: id,
       },
     });
     if (unit) {
       console.log(`Deleted successful!`);
-      revalidatePath("/dashboard/unit");
+      revalidatePath("/dashboard/warehouse");
       return true;
     }
   } catch (err) {
