@@ -3,8 +3,8 @@ import PageTitle from "@/components/ui/PageTitle";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X } from "lucide-react";
 import Link from "next/link";
-import ProductForm from "./ProductForm";
 import { useState } from "react";
+import ProductForm from "./ProductForm";
 
 export default function CreateProductsPage() {
   const [product, setProduct] = useState<any>([]);

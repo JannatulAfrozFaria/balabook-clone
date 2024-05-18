@@ -2,14 +2,13 @@ import PageTitle from "@/components/ui/PageTitle";
 import prisma from "../../../../../prisma";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import OfferForm from "../offerForm";
+
 
 export default async function OfferPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const offer = await prisma.offer.findFirst({ where: { id: params.id } });
 
   // console.log(offer)
 
@@ -29,7 +28,6 @@ export default async function OfferPage({
           <div className="flex justify-center">
             <div className="w-1/3">
               {/* {params.id} */}
-              <OfferForm offer={offer} />
             </div>
           </div>
         </div>
