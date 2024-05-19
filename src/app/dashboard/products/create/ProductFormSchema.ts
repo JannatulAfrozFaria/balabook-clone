@@ -19,7 +19,7 @@ export const ProductFormSchema = z.object({
   slug: z.string().optional(), //done
   description: z.string(), //done
   specification: z.string(), //done
-  // price: z.number().optional(),
+  price: z.number().optional(),
   promoPrice: z.number().optional(), //done
   promoStart: z.date().optional(), //done
   promoEnd: z.date().optional(), //done

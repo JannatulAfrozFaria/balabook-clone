@@ -5,6 +5,7 @@ import "@/app/globals.css"
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Sidebar from "./sidebar/sidebar";
+import StoreProvider from "../StoreProvider";
 
 
 const inter = Inter({ subsets: ["latin"] });

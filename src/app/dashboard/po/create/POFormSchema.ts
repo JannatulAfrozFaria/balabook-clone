@@ -11,6 +11,8 @@ export const POFormSchema = z.object({
   vat: z.number().optional(), //done
   stock: z.number().optional(), //done
   hsCode: z.string().optional(), //done
+  piNo: z.string().optional(), //done
+  lcNo: z.string().optional(), //done
   supplier: z.string().optional(), //done
   tax: z.number().optional(), //done
   country: z.string().optional(),

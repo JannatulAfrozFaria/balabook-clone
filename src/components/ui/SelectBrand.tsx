@@ -32,7 +32,7 @@ export default function SelectBrand({ handleSelect }: { handleSelect: any }) {
     fetchCategories();
   }, []);
 
-  console.log(options);
+  // console.log(options);
   return (
     <div className="App">
       <Select

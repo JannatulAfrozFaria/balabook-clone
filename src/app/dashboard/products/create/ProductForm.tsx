@@ -77,7 +77,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
       slug: "",
       description: "",
       specification: "",
-      // price: 0,
+      price: 0,
       promoPrice: 0,
       promoStart: new Date(),
       promoEnd: new Date(),
@@ -118,7 +118,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
       form.setValue("slug", entry?.slug);
       form.setValue("description", entry?.description);
       form.setValue("specification", entry?.specification);
-      // form.setValue("price", entry?.price);
+      form.setValue("price", entry?.price);
       form.setValue("promoPrice", entry?.promoPrice);
       form.setValue("promoStart", entry?.promoStart);
       form.setValue("promoEnd", entry?.promoEnd);
@@ -422,13 +422,32 @@ function ProductForm({ entry }: ProductFormEditProps) {
                 />
               </div>
               {/* mrp,tp,vat, isVatIn */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={`${350}`}
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="mrp"
                   render={({ field }) => (
                     <FormItem className="">
-                      <FormLabel>Price</FormLabel>
+                      <FormLabel>MRP</FormLabel>
                       <FormControl>
                         <Input
                           placeholder={`${350}`}

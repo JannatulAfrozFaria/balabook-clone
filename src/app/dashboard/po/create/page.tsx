@@ -1,3 +1,4 @@
+"use client"
 import PageTitle from "@/components/ui/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Toast } from "@/components/ui/toast";
@@ -5,10 +6,11 @@ import Link from "next/link";
 import PoForm from "./POForm";
 import { useState } from "react";
 import { ArrowLeft, X } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux-store/store";
 
-export default async function ProductsPage() {
-  const data: any = [];
-  // const [product, setProduct] = useState<any>([]);
+export default function ProductsPage() {
+  // console.log("shuvo", poData)
   return (
     <main className="flex min-h-screen flex-col gap-0 w-full">
       <div className=" flex-col flex w-full">
