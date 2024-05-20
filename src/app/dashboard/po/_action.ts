@@ -2,9 +2,9 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { POFormSchema } from "./create/PoFormSchema";
+// import { POFormSchema } from "./create/PoFormSchema";
 
-export type Product = z.infer<typeof POFormSchema>;
+// export type Product = z.infer<typeof POFormSchema>;
 
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);
@@ -26,7 +26,7 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveProduct = async (id: string, data: Product) => {
+export const saveProduct = async (id: string, data: any) => {
   try {
     console.log("action", data);
     let {
@@ -47,7 +47,6 @@ export const saveProduct = async (id: string, data: Product) => {
       grossTotalRound,
       note,
       containerId,
-      
     } = data;
 
     if (!name || !articleCode) return false;
@@ -60,22 +59,22 @@ export const saveProduct = async (id: string, data: Product) => {
         data: {
           //@ts-ignore
           name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
-      total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
-      grossTotalRound,
-      note,
-      containerId,
+          articleCode,
+          qty,
+          mrp,
+          tp,
+          total,
+          vat,
+          stock,
+          supplier,
+          tax,
+          hsCode,
+          country,
+          discount,
+          grosTotal,
+          grossTotalRound,
+          note,
+          containerId,
         },
       });
 
@@ -88,23 +87,23 @@ export const saveProduct = async (id: string, data: Product) => {
     } else {
       const createProduct = await prisma.product.create({
         data: {
-            name,
-            articleCode,
-            qty,
-            mrp,
-            tp,
-            total,
-            vat,
-            stock,
-            supplier,
-            tax,
-            hsCode,
-            country,
-            discount,
-            grosTotal,
-            grossTotalRound,
-            note,
-            containerId,
+          name,
+          articleCode,
+          qty,
+          mrp,
+          tp,
+          total,
+          vat,
+          stock,
+          supplier,
+          tax,
+          hsCode,
+          country,
+          discount,
+          grosTotal,
+          grossTotalRound,
+          note,
+          containerId,
         },
       });
 
@@ -119,4 +118,24 @@ export const saveProduct = async (id: string, data: Product) => {
     console.log(err);
     return false;
   }
+};
+
+export const searchProductDw = async (queryString: string) => {
+  const productList = await prisma.product.findMany({
+    where: {
+      name: {
+        contains: queryString,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      articleCode: true,
+    },
+  });
+
+  return productList.map((product) => ({
+    value: product.id,
+    label: `${product.name} [${product.articleCode}]`,
+  }));
 };

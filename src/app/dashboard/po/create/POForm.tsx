@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, SendHorizonal } from "lucide-react";
@@ -46,7 +46,7 @@ import SelectSupplier from "@/components/ui/SelectSupplier";
 import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
-import { saveProduct } from "../_action";
+import { saveProduct, searchProductDw } from "../_action";
 import { PoDataTable } from "./data-tables";
 import { columns } from "./columns";
 import { POFormSchema } from "./PoFormSchema";
@@ -58,6 +58,9 @@ import {
 } from "@/app/redux-store/Slice/PoSlice";
 import { useSession } from "next-auth/react";
 import { RootState } from "@/app/redux-store/store";
+import CsvUpload from "@/components/CsvUpload";
+import { importProduct } from "../../products/_action";
+import SearchProduct from "@/components/ui/searchProduct";
 
 interface ProductFormEditProps {
   entry: any;
@@ -67,6 +70,7 @@ const data: any = [];
 function ProductForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
   const [mcId, setMcId] = useState<string>("");
+  const [products, setProducts] = useState<any>();
 
   const form = useForm();
   //   const form = useForm<z.infer<typeof POFormSchema>>({
@@ -92,6 +96,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   //       lcNo:"",
   //     },
   //   });
+  const [options, setOptions] = useState<any>([{ value: "", label: "" }]);
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -152,34 +157,56 @@ function ProductForm({ entry }: ProductFormEditProps) {
     // form.setValue( id);
     setMcId(id);
   };
-  //   const handleUnitId = (id: string) => {
-  //     form.setValue("unitId", id);
-  //     setMcId(id);
-  //   };
 
-  async function onSubmit(data: z.infer<typeof POFormSchema>) {
-    try {
-      console.log("product", data);
-      //@ts-ignore
-      const product = await saveProduct(id, data);
-
-      if (product) {
-        toast.success(
-          id ? "Product Update Success" : "Product Creation Success"
-        );
-      } else {
-        toast.error(id ? "Product Update faield!" : "Product Creation faield!");
-      }
-    } catch (error) {
-      console.error(error);
+  // onSearchChange;
+  const onSearchChange = async (query: any) => {
+    console.log(query);
+    const productList = await searchProductDw(query);
+    // console.log("prosuctList", prosuctList);
+    if (productList.length > 0) {
+      setProducts(productList);
     }
-  }
+  };
+  // handleSelectedProduct;
+  const handleSelectedProduct = (product: any) => {
+    console.log(product);
+  };
+
+  // async function onSubmit(data: z.infer<typeof POFormSchema>) {
+  //   try {
+  //     console.log("product", data);
+  //     //@ts-ignore
+  //     const product = await saveProduct(id, data);
+
+  //     if (product) {
+  //       toast.success(
+  //         id ? "Product Update Success" : "Product Creation Success"
+  //       );
+  //     } else {
+  //       toast.error(id ? "Product Update faield!" : "Product Creation faield!");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  const [CSV, setCSV] = useState<any>([]);
+
+  const handelImport = async () => {
+    // console.log("Import", CSV);
+    if (CSV?.length > 0) {
+      const product = await importProduct(CSV);
+      if (product) {
+        toast.success("Product Import Success");
+      }
+    }
+  };
 
   return (
     <div className="flex pt-8">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          // onSubmit={onSubmit}
           className="w-full space-y-4"
         >
           <div className="flex w-full">
@@ -262,6 +289,27 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   )}
                 />
               </div>
+
+              <div className="flex items-center py-2 grid grid-cols-2 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="productSearch"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <SearchProduct
+                          onSearchChange={onSearchChange}
+                          handleSelect={handleSelectedProduct}
+                          productSList={products}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <CsvUpload setCSV={setCSV} handelImport={handelImport} />
+              </div>
+
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
                 <PoDataTable columns={columns} data={data} />
