@@ -1,47 +1,54 @@
 "use client";
 
+import { searchProductDw } from "@/app/dashboard/products/_action";
 import { unitDw } from "@/app/dashboard/unit/_action";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 
-export default function SearchProduct({
-  handleSelect,
-  onSearchChange,
-  productSList,
-}: {
-  handleSelect: any;
-  onSearchChange: any;
-  productSList: any;
-}) {
+export default function SearchProduct({ handleSelect }: { handleSelect: any }) {
   const [selectedOption, setSelectedOption] = useState<any>(null);
-  const [Option, setOption] = useState<any>([
-    {
-      value: "",
-      label: "Select Product",
-    },
-  ]);
 
+  // Function to load options asynchronously based on user input
+  const loadOptions = async (inputValue: string) => {
+    let products = [{ value: "", label: "Select Product" }];
+    // Example logic to fetch options based on inputValue
+    const productList = await searchProductDw(inputValue);
+
+    console.log("productList", productList);
+
+    if (productList?.length > 0) products = productList;
+    // For testing purposes, returning the options state
+    return products;
+  };
+
+  // Function to handle custom selection of an option
   const handleCustomSelect = (option: any) => {
-    console.log(option);
     setSelectedOption(option);
     handleSelect(option.value);
   };
 
-  useEffect(() => {
-    if (productSList?.length > 0) {
-      setOption(productSList);
-    }
-  }, [productSList]);
+  // onSearchChange;
 
-  console.log("productSList", Option);
+  const onSearchChange = async (query: any) => {
+    console.log(query);
+    const productList = await searchProductDw(query);
+    setOptions(productList);
+    console.log("prosuctList", productList);
+    // if (productList.length > 0) {
+    //   setProducts(productList);
+    // }
+  };
+
   return (
     <div className="App">
       <AsyncSelect
         cacheOptions
-        defaultOptions={selectedOption}
-        loadOptions={Option}
+        defaultOptions
+        loadOptions={loadOptions} // Function to load options asynchronously
+        value={selectedOption} // The currently selected option
+        onChange={handleCustomSelect} // Function to handle option selection
       />
       {/* <AsyncSelect
         unstyled // Remove all non-essential styles

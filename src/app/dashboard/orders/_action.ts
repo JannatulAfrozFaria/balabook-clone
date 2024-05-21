@@ -2,11 +2,12 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-// import { POFormSchema } from "./create/PoFormSchema";
+import { TPNFormSchema } from "./create/TPNFormSchema";
 
-// export type Product = z.infer<typeof POFormSchema>;
+export type Product = z.infer<typeof TPNFormSchema>;
 
 export const handleDelete = async (id: string) => {
+  console.log("Tigger Action", id);
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
@@ -25,7 +26,7 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveProduct = async (id: string, data: any) => {
+export const saveProduct = async (id: string, data: Product) => {
   try {
     console.log("action", data);
     let {

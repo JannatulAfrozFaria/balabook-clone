@@ -140,9 +140,29 @@ function TPNForm({ entry }: ProductFormEditProps) {
     console.log(query);
   };
   // handleSelectedProduct;
+  // handleSelectedProduct;
   const handleSelectedProduct = (product: any) => {
     console.log(product);
   };
+
+  // async function onSubmit(data: z.infer<typeof POFormSchema>) {
+  //   try {
+  //     console.log("product", data);
+  //     //@ts-ignore
+  //     const product = await saveProduct(id, data);
+
+  //     if (product) {
+  //       toast.success(
+  //         id ? "Product Update Success" : "Product Creation Success"
+  //       );
+  //     } else {
+  //       toast.error(id ? "Product Update faield!" : "Product Creation faield!");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
@@ -218,18 +238,12 @@ function TPNForm({ entry }: ProductFormEditProps) {
               <div className="flex items-center py-2 grid grid-cols-2 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="product"
+                  name="productSearch"
                   render={({ field }) => (
                     <FormItem>
-                      {/* <FormLabel>Search </FormLabel> */}
-
                       <FormControl>
-                        <SearchProduct
-                          onSearchChange={onSearchChange}
-                          handleSelect={handleSelectedProduct}
-                        />
+                        <SearchProduct handleSelect={handleSelectedProduct} />
                       </FormControl>
-
                       <FormMessage />
                     </FormItem>
                   )}

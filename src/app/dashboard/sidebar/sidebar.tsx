@@ -139,7 +139,7 @@ function Sidebar() {
                 variant: "ghost",
                 href: "/dashboard/rtv",
               },
-             
+
               {
                 title: "Accounts",
                 label: "",
@@ -153,6 +153,13 @@ function Sidebar() {
                 icon: Users2,
                 variant: "ghost",
                 href: "/dashboard/supplier",
+              },
+              {
+                title: "Order",
+                label: "",
+                icon: ShoppingCart,
+                variant: "ghost",
+                href: "/dashboard/orders",
               },
               {
                 title: "Customer / Party",

@@ -34,7 +34,7 @@ export default function SelectSupplier({
     fetchCategories();
   }, []);
 
-  console.log(options);
+  // console.log(options);
   return (
     <div className="App">
       <Select

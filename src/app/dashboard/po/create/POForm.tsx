@@ -46,10 +46,10 @@ import SelectSupplier from "@/components/ui/SelectSupplier";
 import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
-import { saveProduct, searchProductDw } from "../_action";
+import { saveProduct } from "../_action";
 import { PoDataTable } from "./data-tables";
 import { columns } from "./columns";
-import { POFormSchema } from "./PoFormSchema";
+// import { POFormSchema } from "./PoFormSchema";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUserId,
@@ -59,13 +59,25 @@ import {
 import { useSession } from "next-auth/react";
 import { RootState } from "@/app/redux-store/store";
 import CsvUpload from "@/components/CsvUpload";
-import { importProduct } from "../../products/_action";
+import { importProduct, searchProductById } from "../../products/_action";
 import SearchProduct from "@/components/ui/searchProduct";
 
+interface PoCart {
+  id: string;
+  name: string;
+  articleCode: string;
+  mrp: number;
+  tp: number;
+  hsCode: string;
+  openingQty: number;
+  cogs: number;
+  closingQty: number;
+  qty: number;
+  total: number;
+}
 interface ProductFormEditProps {
   entry: any;
 }
-const data: any = [];
 
 function ProductForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
@@ -102,7 +114,6 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const { data: session } = useSession();
 
   const sessionUserId = session?.user?.id;
-  console.log(sessionUserId);
 
   const poData = useSelector((state: RootState) => state.purchaseOrder);
 
@@ -158,18 +169,32 @@ function ProductForm({ entry }: ProductFormEditProps) {
     setMcId(id);
   };
 
-  // onSearchChange;
-  const onSearchChange = async (query: any) => {
-    console.log(query);
-    const productList = await searchProductDw(query);
-    // console.log("prosuctList", prosuctList);
-    if (productList.length > 0) {
-      setProducts(productList);
-    }
-  };
   // handleSelectedProduct;
-  const handleSelectedProduct = (product: any) => {
-    console.log(product);
+  const [poProduct, setPoProduct] = useState<PoCart[]>([]);
+
+  const handleSelectedProduct = async (productId: string) => {
+    try {
+      const product = await searchProductById(productId);
+      const newProduct = {
+        id: product?.id,
+        name: product?.name,
+        articleCode: product?.articleCode,
+        mrp: product?.mrp | 0,
+        tp: product.tp,
+        hsCode: product.hsCode,
+        openingQty: product.openingQty,
+        cogs: product.cogs,
+        closingQty: product.closingQty,
+        qty: 1,
+        total: product.tp,
+      };
+
+      if (product) {
+        setPoProduct([...poProduct, newProduct]); // Wrap the product in an array
+      }
+    } catch (error) {
+      console.error("Error fetching product by id:", error);
+    }
   };
 
   // async function onSubmit(data: z.infer<typeof POFormSchema>) {
@@ -255,7 +280,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem>
                       <FormLabel>PI No</FormLabel>
                       <FormControl>
-                        <Input placeholder="Quantity" {...field} />
+                        <Input placeholder="PI No" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -297,11 +322,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <SearchProduct
-                          onSearchChange={onSearchChange}
-                          handleSelect={handleSelectedProduct}
-                          productSList={products}
-                        />
+                        <SearchProduct handleSelect={handleSelectedProduct} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -312,7 +333,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                <PoDataTable columns={columns} data={data} />
+                <PoDataTable columns={columns} data={poProduct} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
                 <FormField
