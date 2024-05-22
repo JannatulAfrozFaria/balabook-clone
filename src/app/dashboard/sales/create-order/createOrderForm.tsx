@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, SendHorizonal } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, SendHorizonal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -49,11 +49,12 @@ import SelectBrand from "@/components/ui/SelectBrand";
 import SelectUnit from "@/components/ui/SelectUnit";
 import { saveProduct } from "../_action";
 import { columns } from "./columns";
-import { TPNDataTable } from "./data-table";
+import { CreateOrderDataTable } from "./data-table";
 import SearchProduct from "@/components/ui/searchProduct";
 import CsvUpload from "@/components/CsvUpload";
 import { importProduct } from "../../products/_action";
 import { CreateOrderFormSchema } from "./CreateOrderFormSchema";
+import { InfoCard } from "./InfoCard";
 
 interface ProductFormEditProps {
   entry: any;
@@ -202,40 +203,54 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
           className="w-full space-y-4"
         >
           <div className="flex w-full">
-            <div className="w-full mx-4 ">
+            <div className="w-2/3 mx-4 ">
               {/* masterCategory, shCode, salesType */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-0 ">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-0 ">
                 <FormField
                   control={form.control}
-                  name="supplierId"
+                  name="promoPrice"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Warehouse From</FormLabel>
+                    <FormItem className="">
                       <FormControl>
-                        <SelectSupplier handleSelect={handleSupplierId} />
+                        <Input placeholder="Manishankar Vakta" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="promoPrice"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormControl>
+                        <Input placeholder="Manishankar Vakta" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="supplierId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Warehouse To</FormLabel>
-
-                      <FormControl>
-                        <SelectSupplier handleSelect={handleSupplierId} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="flex justify-between">
+                  <FormField
+                    control={form.control}
+                    name="supplierId"
+                    render={({ field }) => (
+                      <FormItem style={{ width: "70%" }}>
+                        <FormControl>
+                          <SelectSupplier handleSelect={handleSupplierId} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button className="">
+                    <Plus className="mr-2 h-4 w-4" /> Add
+                  </Button>
+                </div>
               </div>
 
-              <div className="flex items-center py-2 grid grid-cols-2 md:grid-cols-2 gap-4">
+              <div className="flex items-center py-2 grid grid-cols-1 md:grid-cols-1 gap-4">
                 <FormField
                   control={form.control}
                   name="productSearch"
@@ -248,34 +263,24 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
                     </FormItem>
                   )}
                 />
-                <CsvUpload setCSV={setCSV} handelImport={handelImport} />
               </div>
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                <TPNDataTable columns={columns} data={data} />
+                <CreateOrderDataTable columns={columns} data={data} />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 pb-2 border-b">
-                <p className="font-bold">
-                  Total Item: <span>0.00</span>
-                </p>
-                <p className="font-bold">
-                  Product Cost: <span>0.00</span>
-                </p>
-                <p className="font-bold">
-                  Shipping Cost: <span>0.00</span>
-                </p>
-                <p className="font-bold">
-                  Total Cost: <span>0.00</span>
-                </p>
-              </div>
+            </div>
+
+            {/* invoice form */}
+            <div className="w-1/3 mx-4">
+              <InfoCard />
             </div>
           </div>
 
-          <div className="w-full flex justify-end">
+          {/* <div className="w-full flex justify-end">
             <Button type="submit" className="mr-4">
               Submit <SendHorizonal className="ml-2 h-4 w-4" />{" "}
             </Button>
-          </div>
+          </div> */}
         </form>
         {/* <DevTool control={form.control} /> */}
       </Form>

@@ -46,39 +46,27 @@ export const columns: ColumnDef<Product>[] = [
     header: "#",
   },
   {
-    accessorKey: "articleCode",
-    header: "Article Code",
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "qty",
-    header: "Quantity",
+    accessorKey: "product",
+    header: "Product",
   },
   {
     accessorKey: "stock",
     header: "Stock",
   },
   {
-    accessorKey: "hsCode",
-    header: "HS Code",
+    accessorKey: "price",
+    header: "Price",
   },
   {
-    accessorKey: "mrp",
-    header: "MRP",
+    accessorKey: "quantity",
+    header: "Quantity",
   },
   {
-    accessorKey: "tp",
-    header: "TP",
+    accessorKey: "vat",
+    header: "Vat",
   },
   {
-    accessorKey: "tax",
-    header: "Tax",
-  },
-  {
-    accessorKey: "total",
-    header: "Total",
+    accessorKey: "subtotal",
+    header: "Subtotal",
   },
 ];
