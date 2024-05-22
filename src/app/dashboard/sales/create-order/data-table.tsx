@@ -21,15 +21,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { importProduct } from "../../products/_action";
+import CsvUpload from "@/components/CsvUpload";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function UserDataTable<TData, TValue>({
+export function TPNDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -37,7 +40,6 @@ export function UserDataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-
   const table = useReactTable({
     data,
     columns,
@@ -52,22 +54,24 @@ export function UserDataTable<TData, TValue>({
     },
   });
 
+  const [CSV, setCSV] = useState<any>([]);
+
+  const handelImport = async () => {
+    // console.log("Import", CSV);
+    if (CSV?.length > 0) {
+      const product = await importProduct(CSV);
+      if (product) {
+        toast.success("Product Import Success");
+      }
+    }
+  };
+
   return (
     <>
       <div>
         {/* Search */}
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Filter PO No..."
-            value={(table.getColumn("poNo")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("poNo")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        </div>
 
-        <div className="rounded-md border">
+        <div className="rounded-md border min-h-64">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -117,24 +121,7 @@ export function UserDataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
+        <div className="flex items-center justify-end space-x-2 py-2"></div>
       </div>
     </>
   );

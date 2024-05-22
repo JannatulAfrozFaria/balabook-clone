@@ -16,8 +16,9 @@ import { handleDelete } from "./_action";
 import { useState } from "react";
 import EditUnitSheet from "./editUnitSheet";
 import { Toaster } from "@/components/ui/sonner";
+import React from "react";
 
-export type Offer = {
+export type Unit = {
   id: string;
   name: string;
   status: "Active" | "Inactive";
@@ -37,7 +38,7 @@ const handleDeleteTigger = async (id: string) => {
   }
 };
 
-export const columns: ColumnDef<Offer>[] = [
+export const columns: ColumnDef<Unit>[] = [
   {
     accessorKey: "name",
     header: "Name",

@@ -7,7 +7,7 @@ import prisma from "../../../../prisma";
 import Link from "next/link";
 
 export default async function OrderPage() {
-  const data: any = []
+  const data: any = [];
   // await prisma.order.findMany({
   //   include: {
   //     Customer: {
@@ -40,7 +40,7 @@ export default async function OrderPage() {
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               {/* <CreateOrderSheet /> */}
-              <Link href="/dashboard/orders/create-order">
+              <Link href="/dashboard/sales/create-order">
                 <Button>Create Order</Button>
               </Link>
             </div>
