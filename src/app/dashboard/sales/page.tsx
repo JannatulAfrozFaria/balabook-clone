@@ -5,31 +5,10 @@ import { Order, columns } from "./columns";
 import CreateOrderSheet from "./createOrderSheet";
 import prisma from "../../../../prisma";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 
 export default async function OrderPage() {
   const data: any = [];
-  // await prisma.order.findMany({
-  //   include: {
-  //     Customer: {
-  //       select: {
-  //         name: true,
-  //         phone: true,
-  //       }
-  //     },
-  //     User: {
-  //       select: {
-  //         name: true,
-  //       }
-  //     },
-  //     Offer: {
-  //       select: {
-  //         name: true,
-  //       }
-  //     },
-  //   },
-  // });
-
-  // console.log(data)
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -41,7 +20,9 @@ export default async function OrderPage() {
               {/* <CalendarDateRangePicker /> */}
               {/* <CreateOrderSheet /> */}
               <Link href="/dashboard/sales/create-order">
-                <Button>Create Order</Button>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" /> Create Order
+                </Button>
               </Link>
             </div>
           </div>

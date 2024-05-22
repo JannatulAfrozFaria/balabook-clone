@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,6 +17,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Printer, RotateCcw } from "lucide-react";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -46,7 +56,7 @@ export function InfoCard() {
   return (
     <>
       <div className="w-full flex justify-between border-b pb-4 font-bold">
-        <p>Finalize Sale</p>
+        <p>Finalize Order</p>
         <div className="flex items-center space-x-2">
           <Checkbox id="terms" />
           <label
@@ -57,25 +67,98 @@ export function InfoCard() {
           </label>
         </div>
       </div>
-      <div className="w-full flex justify-between mt-2">
+      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total Item:</p>
         <p>1</p>
       </div>
-      <div className="w-full flex justify-between mt-2">
+      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total:</p>
         <p>328.00 BDT</p>
       </div>
-      <div className="w-full flex justify-between mt-2">
+      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Vat/Tax Amount:</p>
         <p>328.00 BDT</p>
       </div>
-      <div className="w-full flex justify-between mt-2">
+      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Gross Total:</p>
         <p>328.00 BDT</p>
       </div>
-      <div className="w-full flex justify-between mt-2">
+      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Gross Total(Round):</p>
         <p>328.00 BDT</p>
+      </div>
+      <div className="w-full flex justify-between mt-4">
+        <p className="font-medium">Cash Recieved:</p>
+        <Input type="text" className="w-1/3" placeholder="1" />
+      </div>
+      <div className="w-full flex justify-between mt-4">
+        <p className="font-medium">Card:</p>
+        <Select value={"visa"}>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Visa" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="visa">Visa</SelectItem>
+              <SelectItem value="dbbl">DBBL</SelectItem>
+              <SelectItem value="mtb">MTB</SelectItem>
+              <SelectItem value="city">City</SelectItem>
+              <SelectItem value="amex">Amex</SelectItem>
+              <SelectItem value="ebl">EBL</SelectItem>
+              <SelectItem value="brac">Brac</SelectItem>
+              <SelectItem value="masterCard">Master Card</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <Input className="w-1/3" placeholder="1" />
+      </div>
+      <div className="w-full flex justify-between mt-4">
+        <p className="font-medium">MFS:</p>
+        <Select value={"bkash"}>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Bkash" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="bkash">Bkash</SelectItem>
+              <SelectItem value="nagad">Nagad</SelectItem>
+              <SelectItem value="upay">Upay</SelectItem>
+              <SelectItem value="rocket">Rocket</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <Input className="w-1/3" placeholder="1" />
+      </div>
+      <div className="w-full flex justify-between mt-4">
+        <div className="flex items-center space-x-2">
+          <Checkbox id="terms" />
+          <label
+            htmlFor="terms"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Discount
+          </label>
+        </div>
+        <Input type="text" className="w-1/3" placeholder="1" />
+      </div>
+      <div className="w-full flex justify-between mt-4">
+        <p className="font-medium">Total Recieved:</p>
+        <p>-328.00 BDT</p>
+      </div>
+      <div className="w-full flex justify-between mt-4 ">
+        <p className="font-medium">Change Amount:</p>
+        <p>-328.00 BDT</p>
+      </div>
+      <Separator orientation="horizontal" className="mt-2" />
+      <div className="w-full flex justify-center gap-4  mt-8">
+        <Button>
+          <RotateCcw size={18} className="mr-2" /> Reset
+        </Button>
+        <Button>
+          <Printer size={18} className="mr-2" /> Generate Order
+        </Button>
       </div>
     </>
   );

@@ -71,7 +71,7 @@ export function CreateOrderDataTable<TData, TValue>({
       <div>
         {/* Search */}
 
-        <div className="rounded-md border min-h-64">
+        <div className="rounded-md border min-h-96">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

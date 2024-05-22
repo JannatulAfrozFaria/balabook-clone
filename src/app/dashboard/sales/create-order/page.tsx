@@ -14,10 +14,10 @@ export default async function ProductsPage() {
   return (
     <main className="flex min-h-screen flex-col gap-0 w-full">
       <div className=" flex-col flex w-full">
-        <div className="flex-1 space-y-4 p-4 pt-4">
+        <div className="flex-1 space-y-4 p-4 ">
           <div className="flex items-center justify-between space-y-2">
             <div className="flex">
-              <Link href="/dashboard/tpn">
+              <Link href="/dashboard/sales">
                 <Button variant="ghost">
                   <ArrowLeft />
                 </Button>
@@ -26,7 +26,7 @@ export default async function ProductsPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Link href="/dashboard/tpn">
+              <Link href="/dashboard/sales">
                 <Button>
                   <X className="mr-2 h-4 w-4" /> Cancle
                 </Button>

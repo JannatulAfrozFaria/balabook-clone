@@ -5,10 +5,10 @@ import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BadgePlus } from "lucide-react";
+import { BadgePlus, Plus } from "lucide-react";
 
 export default async function ProductsPage() {
-  const data: any = []
+  const data: any = [];
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -19,7 +19,9 @@ export default async function ProductsPage() {
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               <Link href="/dashboard/tpn/create">
-                <Button><BadgePlus className="mr-2 h-4 w-4"/> Create TPN</Button>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" /> Create TPN
+                </Button>
               </Link>
             </div>
           </div>
