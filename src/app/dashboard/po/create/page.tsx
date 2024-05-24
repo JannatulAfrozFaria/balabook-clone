@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import PageTitle from "@/components/ui/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Toast } from "@/components/ui/toast";
@@ -9,14 +9,13 @@ import { ArrowLeft, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux-store/store";
 
-export default function ProductsPage() {
-  // console.log("shuvo", poData)
+export default function PoCreate() {
   return (
     <main className="flex min-h-screen flex-col gap-0 w-full">
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-4 pt-4">
           <div className="flex items-center justify-between space-y-2">
-          <div className="flex">
+            <div className="flex">
               <Link href="/dashboard/po">
                 <Button variant="ghost">
                   <ArrowLeft />
@@ -24,10 +23,12 @@ export default function ProductsPage() {
               </Link>
               <PageTitle title="Create Purchase Order" />
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Link href="/dashboard/po">
-                <Button><X className="mr-2 h-4 w-4" /> Cancle</Button>
+                <Button>
+                  <X className="mr-2 h-4 w-4" /> Cancle
+                </Button>
               </Link>
             </div>
           </div>
@@ -37,8 +38,8 @@ export default function ProductsPage() {
         </div>
       </div>
       <div className="grid gap-0 md:grid-cols-1 lg:grid-cols-1">
-            <PoForm entry={""} />
-          </div>
+        <PoForm entry={""} />
+      </div>
     </main>
   );
 }

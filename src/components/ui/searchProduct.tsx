@@ -16,8 +16,6 @@ export default function SearchProduct({ handleSelect }: { handleSelect: any }) {
     // Example logic to fetch options based on inputValue
     const productList = await searchProductDw(inputValue);
 
-    console.log("productList", productList);
-
     if (productList?.length > 0) products = productList;
     // For testing purposes, returning the options state
     return products;

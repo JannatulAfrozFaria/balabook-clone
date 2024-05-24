@@ -4,7 +4,7 @@ import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
-import { BadgePlus } from "lucide-react";
+import { BadgePlus, Plus } from "lucide-react";
 
 export default async function ProductsPage() {
   const data: any = [];
@@ -18,7 +18,9 @@ export default async function ProductsPage() {
             <div className="flex items-center space-x-2">
               <CalenderDateRangePicker />
               <Link href="/dashboard/po/create">
-                <Button><BadgePlus className="mr-2 h-4 w-4" /> Create PO</Button>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" /> Create PO
+                </Button>
               </Link>
             </div>
           </div>

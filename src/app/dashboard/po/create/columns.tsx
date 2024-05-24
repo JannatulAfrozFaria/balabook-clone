@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal, X } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { removeFromDb } from "@/lib/poDb";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Order = {
@@ -50,7 +51,17 @@ export const columns: ColumnDef<Order>[] = [
 
   {
     accessorKey: "tp",
-    header: "TP",
+    header: () => <div className="">TP</div>,
+    id: "actions",
+    cell: ({ row }: { row: any }) => {
+      const product = row.original;
+
+      return (
+        <div>
+          <Input value={product.tp} className="w-1/10" />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "hsCode",
@@ -89,7 +100,10 @@ export const columns: ColumnDef<Order>[] = [
 
       return (
         <div>
-          <X />
+          <X
+            className="cursor-pointer"
+            onClick={() => removeFromDb(product.id)}
+          />
         </div>
       );
     },

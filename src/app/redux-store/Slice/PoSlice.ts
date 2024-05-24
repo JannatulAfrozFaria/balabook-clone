@@ -62,10 +62,32 @@ export const poSlice = createSlice({
         lcNo: action.payload,
       };
     },
+    setProducts: (state, action) => {
+      console.log(action.payload);
+      const products = action.payload;
+      // const totalItem = products.length;
+      // //@ts-nocheck
+      const total = products.reduce((acc, product) => acc + product.total, 0);
+      const grossTotal = products.reduce(
+        (acc, product) => acc + product.total,
+        0
+      );
+      // const grossTotal = total - state.tax - state.discount;
+      // const grossTotalRound = ceil(grossTotal);
+      return {
+        ...state,
+        products: products,
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: products.length,
+      };
+    },
     // Add more reducers as needed
   },
 });
-export const { setUserId, selectSupplier, setlcNo } = poSlice.actions;
+export const { setUserId, selectSupplier, setlcNo, setProducts } =
+  poSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.purchaseOrder;

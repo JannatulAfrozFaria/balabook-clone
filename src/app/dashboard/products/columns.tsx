@@ -10,7 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Barcode, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  Barcode,
+  BarcodeIcon,
+  MoreHorizontal,
+} from "lucide-react";
 import Link from "next/link";
 import { handleDelete } from "./_action";
 import { toast } from "sonner";
@@ -20,6 +25,8 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
+import { useState } from "react";
+import { BarCodeAlertDialog } from "@/components/ui/barcode-print-pop";
 export type Product = {
   id: string;
   name: string;
@@ -48,6 +55,24 @@ export const columns: ColumnDef<Product>[] = [
         <div className="flex items-center">
           <Barcode className="h-4 w-4 mr-2" /> BC
         </div>
+      );
+    },
+    cell: ({ row }) => {
+      const product = row.original;
+      const [open, setOpen] = useState(false);
+
+      return (
+        <>
+          <BarcodeIcon
+            className="cursor-pointer"
+            onClick={() => setOpen(true)}
+          />
+          <BarCodeAlertDialog
+            open={open}
+            setOpen={setOpen}
+            entry={product as any}
+          />
+        </>
       );
     },
   },

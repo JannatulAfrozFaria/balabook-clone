@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { string, z } from "zod";
 
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { Calendar as CalendarIcon, SendHorizonal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -55,12 +55,14 @@ import {
   setUserId,
   selectSupplier,
   setlcNo,
+  setProducts,
 } from "@/app/redux-store/Slice/PoSlice";
 import { useSession } from "next-auth/react";
 import { RootState } from "@/app/redux-store/store";
 import CsvUpload from "@/components/CsvUpload";
 import { importProduct, searchProductById } from "../../products/_action";
 import SearchProduct from "@/components/ui/searchProduct";
+import { addToDb, getStoredCart, removeFromDb } from "@/lib/poDb";
 
 interface PoCart {
   id: string;
@@ -82,7 +84,6 @@ interface ProductFormEditProps {
 function ProductForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
   const [mcId, setMcId] = useState<string>("");
-  const [products, setProducts] = useState<any>();
 
   const form = useForm();
   //   const form = useForm<z.infer<typeof POFormSchema>>({
@@ -108,7 +109,6 @@ function ProductForm({ entry }: ProductFormEditProps) {
   //       lcNo:"",
   //     },
   //   });
-  const [options, setOptions] = useState<any>([{ value: "", label: "" }]);
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -116,40 +116,18 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const sessionUserId = session?.user?.id;
 
   const poData = useSelector((state: RootState) => state.purchaseOrder);
+  const storeProduct = getStoredCart();
+
+  console.log(poData);
 
   useEffect(() => {
     dispatch(setUserId(sessionUserId));
+    dispatch(setProducts(storeProduct));
   }, []);
-  // useEffect(() => {
-  //     // console.log(data);
-  //     if (entry?.id) {
-  //         // form.setValue("name", entry.name);
-  //         // form.setValue("articleCode", entry.articleCode);
-  //         // form.setValue("qty", entry.qty);
-  //         // form.setValue("mrp", entry.mrp);
-  //         // form.setValue("tp", entry.tp);
-  //         // form.setValue("total", entry.total);
-  //         // form.setValue("vat", entry.vat);
-  //         // form.setValue("stock", entry.stock);
-  //         // form.setValue("hsCode", entry.hsCode);
-  //         // form.setValue("supplier", entry.supplier);
-  //         // form.setValue("supplierId", entry.supplierId);
-  //         // form.setValue("tax", entry.tax);
-  //         // form.setValue("hsCode", entry.hsCode);
-  //         // form.setValue("country", entry.country);
-  //         // form.setValue("grosTotal", entry.grosTotal);
-  //         // form.setValue("grossTotalRound", entry.grossTotalRound);
-  //         // form.setValue("note", entry.note);
-  //         // // form.setValue("price", entry.price);
-  //         // form.setValue("containerId", entry.containerId);
-  //         setId(entry?.id);
-  //     }
-  // }, []);
 
-  //   const handleSlug = (name: string) => {
-  //     const slug = name.split(" ").join("-");
-  //     form.setValue("slug", slug);
-  //   };
+  useEffect(() => {
+    dispatch(setProducts(storeProduct));
+  }, [addToDb]);
 
   const handleSupplierId = (id: string) => {
     // form.setValue("supplierId", id);
@@ -169,51 +147,62 @@ function ProductForm({ entry }: ProductFormEditProps) {
     setMcId(id);
   };
 
+  // handleRemoveItem
+
+  const handleRemoveItem = (id: string) => {
+    removeFromDb(id);
+  };
+
   // handleSelectedProduct;
   const [poProduct, setPoProduct] = useState<PoCart[]>([]);
 
   const handleSelectedProduct = async (productId: string) => {
     try {
-      const product = await searchProductById(productId);
-      const newProduct = {
-        id: product?.id,
-        name: product?.name,
-        articleCode: product?.articleCode,
-        mrp: product?.mrp | 0,
-        tp: product.tp,
-        hsCode: product.hsCode,
-        openingQty: product.openingQty,
-        cogs: product.cogs,
-        closingQty: product.closingQty,
-        qty: 1,
-        total: product.tp,
-      };
+      // Check if exist
+      const exist = poData.products.find(
+        (poProduct) => poProduct.id === productId
+      );
+      const rest = poData.products.filter(
+        (poProduct) => poProduct.id !== productId
+      );
+      let newProduct;
+      if (exist) {
+        // inrease qty
 
-      if (product) {
-        setPoProduct([...poProduct, newProduct]); // Wrap the product in an array
+        newProduct = {
+          ...exist,
+          qty: exist.qty + 1,
+          total: (exist.qty + 1) * exist.tp,
+        };
+        dispatch(setProducts(rest));
+        addToDb(newProduct);
+        dispatch(setProducts([...rest, newProduct]));
+      } else {
+        // add new
+        const product = await searchProductById(productId);
+
+        newProduct = {
+          id: product?.id,
+          name: product?.name,
+          articleCode: product?.articleCode,
+          //@ts-ignore
+          mrp: product?.mrp | 0,
+          tp: product?.tp | 0,
+          hsCode: product.hsCode,
+          openingQty: product.openingQty,
+          cogs: product.cogs,
+          closingQty: product.closingQty,
+          qty: 1,
+          total: 1 * product.tp,
+        };
       }
+
+      addToDb(newProduct);
+      dispatch(setProducts([...rest, newProduct]));
     } catch (error) {
       console.error("Error fetching product by id:", error);
     }
   };
-
-  // async function onSubmit(data: z.infer<typeof POFormSchema>) {
-  //   try {
-  //     console.log("product", data);
-  //     //@ts-ignore
-  //     const product = await saveProduct(id, data);
-
-  //     if (product) {
-  //       toast.success(
-  //         id ? "Product Update Success" : "Product Creation Success"
-  //       );
-  //     } else {
-  //       toast.error(id ? "Product Update faield!" : "Product Creation faield!");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 
   const [CSV, setCSV] = useState<any>([]);
 
@@ -227,6 +216,20 @@ function ProductForm({ entry }: ProductFormEditProps) {
     }
   };
 
+  const products = poData ? poData.products : null;
+
+  // Calculate length of items
+  const itemsLength: number = products.length;
+
+  // Calculate gross total of items
+  const grossTotal: number = products.reduce(
+    (acc, product) => acc + product.total,
+    0
+  );
+
+  console.log("Length of items:", itemsLength);
+  console.log("Gross total of items:", grossTotal);
+  // const sortedArray = array.slice().sort((a, b) => a.order - b.order);
   return (
     <div className="flex pt-8">
       <Form {...form}>
@@ -333,7 +336,12 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                <PoDataTable columns={columns} data={poProduct} />
+                <PoDataTable
+                  columns={columns}
+                  data={poData?.products
+                    ?.slice()
+                    .sort((a, b) => a.order - b.order)}
+                />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
                 <FormField
@@ -352,20 +360,16 @@ function ProductForm({ entry }: ProductFormEditProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 mt-4 pb-2 border-b">
+                <p className="font-bold">{/* Discount: <span>0.00</span> */}</p>
+                <p className="font-bold">{/* Tax: <span>0.00</span> */}</p>
                 <p className="font-bold">
-                  Discount: <span>0.00</span>
+                  Total Item: <span>{poData.totalItem}</span>
                 </p>
                 <p className="font-bold">
-                  Tax: <span>0.00</span>
+                  Gross Total: <span>{poData.grossTotal}</span>
                 </p>
                 <p className="font-bold">
-                  Total: <span>0.00</span>
-                </p>
-                <p className="font-bold">
-                  Gross Total: <span>0.00</span>
-                </p>
-                <p className="font-bold">
-                  Gross Total Round: <span>0.00</span>
+                  Gross Total Round: <span>{poData.grossTotalRound}</span>
                 </p>
               </div>
             </div>
