@@ -10,8 +10,10 @@ interface poState {
   poNo: string;
   supplierId: string;
   containerId: string;
+  piNo: string;
   products: any;
   totalItem: number;
+  note: string;
   lcNo: string;
   total: number;
   tax: number;
@@ -27,8 +29,10 @@ const initialState: poState = {
   poNo: "",
   supplierId: "",
   containerId: "",
+  piNo: "",
   products: [],
   totalItem: 0,
+  note: "",
   lcNo: "",
   total: 0,
   tax: 0,
@@ -62,6 +66,24 @@ export const poSlice = createSlice({
         lcNo: action.payload,
       };
     },
+    setContainerId: (state, action) => {
+      return {
+        ...state,
+        containerId: action.payload,
+      };
+    },
+    setPiNo: (state, action) => {
+      return {
+        ...state,
+        piNo: action.payload,
+      };
+    },
+    setNote: (state, action) => {
+      return {
+        ...state,
+        note: action.payload,
+      };
+    },
     setProducts: (state, action) => {
       console.log(action.payload);
       const products = action.payload;
@@ -86,8 +108,15 @@ export const poSlice = createSlice({
     // Add more reducers as needed
   },
 });
-export const { setUserId, selectSupplier, setlcNo, setProducts } =
-  poSlice.actions;
+export const {
+  setUserId,
+  selectSupplier,
+  setlcNo,
+  setProducts,
+  setContainerId,
+  setPiNo,
+  setNote,
+} = poSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.purchaseOrder;

@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/index";
+import { generateId } from "@/lib/idGenerator";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 // import { POFormSchema } from "./create/PoFormSchema";
@@ -8,14 +9,14 @@ import { z } from "zod";
 
 export const handleDelete = async (id: string) => {
   try {
-    const deleteProduct = await prisma.product.delete({
+    const deleteProduct = await prisma.purchaseOrder.delete({
       where: {
         id: id,
       },
     });
     // console.log(deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      console.log(`${deleteProduct.poNo} deleted successful!`);
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
@@ -25,92 +26,104 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveProduct = async (id: string, data: any) => {
+export const savePo = async (id: string, data: any) => {
   try {
-    console.log("action", data);
+    const newPoNo = await generateId("po");
+    console.log("newPoNo", newPoNo);
+    console.log("", data);
+
     let {
-      name,
-      articleCode,
+      poNo,
       qty,
       mrp,
       tp,
       total,
       vat,
-      stock,
-      supplier,
+      userId,
+      piNo,
+      products,
+      supplierId,
+      totalItem,
+      note,
+      lcNo,
       tax,
-      hsCode,
+      status,
       country,
       discount,
       grosTotal,
       grossTotalRound,
-      note,
       containerId,
     } = data;
 
-    if (!name || !articleCode) return false;
+    if (!supplierId || totalItem > 0) return false;
 
-    if (id !== "") {
-      const updateUnit = await prisma.product.update({
+    if (supplierId !== "") {
+      const updateUnit = await prisma.purchaseOrder.update({
         where: {
           id: id,
         },
         data: {
           //@ts-ignore
-          name,
-          articleCode,
+          poNo,
           qty,
           mrp,
           tp,
           total,
           vat,
-          stock,
-          supplier,
+          userId,
+          piNo,
+          products,
+          supplierId,
+          totalItem,
+          note,
+          lcNo,
           tax,
-          hsCode,
+          status,
           country,
           discount,
           grosTotal,
           grossTotalRound,
-          note,
           containerId,
         },
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
+        console.log(`${updateUnit.poNo} Update successful!`);
 
-        revalidatePath("/dashboard/unit");
+        revalidatePath("/dashboard/po");
         return updateUnit;
       }
     } else {
-      const createProduct = await prisma.product.create({
+      const createPO = await prisma.purchaseOrder.create({
         data: {
-          name,
-          articleCode,
+          poNo,
           qty,
           mrp,
           tp,
           total,
           vat,
-          stock,
-          supplier,
+          userId,
+          piNo,
+          products,
+          supplierId,
+          totalItem,
+          note,
+          lcNo,
           tax,
-          hsCode,
+          status,
           country,
           discount,
           grosTotal,
           grossTotalRound,
-          note,
           containerId,
         },
       });
 
-      if (createProduct) {
-        console.log(`${createProduct.name} Create successful!`);
+      if (createPO) {
+        console.log(`${createPO.poNo} Create successful!`);
 
-        revalidatePath("/dashboard/unit");
-        return createProduct;
+        revalidatePath("/dashboard/po");
+        return createPO;
       }
     }
   } catch (err) {

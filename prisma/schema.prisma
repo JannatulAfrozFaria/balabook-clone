@@ -25,6 +25,7 @@ model User {
   grn           GRN[]
   tpn           TPN[]
   sales         Sales[]
+  damage        Damage[]
   userLogs      UserLogs[]
   // activityLog []
 
@@ -162,6 +163,7 @@ model Product {
   productPO    POProduct[]
   grnProduct   GRNProduct[]
   tpnProduct   TPNProduct[]
+  dmgProducts DmgProducts[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -429,6 +431,44 @@ model Sales {
   userId      String @db.ObjectId // MongoDB ObjectId reference to User
   customer        Customer   @relation(fields: [customerId], references: [id])
   customerId      String @db.ObjectId // MongoDB ObjectId reference to User
+}
+model Damage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String @db.ObjectId // MongoDB ObjectId reference to User
+}
+
+// Define the GRNProduct model (representing products within a GRN)
+model DmgProducts {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name        String
+  articleCode String
+  qty         Int
+  mrp         Int?
+  tp          Int?
+  total       Int?
+  vat         Int?
+  stock       Int
+  hsCode      String
+  supplier    String
+  totalItem   Int
+  tax         Int?
+  discount    Int?
+
+  // Define the relationship with the parent GRN
+
+  // Define the relationship with the Product model
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
+}
+
+model OrderProducts {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+
+}
+model ReturnProducts {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+
 }
 
 enum UserType {

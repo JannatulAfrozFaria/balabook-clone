@@ -46,7 +46,7 @@ import SelectSupplier from "@/components/ui/SelectSupplier";
 import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
-import { saveProduct } from "../_action";
+import { savePo, saveProduct } from "../_action";
 import { PoDataTable } from "./data-tables";
 import { columns } from "./columns";
 // import { POFormSchema } from "./PoFormSchema";
@@ -56,6 +56,9 @@ import {
   selectSupplier,
   setlcNo,
   setProducts,
+  setContainerId,
+  setPiNo,
+  setNote,
 } from "@/app/redux-store/Slice/PoSlice";
 import { useSession } from "next-auth/react";
 import { RootState } from "@/app/redux-store/store";
@@ -63,6 +66,7 @@ import CsvUpload from "@/components/CsvUpload";
 import { importProduct, searchProductById } from "../../products/_action";
 import SearchProduct from "@/components/ui/searchProduct";
 import { addToDb, getStoredCart, removeFromDb } from "@/lib/poDb";
+import { PoFormSchema } from "./PoFormSchema";
 
 interface PoCart {
   id: string;
@@ -86,29 +90,29 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const [mcId, setMcId] = useState<string>("");
 
   const form = useForm();
-  //   const form = useForm<z.infer<typeof POFormSchema>>({
-  //     resolver: zodResolver(POFormSchema),
-  //     defaultValues: {
-  //       name: "",
-  //       qty: 0,
-  //       mrp: 0,
-  //       tp: 0,
-  //       total: 0,
-  //       vat: 0,
-  //       stock: 0,
-  //       supplier: "",
-  //       tax: 0,
-  //       hsCode: "",
-  //       country: "",
-  //       supplierId: "",
-  //       discount: 0,
-  //       grosTotal: 0,
-  //       grossTotalRound: 0,
-  //       note: "",
-  //       containerId: "",
-  //       lcNo:"",
-  //     },
-  //   });
+  // const form = useForm<typeof PoFormSchema>({
+  //   defaultValues: {
+  //     id: generateId
+  //     qty: 0,
+  //     mrp: 0,
+  //     tp: 0,
+  //     total: 0,
+  //     vat: 0,
+  //     stock: 0,
+  //     supplier: "",
+  //     tax: 0,
+  //     hsCode: "",
+  //     piNo: "",
+  //     country: "",
+  //     supplierId: "",
+  //     discount: 0,
+  //     grosTotal: 0,
+  //     grossTotalRound: 0,
+  //     note: "",
+  //     containerId: "",
+  //     lcNo: "",
+  //   },
+  // });
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -118,7 +122,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const poData = useSelector((state: RootState) => state.purchaseOrder);
   const storeProduct = getStoredCart();
 
-  console.log(poData);
+  // console.log(poData);
 
   useEffect(() => {
     dispatch(setUserId(sessionUserId));
@@ -218,23 +222,31 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
   const products = poData ? poData.products : null;
 
-  // Calculate length of items
-  const itemsLength: number = products.length;
+  async function onSubmit() {
+    try {
+      console.log("po data", poData);
+      //@ts-ignore
+      const purchaseOrder = await savePo(id, poData);
 
-  // Calculate gross total of items
-  const grossTotal: number = products.reduce(
-    (acc, product) => acc + product.total,
-    0
-  );
-
-  console.log("Length of items:", itemsLength);
-  console.log("Gross total of items:", grossTotal);
+      if (purchaseOrder) {
+        form.reset();
+        toast.success(
+          poData.poNo ? "PO Update Success" : "PO Creation Success"
+        );
+      } else {
+        toast.error(poData.poNo ? "PO Update faield!" : "PO Creation faield!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   // const sortedArray = array.slice().sort((a, b) => a.order - b.order);
   return (
     <div className="flex pt-8">
       <Form {...form}>
         <form
           // onSubmit={onSubmit}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-4"
         >
           <div className="flex w-full">
@@ -243,7 +255,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-0 ">
                 <FormField
                   control={form.control}
-                  name="supplierId"
+                  name="supplier"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Supplier</FormLabel>
@@ -258,7 +270,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                 />
 
                 <FormField
-                  name="qty"
+                  name="lcNo"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>LC No</FormLabel>
@@ -278,12 +290,20 @@ function ProductForm({ entry }: ProductFormEditProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="qty"
+                  name="piNo"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>PI No</FormLabel>
                       <FormControl>
-                        <Input placeholder="PI No" {...field} />
+                        <Input
+                          placeholder="PI No"
+                          {...field}
+                          value={poData.piNo}
+                          onChange={(e) => {
+                            const { value } = e.target;
+                            dispatch(setPiNo(value));
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -310,7 +330,15 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem>
                       <FormLabel>Container ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="container ID" {...field} />
+                        <Input
+                          placeholder="container ID"
+                          {...field}
+                          value={poData.containerId}
+                          onChange={(e) => {
+                            const { value } = e.target;
+                            dispatch(setContainerId(value));
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -351,7 +379,15 @@ function ProductForm({ entry }: ProductFormEditProps) {
                     <FormItem>
                       <FormLabel>Note</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Note" {...field} />
+                        <Textarea
+                          placeholder="Note"
+                          {...field}
+                          value={poData.note}
+                          onChange={(e) => {
+                            const { value } = e.target;
+                            dispatch(setNote(value));
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -1,0 +1,17 @@
+export const PoFormSchema = {
+  id: String,
+  name: String,
+  lcNo: String,
+  articleCode: String,
+  qty: Number,
+  mrp: Number,
+  tp: Number,
+  total: Number,
+  vat: Number,
+  stock: Number,
+  hsCode: String,
+  supplier: String,
+  tax: Number,
+  purchaseOrderId: String,
+  productId: String,
+};
