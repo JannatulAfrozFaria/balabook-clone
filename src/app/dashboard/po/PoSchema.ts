@@ -13,6 +13,7 @@ export interface PoSchema {
   grossTotal?: number;
   grossTotalRound?: number;
   note?: String;
+  country?: String;
   status?: string; // Assuming status is a string; refine based on possible values
   userId?: string; // MongoDB ObjectId reference to User
 }

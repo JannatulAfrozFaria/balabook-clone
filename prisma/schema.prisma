@@ -252,6 +252,7 @@ model PurchaseOrder {
   total           Int?
   tax             Int?
   discount        Int?
+  country        String?
   grossTotal      Int?
   grossTotalRound Int?
   note    String?

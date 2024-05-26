@@ -61,7 +61,7 @@ export const generateId = async (module: string) => {
   const current = number.substring(number.length - 4);
   const date = formatDate(new Date(new Date()), "MMddyyyy");
   const newId =
-    process.env.ID_PREFIX + "-" + modulePrefix + "-" + date + "-" + current;
+    process.env.ID_PREFIX + "-" + modulePrefix + date + "-" + current;
 
   return newId;
 };

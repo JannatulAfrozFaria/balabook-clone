@@ -1,20 +1,9 @@
 "use client";
 import { Input } from "@/components/ui/input";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { string, z } from "zod";
 
-import { format, set } from "date-fns";
 import { Calendar as CalendarIcon, SendHorizonal } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,30 +15,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Checkbox } from "@/components/ui/checkbox";
-import productPhoto from "./img/product.jpg";
-import Image from "next/image";
-import { DevTool } from "@hookform/devtools";
 import SelectSupplier from "@/components/ui/SelectSupplier";
-import SelectMc from "@/components/ui/SelectMc";
-import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
-import { savePo, saveProduct } from "../_action";
+import { savePo } from "../_action";
 import { PoDataTable } from "./data-tables";
 import { columns } from "./columns";
-// import { POFormSchema } from "./PoFormSchema";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUserId,
@@ -67,6 +42,13 @@ import { importProduct, searchProductById } from "../../products/_action";
 import SearchProduct from "@/components/ui/searchProduct";
 import { addToDb, getStoredCart, removeFromDb } from "@/lib/poDb";
 import { PoSchema } from "../PoSchema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PoCart {
   id: string;
@@ -86,14 +68,12 @@ interface ProductFormEditProps {
 }
 
 function ProductForm({ entry }: ProductFormEditProps) {
-  const [id, setId] = useState<string>("");
-  const [mcId, setMcId] = useState<string>("");
-
   const form = useForm();
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
 
+  // @ts-ignore
   const sessionUserId = session?.user?.id;
 
   console.log(sessionUserId);
@@ -117,10 +97,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
     dispatch(selectSupplier(id));
   };
 
-  const handleBrandId = (id: string) => {
-    // form.setValue( id);
-    setMcId(id);
-  };
+  const handleBrandId = (id: string) => {};
 
   // handleRemoveItem
 
@@ -168,6 +145,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
           cogs: product.cogs,
           closingQty: product.closingQty,
           qty: 1,
+          // @ts-ignore
           total: 1 * product?.tp,
         };
       }
@@ -204,11 +182,9 @@ function ProductForm({ entry }: ProductFormEditProps) {
       console.log("product", PO);
       if (PO) {
         form.reset();
-        toast.success(
-          PO ? "Product Update Success" : "Product Creation Success"
-        );
+        toast.success(PO ? "PO Creation Success" : "PO Update Success");
       } else {
-        toast.error(PO ? "Product Update faield!" : "Product Creation faield!");
+        toast.error(PO ? "PO Creation faield!" : "PO Update faield!");
       }
     } catch (error) {
       console.error(error);
@@ -221,6 +197,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
       <Form {...form}>
         <form
           // onSubmit={onSubmit}
+          //@ts-ignore
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-4"
         >
@@ -286,13 +263,26 @@ function ProductForm({ entry }: ProductFormEditProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="supplierId"
+                  name="country"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <SelectBrand handleSelect={handleBrandId} />
-                      </FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={
+                          poData?.country ? poData.country : "China"
+                        }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="">
+                            <SelectValue placeholder="China" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="China">China</SelectItem>
+                          <SelectItem value="USA">USA</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -343,6 +333,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                   columns={columns}
                   data={poData?.products
                     ?.slice()
+                    // @ts-ignore
                     .sort((a, b) => a.order - b.order)}
                 />
               </div>
@@ -357,6 +348,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                         <Textarea
                           placeholder="Note"
                           {...field}
+                          //@ts-ignore
                           value={poData.note}
                           onChange={(e) => {
                             const { value } = e.target;

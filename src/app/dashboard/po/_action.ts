@@ -50,6 +50,7 @@ export const savePo = async (data: PoSchema) => {
       tax,
       status,
       discount,
+      country,
       grossTotal,
       grossTotalRound,
       containerId,
@@ -77,6 +78,7 @@ export const savePo = async (data: PoSchema) => {
           tax,
           status,
           discount,
+          country,
           grossTotal,
           grossTotalRound,
           containerId,
@@ -119,4 +121,25 @@ export const savePo = async (data: PoSchema) => {
     console.error("Error saving PO:", err);
     return false;
   }
+};
+
+export const formatDateTime = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
+
+  const formattedDate = date.toLocaleDateString("en-US", options);
+  const formattedTime24 = date.toTimeString().split(" ")[0];
+  const formattedTime12 = date.toLocaleTimeString("en-US", { hour12: true });
+
+  return {
+    date: formattedDate, // Sun May 26, 2024
+    time24: formattedTime24, // 15:04:06
+    time12: formattedTime12, // 03:04:06 PM
+  };
 };
