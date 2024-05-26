@@ -3,6 +3,7 @@ import prisma from "@/index";
 import { generateId } from "@/lib/idGenerator";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { PoSchema } from "./PoSchema";
 // import { POFormSchema } from "./create/PoFormSchema";
 
 // export type Product = z.infer<typeof POFormSchema>;
@@ -26,19 +27,19 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const savePo = async (id: string, data: any) => {
+export const savePo = async (data: PoSchema) => {
   try {
+    // Validate data if schema is defined
+    // const validatedData = POFormSchema.parse(data);
+
     const newPoNo = await generateId("po");
-    console.log("newPoNo", newPoNo);
-    console.log("", data);
+    console.log("newPoNo:", newPoNo);
+    console.log("data:", data);
 
     let {
+      id,
       poNo,
-      qty,
-      mrp,
-      tp,
       total,
-      vat,
       userId,
       piNo,
       products,
@@ -48,86 +49,74 @@ export const savePo = async (id: string, data: any) => {
       lcNo,
       tax,
       status,
-      country,
       discount,
-      grosTotal,
+      grossTotal,
       grossTotalRound,
       containerId,
     } = data;
 
-    if (!supplierId || totalItem > 0) return false;
+    // Validate required fields
+    if (totalItem && totalItem < 0) {
+      console.error("Supplier ID is missing or total items are zero");
+      return false;
+    }
 
-    if (supplierId !== "") {
-      const updateUnit = await prisma.purchaseOrder.update({
-        where: {
-          id: id,
-        },
-        data: {
-          //@ts-ignore
-          poNo,
-          qty,
-          mrp,
-          tp,
-          total,
-          vat,
-          userId,
-          piNo,
-          products,
-          supplierId,
-          totalItem,
-          note,
-          lcNo,
-          tax,
-          status,
-          country,
-          discount,
-          grosTotal,
-          grossTotalRound,
-          containerId,
-        },
-      });
-
-      if (updateUnit) {
-        console.log(`${updateUnit.poNo} Update successful!`);
-
-        revalidatePath("/dashboard/po");
-        return updateUnit;
-      }
-    } else {
+    if (id === "") {
       const createPO = await prisma.purchaseOrder.create({
+        // where: { id: id },
         data: {
-          poNo,
-          qty,
-          mrp,
-          tp,
+          poNo: newPoNo,
           total,
-          vat,
-          userId,
+          user: { connect: { id: userId } },
           piNo,
           products,
-          supplierId,
+          supplier: { connect: { id: supplierId } },
           totalItem,
           note,
           lcNo,
           tax,
           status,
-          country,
           discount,
-          grosTotal,
+          grossTotal,
           grossTotalRound,
           containerId,
         },
       });
 
       if (createPO) {
-        console.log(`${createPO.poNo} Create successful!`);
-
+        console.log(`${createPO.poNo} updated successfully!`);
         revalidatePath("/dashboard/po");
         return createPO;
       }
+    } else {
+      const updatePo = await prisma.purchaseOrder.update({
+        data: {
+          poNo,
+          total,
+          user: { connect: { id: userId } },
+          piNo,
+          products,
+          supplier: { connect: { id: supplierId } },
+          totalItem,
+          note,
+          lcNo,
+          tax,
+          status,
+          discount,
+          grossTotal,
+          grossTotalRound,
+          containerId,
+        },
+      });
+
+      if (updatePo) {
+        console.log(`${updatePo.poNo} created successfully!`);
+        revalidatePath("/dashboard/po");
+        return updatePo;
+      }
     }
   } catch (err) {
-    console.log(err);
+    console.error("Error saving PO:", err);
     return false;
   }
 };

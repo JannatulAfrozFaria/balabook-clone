@@ -4,28 +4,11 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-
-// Define a type for the slice state
-interface poState {
-  poNo: string;
-  supplierId: string;
-  containerId: string;
-  piNo: string;
-  products: any;
-  totalItem: number;
-  note: string;
-  lcNo: string;
-  total: number;
-  tax: number;
-  discount: number;
-  grossTotal: number;
-  grossTotalRound: number;
-  status: string;
-  userId: string;
-}
+import { PoSchema } from "@/app/dashboard/po/PoSchema";
 
 // Define the initial state using that type
-const initialState: poState = {
+const initialState: PoSchema = {
+  id: "",
   poNo: "",
   supplierId: "",
   containerId: "",

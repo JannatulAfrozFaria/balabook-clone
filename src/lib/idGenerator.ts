@@ -16,6 +16,7 @@ export const generateId = async (module: string) => {
           },
         },
       });
+      modulePrefix = "PO";
       break;
   }
   switch (module) {
@@ -27,6 +28,7 @@ export const generateId = async (module: string) => {
           },
         },
       });
+      modulePrefix = "TPN";
       break;
   }
   switch (module) {
@@ -38,6 +40,7 @@ export const generateId = async (module: string) => {
           },
         },
       });
+      modulePrefix = "GRN";
       break;
   }
   //   switch (module) {
@@ -57,7 +60,8 @@ export const generateId = async (module: string) => {
   const number = ("000" + (todayTotal + 1)).toString();
   const current = number.substring(number.length - 4);
   const date = formatDate(new Date(new Date()), "MMddyyyy");
-  const newId = process.env.ID_PREFIX + modulePrefix + date + "-" + current;
+  const newId =
+    process.env.ID_PREFIX + "-" + modulePrefix + "-" + date + "-" + current;
 
   return newId;
 };

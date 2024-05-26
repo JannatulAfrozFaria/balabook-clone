@@ -160,7 +160,7 @@ model Product {
   cogs       Int? @default(0)
 
   closingStock ClosingStock[]
-  productPO    POProduct[]
+  // productPO    POProduct[]
   grnProduct   GRNProduct[]
   tpnProduct   TPNProduct[]
   dmgProducts DmgProducts[]
@@ -241,20 +241,20 @@ model ClosingStock {
 model PurchaseOrder {
   id              String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   poNo            String
-  supplier        Supplier    @relation(fields: [supplierId], references: [id])
+  supplier        Supplier?    @relation(fields: [supplierId], references: [id])
   supplierId      String      @db.ObjectId // MongoDB ObjectId reference to Supplier
   containerId     String?
-  products        POProduct[] // Array of products in the purchase order
+  products        Json[] // Array of products in the purchase order
   grn             GRN[]
   lcNo            String?
   piNo            String?
-  quantity        Int?
   totalItem       Int?
   total           Int?
   tax             Int?
   discount        Int?
   grossTotal      Int?
   grossTotalRound Int?
+  note    String?
 
   status DataStatus
   user   User       @relation(fields: [userId], references: [id])
@@ -265,28 +265,28 @@ model PurchaseOrder {
 }
 
 // Define the ProductPO model (representing products within a PurchaseOrder)
-model POProduct {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  name        String
-  articleCode String
-  qty         Int
-  mrp         Int?
-  tp          Int?
-  total       Int?
-  vat         Int?
-  stock       Int
-  hsCode      String
-  supplier    String
-  tax         Int?
+// model POProduct {
+//   id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+//   name        String
+//   articleCode String
+//   qty         Int
+//   mrp         Int?
+//   tp          Int?
+//   total       Int?
+//   vat         Int?
+//   stock       Int
+//   hsCode      String
+//   supplier    String
+//   tax         Int?
 
-  // Define the relationship to the parent PurchaseOrder
-  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
-  purchaseOrderId String        @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+//   // Define the relationship to the parent PurchaseOrder
+//   purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+//   purchaseOrderId String        @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
 
-  // Define the relationship with the Product model
-  product   Product @relation(fields: [productId], references: [id])
-  productId String  @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
-}
+//   // Define the relationship with the Product model
+//   product   Product @relation(fields: [productId], references: [id])
+//   productId String  @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
+// }
 
 // Define the PurchaseOrder model
 model TPN {

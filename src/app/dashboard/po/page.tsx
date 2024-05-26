@@ -5,9 +5,26 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
 import { BadgePlus, Plus } from "lucide-react";
+import { PoSchema } from "./PoSchema";
+import prisma from "@/index";
 
 export default async function ProductsPage() {
-  const data: any = [];
+  const data: PoSchema = await prisma.purchaseOrder.findMany({
+    include: {
+      supplier: {
+        select: {
+          name: true, // Select only the name field from the supplier model
+        },
+      },
+      user: {
+        select: {
+          name: true, // Select only the name field from the user model
+        },
+      },
+    },
+  });
+
+  console.log(data);
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

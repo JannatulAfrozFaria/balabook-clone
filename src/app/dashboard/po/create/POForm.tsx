@@ -66,7 +66,7 @@ import CsvUpload from "@/components/CsvUpload";
 import { importProduct, searchProductById } from "../../products/_action";
 import SearchProduct from "@/components/ui/searchProduct";
 import { addToDb, getStoredCart, removeFromDb } from "@/lib/poDb";
-import { PoFormSchema } from "./PoFormSchema";
+import { PoSchema } from "../PoSchema";
 
 interface PoCart {
   id: string;
@@ -90,34 +90,13 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const [mcId, setMcId] = useState<string>("");
 
   const form = useForm();
-  // const form = useForm<typeof PoFormSchema>({
-  //   defaultValues: {
-  //     id: generateId
-  //     qty: 0,
-  //     mrp: 0,
-  //     tp: 0,
-  //     total: 0,
-  //     vat: 0,
-  //     stock: 0,
-  //     supplier: "",
-  //     tax: 0,
-  //     hsCode: "",
-  //     piNo: "",
-  //     country: "",
-  //     supplierId: "",
-  //     discount: 0,
-  //     grosTotal: 0,
-  //     grossTotalRound: 0,
-  //     note: "",
-  //     containerId: "",
-  //     lcNo: "",
-  //   },
-  // });
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
 
   const sessionUserId = session?.user?.id;
+
+  console.log(sessionUserId);
 
   const poData = useSelector((state: RootState) => state.purchaseOrder);
   const storeProduct = getStoredCart();
@@ -127,7 +106,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   useEffect(() => {
     dispatch(setUserId(sessionUserId));
     dispatch(setProducts(storeProduct));
-  }, []);
+  }, [sessionUserId]);
 
   useEffect(() => {
     dispatch(setProducts(storeProduct));
@@ -138,14 +117,6 @@ function ProductForm({ entry }: ProductFormEditProps) {
     dispatch(selectSupplier(id));
   };
 
-  //   const handleMcId = (id: string) => {
-  //     form.setValue("masterCategoryId", id);
-  //     setMcId(id);
-  //   };
-  //   const handleCategoryId = (id: string) => {
-  //     form.setValue("categoryId", id);
-  //     setMcId(id);
-  //   };
   const handleBrandId = (id: string) => {
     // form.setValue( id);
     setMcId(id);
@@ -164,10 +135,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
     try {
       // Check if exist
       const exist = poData.products.find(
-        (poProduct) => poProduct.id === productId
+        (poProduct: any) => poProduct.id === productId
       );
       const rest = poData.products.filter(
-        (poProduct) => poProduct.id !== productId
+        (poProduct: any) => poProduct.id !== productId
       );
       let newProduct;
       if (exist) {
@@ -190,14 +161,14 @@ function ProductForm({ entry }: ProductFormEditProps) {
           name: product?.name,
           articleCode: product?.articleCode,
           //@ts-ignore
-          mrp: product?.mrp | 0,
-          tp: product?.tp | 0,
+          mrp: product?.mrp !== null ? product.mrp : 0,
+          tp: product?.tp !== null ? product.tp : 0,
           hsCode: product.hsCode,
           openingQty: product.openingQty,
           cogs: product.cogs,
           closingQty: product.closingQty,
           qty: 1,
-          total: 1 * product.tp,
+          total: 1 * product?.tp,
         };
       }
 
@@ -220,26 +191,30 @@ function ProductForm({ entry }: ProductFormEditProps) {
     }
   };
 
+  // const products = poData ? poData.products : null;
+
   const products = poData ? poData.products : null;
 
-  async function onSubmit() {
-    try {
-      console.log("po data", poData);
-      //@ts-ignore
-      const purchaseOrder = await savePo(id, poData);
+  console.log(poData);
 
-      if (purchaseOrder) {
+  async function onSubmit(data: PoSchema) {
+    try {
+      //@ts-ignore
+      const PO = await savePo(poData);
+      console.log("product", PO);
+      if (PO) {
         form.reset();
         toast.success(
-          poData.poNo ? "PO Update Success" : "PO Creation Success"
+          PO ? "Product Update Success" : "Product Creation Success"
         );
       } else {
-        toast.error(poData.poNo ? "PO Update faield!" : "PO Creation faield!");
+        toast.error(PO ? "Product Update faield!" : "Product Creation faield!");
       }
     } catch (error) {
       console.error(error);
     }
   }
+
   // const sortedArray = array.slice().sort((a, b) => a.order - b.order);
   return (
     <div className="flex pt-8">

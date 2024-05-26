@@ -51,17 +51,22 @@ export const columns: ColumnDef<Offer>[] = [
   {
     accessorKey: "no",
     header: "#",
+    cell: ({ row }: { row: any }) => {
+      const sl = row.index + 1; // row.index gives the zero-based index, add 1 to make it 1-based
+
+      return `${sl}.`;
+    },
   },
   {
-    accessorKey: "pono",
+    accessorKey: "poNo",
     header: "PoNo",
   },
   {
-    accessorKey: "user",
+    accessorKey: "user.name",
     header: "User",
   },
   {
-    accessorKey: "supplier",
+    accessorKey: "supplier.name",
     header: "Supplier",
   },
   {
