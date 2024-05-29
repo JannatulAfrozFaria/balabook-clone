@@ -34,12 +34,14 @@ export function BarCodeAlertDialog({
   setOpen: any;
 }) {
   const product = entry;
-  const componentRef = useRef();
+  // const componentRef = useRef();
   const handleCloseDialog = () => {
     setOpen(false);
   };
+  const componentRef = useRef<HTMLDivElement>(null);
+  // console.log(product);
 
-  console.log(product);
+  // Output: One Hundred
 
   return (
     <>
@@ -99,7 +101,7 @@ export function BarCodeAlertDialog({
                   <Printer size="18" /> Print
                 </AlertDialogAction>
               )}
-              content={componentRef.current}
+              content={() => componentRef.current} // Pass a function that returns the content
             />
           </AlertDialogFooter>
         </AlertDialogContent>

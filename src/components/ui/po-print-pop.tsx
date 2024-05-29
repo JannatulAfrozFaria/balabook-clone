@@ -19,11 +19,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Logo from "@/components/logo";
 import ReactToPrint from "react-to-print";
 import { AspectRatio } from "./aspect-ratio";
 import { Button } from "./button";
 import { Printer } from "lucide-react";
 import { Toaster } from "./toaster";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Barcode from "react-barcode";
 import {
   Card,
@@ -33,6 +35,8 @@ import {
   CardTitle,
 } from "./card";
 import { useRef } from "react";
+import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
 export function PoPrintalog({
   entry,
@@ -44,20 +48,154 @@ export function PoPrintalog({
   setOpen: any;
 }) {
   const product = entry;
-  const componentRef = useRef();
+  const componentRef = useRef<HTMLDivElement>(null);
   const handleCloseDialog = () => {
     setOpen(false);
   };
   const productsInfo = product?.products;
-  console.log(productsInfo);
+  // console.log(productsInfo);
+
+  function convertToWords(number: number): string {
+    const ones: string[] = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+    ];
+    const teens: string[] = [
+      "",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens: string[] = [
+      "",
+      "Ten",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
+    const thousands: string[] = [
+      "",
+      "Thousand",
+      "Million",
+      "Billion",
+      "Trillion",
+    ];
+
+    if (number === 0) {
+      return "Zero";
+    }
+
+    let numStr: string = "";
+    let count: number = 0;
+
+    while (number > 0) {
+      if (number % 1000 !== 0) {
+        numStr =
+          convertThreeDigitsToWords(number % 1000) +
+          " " +
+          thousands[count] +
+          " " +
+          numStr;
+      }
+      number = Math.floor(number / 1000);
+      count++;
+    }
+
+    return numStr.trim();
+  }
+
+  function convertThreeDigitsToWords(num: number): string {
+    const ones: string[] = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+    ];
+    const teens: string[] = [
+      "",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens: string[] = [
+      "",
+      "Ten",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
+
+    let numStr: string = "";
+
+    if (num >= 100) {
+      numStr += ones[Math.floor(num / 100)] + " Hundred ";
+      num %= 100;
+    }
+
+    if (num >= 11 && num <= 19) {
+      numStr += teens[num - 10] + " ";
+    } else if (num === 10 || num >= 20) {
+      numStr += tens[Math.floor(num / 10)] + " ";
+      num %= 10;
+    }
+
+    if (num >= 1 && num <= 9) {
+      numStr += ones[num] + " ";
+    }
+
+    return numStr.trim();
+  }
+
+  console.log("convert to word", convertToWords(product.total));
 
   return (
-    <>
+    <div>
       <style jsx global>{`
         @media print {
           @page {
             size: A4; /* Set the page size to A4 */
             margin: 0; /* Remove default margins */
+            margin-top: 20px;
+          }
+          .rounded-none {
+            box-shadow: none !important;
+            border: none !important;
           }
           body {
             -webkit-print-color-adjust: exact;
@@ -74,98 +212,164 @@ export function PoPrintalog({
           }
         }
       `}</style>
+
       <AlertDialog open={open}>
         <AlertDialogContent className="max-w-[800px] min-w-[200px]">
           <AlertDialogHeader>
             {/* <AlertDialogTitle className="mb-2">Create New Order</AlertDialogTitle> */}
             <AlertDialogDescription>
-              <Card ref={componentRef} className=" rounded-none">
-                <CardHeader>
-                  <CardTitle className="text-center">{product?.name}</CardTitle>
-                  <CardDescription>
-                    {/* <Barcode
-                      className="text-center"
-                      value={product.articleCode}
-                      height="50"
-                      width="2.5"
-                      fontSize="12"
-                    /> */}
+              {/* @ts-ignore */}
 
-                    <div className="flex justify-between">
-                      <div className="w-1/2">
-                        <h1 className="font-bold ">To</h1>
-                        <h2>{product.supplier.name}</h2>
-                        <h1 className="font-bold mt-4">From</h1>
-                        <h2>{product.user.name}</h2>
+              <div className="overflow-y-auto max-h-[80vh]">
+                <Card
+                  className=" rounded-none min-h-[840px] max-h-[3508px] relative"
+                  ref={componentRef}
+                >
+                  <CardHeader>
+                    <CardTitle className="">
+                      <div className="flex mb-4 justify-between">
+                        <Logo />
+
+                        <div className="text-right text-sm">
+                          <h1 className=" font-sm font-normal">
+                            <span className="font-bold font-sm">Hotline:</span>{" "}
+                            01332553955
+                          </h1>
+                          <p className="font-normal">
+                            H#6, R#27, Sector 7, Uttara, Dhaka - 1230
+                          </p>
+                          <p className="font-normal ">
+                            citizentrademanagement@gmail.com
+                          </p>
+                        </div>
                       </div>
-                      <div className="w-1/2 flex flex-col items-end">
-                        <h1 className="text-lg font-bold mb-2 ">
-                          Purchase Order
-                        </h1>
-                        <h2 className="font-bold">
-                          PO No:{" "}
-                          <span className="font-normal">{product.poNo}</span>
-                        </h2>
-                        {/* <h2 className="font-bold">
+                    </CardTitle>
+                    <Separator />
+                    <CardDescription>
+                      <div className="flex justify-between mb-2 ">
+                        <div className="text-black">
+                          <h1 className="font-bold ">Name of Supplier</h1>
+                          <h2>{product.supplier.name}</h2>
+                          <h2>demo@gmail.com</h2>
+                          <h2>1316842636</h2>
+                        </div>
+                        <div className="text-black">
+                          <h1 className="font-bold">Warehouse</h1>
+                          <h2>{product.user.name}</h2>
+                          <h2>demo@gmail.com</h2>
+                          <h2>1316842636</h2>
+                        </div>
+                        <div className=" flex flex-col items-end text-black">
+                          <h1 className=" font-bold  ">Purchase Order</h1>
+                          <h2 className="font-bold text-sm">
+                            PO No:{" "}
+                            <span className="font-normal">{product.poNo}</span>
+                          </h2>
+                          {/* <h2 className="font-bold">
                         PO Date: <span className="font-normal"></span>
                       </h2> */}
-                        <h2 className="font-bold">
-                          Status:{" "}
-                          <span className="font-normal">{product.status}</span>
-                        </h2>
-                        <Barcode
-                          className="text-center"
-                          value={product.poNo}
-                          height="25"
-                          width="1"
-                          fontSize="10"
-                        />
+                          <h2 className="font-bold">
+                            Status:{" "}
+                            <span className="font-normal">
+                              {product.status}
+                            </span>
+                          </h2>
+                          {/* @ts-ignore */}
+                          <Barcode
+                            className="text-center"
+                            value={product.poNo}
+                            height="25"
+                            width="1"
+                            fontSize="10"
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <Table>
-                        <TableCaption>
-                          A list of your recent invoices.
-                        </TableCaption>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="w-[100px]">Code</TableHead>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Qty</TableHead>
-                            <TableHead className="text-right">TP</TableHead>
-                            <TableHead className="text-right">Amount</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {productsInfo.map((product: any) => (
-                            <TableRow key={product.id}>
-                              <TableCell className="font-medium">
-                                {product.articleCode}
-                              </TableCell>
-                              <TableCell>{product.name}</TableCell>
-                              <TableCell>{product.qty}</TableCell>
-                              <TableCell>
-                                {product.tp ? product.tp : "0"}
-                              </TableCell>
-                              <TableCell className="text-right">
-                                {product.mrp}
-                              </TableCell>
+                      <div>
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="">
+                              <TableHead className=" pl-0 text-black font-bold pl-2">
+                                #
+                              </TableHead>
+                              <TableHead className=" pl-0 text-black font-bold">
+                                Code
+                              </TableHead>
+                              <TableHead className="text-black font-bold">
+                                Name
+                              </TableHead>
+                              <TableHead className="text-black font-bold">
+                                Qty
+                              </TableHead>
+                              <TableHead className="text-right text-black font-bold">
+                                TP
+                              </TableHead>
+                              <TableHead className="text-right text-black font-bold">
+                                Amount
+                              </TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                        <TableFooter>
-                          <TableRow>
-                            <TableCell colSpan={4}>Total</TableCell>
-                            <TableCell className="text-right">
-                              ৳ {product.total}
-                            </TableCell>
-                          </TableRow>
-                        </TableFooter>
-                      </Table>
-                    </div>
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+                          </TableHeader>
+                          <TableBody className="border-b">
+                            {productsInfo.map((product: any, index: number) => (
+                              <TableRow
+                                key={product.id}
+                                className="text-xs text-black"
+                              >
+                                <TableCell className="font-medium text-xs  border-r border-l py-[2px]">
+                                  {index + 1}.
+                                </TableCell>
+                                <TableCell className="font-medium text-xs border-r  py-[2px]">
+                                  {product.articleCode}
+                                </TableCell>
+                                <TableCell className="border-r py-[2px]">
+                                  {product.name}
+                                </TableCell>
+                                <TableCell className="border-r py-[2px]">
+                                  {product.qty}
+                                </TableCell>
+                                <TableCell className="border-r py-[2px]">
+                                  {product.tp ? product.tp : "0"}
+                                </TableCell>
+                                <TableCell className="text-right border-r py-[2px]">
+                                  {product.mrp}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                        <div className="w-full flex  justify-end mt-2 text-black font-bold">
+                          <div className="flex">
+                            <p className="mr-2">Gross Total:</p>
+                            <p className="mr-4">{product.grossTotal}</p>
+                          </div>
+                          <div className="flex">
+                            <p className="mr-2">Total:</p>
+                            <p>{product.total}</p>
+                          </div>
+                        </div>
+                        <p className="text-black mt-4">
+                          <span className="font-bold">In Word:</span>{" "}
+                          {convertToWords(product.total)} Taka Only
+                        </p>
+                        {/*  */}
+                      </div>
+
+                      <div className=" absolute bottom-0.5 w-[80%]">
+                        <div className="flex justify-between w-full">
+                          <p className="font-bold">
+                            <span>Prepared By:</span>
+                          </p>
+                          <p className="font-bold">
+                            <span>Checked By:</span>
+                          </p>
+                          <p className="font-bold">
+                            <span>Authorized By:</span>
+                          </p>
+                        </div>
+                      </div>
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -178,12 +382,12 @@ export function PoPrintalog({
                   <Printer size="18" /> Print
                 </AlertDialogAction>
               )}
-              content={componentRef.current}
+              content={() => componentRef.current} // Pass a function that returns the content
             />
           </AlertDialogFooter>
         </AlertDialogContent>
         <Toaster />
       </AlertDialog>
-    </>
+    </div>
   );
 }
