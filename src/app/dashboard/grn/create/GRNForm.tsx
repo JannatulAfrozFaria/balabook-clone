@@ -53,6 +53,7 @@ import { GRNDataTable } from "./data-table";
 import { GRNFormSchema } from "./GRNFormSchema";
 import PageTitle from "@/components/ui/PageTitle";
 import { Label } from "@/components/ui/label";
+import SelectPO from "@/components/ui/selectPO";
 
 interface ProductFormEditProps {
   entry: any;
@@ -197,7 +198,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                       <FormItem>
                         {/* <FormLabel>Warehouse </FormLabel> */}
                         <FormControl>
-                          <SelectSupplier handleSelect={handleSupplierId} />
+                          <SelectPO handleSelect={handleSupplierId} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -240,7 +241,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                   <GRNDataTable
                     columns={columns}
                     data={data}
-                    className="bg-red-400"
+                    // className="bg-red-400"
                   />
                 </div>
               </div>

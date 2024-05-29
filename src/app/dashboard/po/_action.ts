@@ -143,3 +143,41 @@ export const formatDateTime = (dateTimeString: string) => {
     time12: formattedTime12, // 03:04:06 PM
   };
 };
+
+export const poDw = async () => {
+  try {
+    const purchaseOrder = await prisma.purchaseOrder.findMany({
+      where: {
+        status: "Pending",
+      },
+      select: {
+        id: true,
+        poNo: true,
+        grossTotal: true,
+      },
+    });
+
+    let dw = [
+      {
+        value: "",
+        label: "Select PO",
+      },
+    ];
+
+    // console.log(po);
+    purchaseOrder.map(
+      (po) =>
+        (dw = [
+          ...dw,
+          {
+            value: po.id,
+            label: `${po.poNo} [${po.grossTotal}]`,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent PO:", error);
+    throw new Error("Failed to fetch PO");
+  }
+};
