@@ -144,6 +144,22 @@ export const formatDateTime = (dateTimeString: string) => {
   };
 };
 
+export const poById = async (id: string) => {
+  try {
+    const purchaseOrder = await prisma.purchaseOrder.findFirst({
+      where: {
+        id: id,
+      },
+      include: { supplier: { select: { name: true, phone: true } } },
+    });
+
+    return purchaseOrder;
+  } catch (error) {
+    console.error("Error fetching parent PO:", error);
+    throw new Error("Failed to fetch PO");
+  }
+};
+
 export const poDw = async () => {
   try {
     const purchaseOrder = await prisma.purchaseOrder.findMany({

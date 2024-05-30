@@ -7,7 +7,6 @@ import { useState } from "react";
 import { ArrowLeft, X } from "lucide-react";
 import GRNForm from "./GRNForm";
 
-
 export default async function ProductsPage() {
   const data: any = [];
   // const [product, setProduct] = useState<any>([]);
@@ -16,7 +15,7 @@ export default async function ProductsPage() {
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-4 pt-4">
           <div className="flex items-center justify-between space-y-2">
-          <div className="flex">
+            <div className="flex">
               <Link href="/dashboard/grn">
                 <Button variant="ghost">
                   <ArrowLeft />
@@ -24,10 +23,12 @@ export default async function ProductsPage() {
               </Link>
               <PageTitle title="Good Recieve Note" />
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Link href="/dashboard/grn">
-                <Button><X className="mr-2 h-4 w-4" /> Cancle IT</Button>
+                <Button>
+                  <X className="mr-2 h-4 w-4" /> Cancle
+                </Button>
               </Link>
             </div>
           </div>
@@ -37,9 +38,8 @@ export default async function ProductsPage() {
         </div>
       </div>
       <div className="grid gap-0 md:grid-cols-1 lg:grid-cols-1">
-            <GRNForm entry={""} />
-            
-          </div>
+        <GRNForm entry={""} />
+      </div>
     </main>
   );
 }

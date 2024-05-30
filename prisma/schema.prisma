@@ -161,7 +161,6 @@ model Product {
 
   closingStock ClosingStock[]
   // productPO    POProduct[]
-  grnProduct   GRNProduct[]
   tpnProduct   TPNProduct[]
   dmgProducts DmgProducts[]
 
@@ -371,8 +370,7 @@ model GRN {
 
   tpnNo       TPN?         @relation(fields: [tpnId], references: [id])
   tpnId       String?      @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
-  containerNo String?
-  products    GRNProduct[] // Array of products in the GRN
+  products    Json[] // Array of products in the GRN
 
   total           Int?
   grossTotal      Int?
@@ -380,7 +378,8 @@ model GRN {
   totalItem       Int
   tax             Int?
   discount        Int?
-  status          String
+  status          DataStatus 
+
   user            User   @relation(fields: [userId], references: [id])
   userId          String @db.ObjectId // MongoDB ObjectId reference to User
 
@@ -388,31 +387,8 @@ model GRN {
   updatedAt DateTime @updatedAt
 }
 
-// Define the GRNProduct model (representing products within a GRN)
-model GRNProduct {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  name        String
-  articleCode String
-  qty         Int
-  mrp         Int?
-  tp          Int?
-  total       Int?
-  vat         Int?
-  stock       Int
-  hsCode      String
-  supplier    String
-  totalItem   Int
-  tax         Int?
-  discount    Int?
 
-  // Define the relationship with the parent GRN
-  grn   GRN    @relation(fields: [grnId], references: [id])
-  grnId String @db.ObjectId // MongoDB ObjectId reference to GRN
 
-  // Define the relationship with the Product model
-  product   Product @relation(fields: [productId], references: [id])
-  productId String  @map("_productId") @db.ObjectId // MongoDB ObjectId reference to Product
-}
 
 model UserLogs {
   id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId

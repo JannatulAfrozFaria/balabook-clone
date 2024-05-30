@@ -54,6 +54,7 @@ import { GRNFormSchema } from "./GRNFormSchema";
 import PageTitle from "@/components/ui/PageTitle";
 import { Label } from "@/components/ui/label";
 import SelectPO from "@/components/ui/selectPO";
+import { poById } from "../../po/_action";
 
 interface ProductFormEditProps {
   entry: any;
@@ -62,7 +63,8 @@ interface ProductFormEditProps {
 const data: any = [];
 function AdjustForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
-  const [mcId, setMcId] = useState<string>("");
+  const [poData, setPoData] = useState<any>({});
+  const [formattedDate, setFormattedDate] = useState<string>("");
   const form = useForm<z.infer<typeof GRNFormSchema>>({
     resolver: zodResolver(GRNFormSchema),
     defaultValues: {
@@ -86,57 +88,34 @@ function AdjustForm({ entry }: ProductFormEditProps) {
     },
   });
 
-  useEffect(() => {
-    // console.log(data);
-    if (entry?.id) {
-      // form.setValue("name", entry.name);
-      // form.setValue("articleCode", entry.articleCode);
-      // form.setValue("qty", entry.qty);
-      // form.setValue("mrp", entry.mrp);
-      // form.setValue("tp", entry.tp);
-      // form.setValue("total", entry.total);
-      // form.setValue("vat", entry.vat);
-      // form.setValue("stock", entry.stock);
-      // form.setValue("hsCode", entry.hsCode);
-      // form.setValue("supplier", entry.supplier);
-      // form.setValue("supplierId", entry.supplierId);
-      // form.setValue("tax", entry.tax);
-      // form.setValue("hsCode", entry.hsCode);
-      // form.setValue("country", entry.country);
-      // form.setValue("grosTotal", entry.grosTotal);
-      // form.setValue("grossTotalRound", entry.grossTotalRound);
-      // form.setValue("note", entry.note);
-      // // form.setValue("price", entry.price);
-      // form.setValue("containerId", entry.containerId);
-      setId(entry?.id);
-    }
-  }, []);
-
-  //   const handleSlug = (name: string) => {
-  //     const slug = name.split(" ").join("-");
-  //     form.setValue("slug", slug);
-  //   };
-
-  const handleSupplierId = (id: string) => {
-    form.setValue("supplierId", id);
+  const handlePoSelect = async (id: string) => {
+    const poDetails = await poById(id);
+    setPoData(poDetails);
+    console.log(poDetails);
   };
 
-  //   const handleMcId = (id: string) => {
-  //     form.setValue("masterCategoryId", id);
-  //     setMcId(id);
-  //   };
-  //   const handleCategoryId = (id: string) => {
-  //     form.setValue("categoryId", id);
-  //     setMcId(id);
-  //   };
-  // const handleBrandId = (id: string) => {
-  //     form.setValue("brandId", id);
-  //     setMcId(id);
-  // };
-  //   const handleUnitId = (id: string) => {
-  //     form.setValue("unitId", id);
-  //     setMcId(id);
-  //   };
+  useEffect(() => {
+    // Convert the createdAt string to a Date object
+    const date = new Date(poData?.createdAt);
+
+    // Format the date as needed
+    const formattedDateString = date.toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short",
+    });
+
+    // Set the formatted date in state
+    setFormattedDate(formattedDateString);
+  }, [poData]);
+
+  console.log(formattedDate);
+
   const [poId, setPoId] = useState(false);
 
   async function onSubmit(data: z.infer<typeof GRNFormSchema>) {
@@ -198,7 +177,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                       <FormItem>
                         {/* <FormLabel>Warehouse </FormLabel> */}
                         <FormControl>
-                          <SelectPO handleSelect={handleSupplierId} />
+                          <SelectPO handleSelect={handlePoSelect} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -212,27 +191,33 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                                             <FormItem>
                                                 <FormLabel>PO Status </FormLabel>
                                                 <FormControl>
-                                                    <SelectSupplier handleSelect={handleSupplierId} />
+                                                    <SelectSupplier handleSelect={handlePoSelect} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     /> */}
                 </div>
-                {poId ? (
+                {poData?.id ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4 pb-2 border-b">
                     <p className="font-bold">
-                      Vendor: <span className="font-normal"></span>
+                      Vendor:{" "}
+                      <span className="font-normal">
+                        {poData?.supplier?.name}
+                      </span>
                     </p>
                     <p className="font-bold">
-                      Po: <span className="font-normal"></span>
+                      Po: <span className="font-normal">{poData?.poNo}</span>
                     </p>
 
                     <p className="font-bold">
-                      Phone: <span className="font-normal"></span>
+                      Phone:{" "}
+                      <span className="font-normal">
+                        {poData?.supplier?.phone}
+                      </span>
                     </p>
                     <p className="font-bold">
-                      Date: <span className="font-normal"></span>
+                      Date: <span className="font-normal">{formattedDate}</span>
                     </p>
                   </div>
                 ) : null}
@@ -240,9 +225,28 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0 mt-2">
                   <GRNDataTable
                     columns={columns}
-                    data={data}
+                    data={poData?.products?.length ? poData.products : []}
                     // className="bg-red-400"
                   />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 mt-4 pb-2 border-b">
+                  <p className="font-bold text-sm">
+                    Item:{" "}
+                    <span className="font-normal">{poData?.totalItem}</span>
+                  </p>
+                  <p className="font-bold text-sm">
+                    Tax: <span className="font-normal">{poData?.tax}</span>
+                  </p>
+                  <p className="font-bold text-sm">
+                    Total: <span className="font-normal">{poData?.total}</span>
+                  </p>
+                  {/* <p className="font-bold text-sm">
+                    Shipping Cost: <span className="font-normal"></span>
+                  </p> */}
+                  <p className="font-bold text-sm">
+                    Gross Total:{" "}
+                    <span className="font-normal">{poData?.grossTotal}</span>
+                  </p>
                 </div>
               </div>
 
@@ -276,63 +280,6 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                     <p className="font-bold text-sm">
                       Grand Total: <span className="font-normal"></span>
                     </p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <FormField
-                      control={form.control}
-                      name="promoPrice"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel>Promo Price </FormLabel>
-                          <FormControl>
-                            <Input placeholder="300" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="promoStart"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel>Promo Start Date </FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-[240px] pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) => date < new Date()}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
 
                   <div className="grid w-full gap-1.5">

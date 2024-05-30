@@ -1,22 +1,17 @@
-import { z } from "zod";
-
-export const GRNFormSchema = z.object({
-  name: z.string().min(1, "Name is Required"), //done
-  articleCode: z.string().min(1, "Article Code is Required"), //done
-  qty: z.number().optional(), //done
-  mrp: z.number().optional(), //done
-  tp: z.number().optional(), //done
-  total: z.number().optional(), //done
-  supplierId: z.string().optional(),
-  vat: z.number().optional(), //done
-  stock: z.number().optional(), //done
-  hsCode: z.string().optional(), //done
-  supplier: z.string().optional(), //done
-  tax: z.number().optional(), //done
-  country: z.string().optional(),
-  discount: z.number().optional(),
-  grosTotal: z.number().optional(),
-  grossTotalRound: z.number().optional(), //done
-  note: z.string(), //done
-  containerId: z.string(), //done
-});
+export interface GrnSchema {
+  id?: string;
+  grnNo?: string;
+  supplierId?: string;
+  poNoId?: string;
+  tpnId?: string;
+  products?: any[];
+  total?: number;
+  grossTotal?: number;
+  grossTotalRound?: number;
+  totalItem?: number;
+  tax?: number;
+  discount?: number;
+  status?: string;
+  userId?: string;
+  // MongoDB ObjectId reference to User
+}

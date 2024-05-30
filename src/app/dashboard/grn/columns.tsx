@@ -20,6 +20,7 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
+import { Checkbox } from "@/components/ui/checkbox";
 export type Offer = {
   id: string;
   name: string;
@@ -46,61 +47,38 @@ export const columns: ColumnDef<Offer>[] = [
     header: "#",
   },
   {
-    accessorKey: "grnNo",
-    header:"GRN No",
+    accessorKey: "articleCode",
+    header: "Article Code",
   },
   {
-    accessorKey: "user",
-    header: "User",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "supplier",
-    header: "Supplier",
+    accessorKey: "tp",
+    header: "TP",
   },
   {
-    accessorKey: "totalItem",
-    header: "Total Item",
+    accessorKey: "qty",
+    header: "Quantity",
   },
   {
-    accessorKey: "grossTotalRound",
+    accessorKey: "total",
     header: "Total",
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+
+  // {
+  //   accessorKey: "status",
+  //   header: "Status",
+  // },
   {
     accessorKey: "action",
     header: () => <div className="">Action</div>,
     id: "actions",
     cell: ({ row }) => {
-      const offer = row.original;
+      const po = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
-            >
-              View Details
-            </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/offers/${offer.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(offer.id)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <Checkbox />;
     },
   },
 ];
