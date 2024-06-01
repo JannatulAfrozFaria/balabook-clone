@@ -89,6 +89,7 @@ export const poSlice = createSlice({
         totalItem: products.length,
       };
     },
+    reset: (state) => (state = initialState),
     // Add more reducers as needed
   },
 });
@@ -100,6 +101,7 @@ export const {
   setContainerId,
   setPiNo,
   setNote,
+  reset,
 } = poSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

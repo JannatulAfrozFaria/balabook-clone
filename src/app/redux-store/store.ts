@@ -1,11 +1,13 @@
 "use client";
 import { configureStore } from "@reduxjs/toolkit";
 import poReducer from "./Slice/PoSlice";
+import grnReducer from "./Slice/GRNSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       purchaseOrder: poReducer, // Add the poSlice reducer to the store
+      grn: grnReducer, // Add the poSlice reducer to the store
     },
   });
 };

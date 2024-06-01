@@ -33,7 +33,7 @@ export const generateId = async (module: string) => {
   }
   switch (module) {
     case "grn":
-      todayTotal = await prisma.gRN.count({
+      todayTotal = await prisma.grn.count({
         where: {
           createdAt: {
             gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter documents created today

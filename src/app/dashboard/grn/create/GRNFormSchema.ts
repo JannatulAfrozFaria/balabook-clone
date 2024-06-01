@@ -1,9 +1,8 @@
-export interface GrnSchema {
+export interface GRNFormSchema {
   id?: string;
   grnNo?: string;
   supplierId?: string;
   poNoId?: string;
-  tpnId?: string;
   products?: any[];
   total?: number;
   grossTotal?: number;
@@ -11,6 +10,7 @@ export interface GrnSchema {
   totalItem?: number;
   tax?: number;
   discount?: number;
+  note?: string;
   status?: string;
   userId?: string;
   // MongoDB ObjectId reference to User

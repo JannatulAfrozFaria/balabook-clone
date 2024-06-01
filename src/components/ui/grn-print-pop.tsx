@@ -37,8 +37,9 @@ import {
 import { useRef } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import prisma from "@/index";
 
-export function PoPrintalog({
+export function GrnPrintLog({
   entry,
   open,
   setOpen,
@@ -250,8 +251,8 @@ export function PoPrintalog({
                         <div className="text-black">
                           <h1 className="font-bold ">Name of Supplier</h1>
                           <h2>{product?.supplier?.name}</h2>
-                          <h2>demo@gmail.com</h2>
-                          <h2>1316842636</h2>
+                          <h2>{product?.supplier?.phone}</h2>
+                          <h2>{product?.supplier?.email}</h2>
                         </div>
                         <div className="text-black">
                           <h1 className="font-bold">Warehouse</h1>
@@ -262,8 +263,16 @@ export function PoPrintalog({
                         <div className=" flex flex-col items-end text-black">
                           <h1 className=" font-bold  ">Good Recieve Note</h1>
                           <h2 className="font-bold text-sm">
+                            GRN No:{" "}
+                            <span className="font-normal">
+                              {product?.grnNo}
+                            </span>
+                          </h2>
+                          <h2 className="font-bold text-sm">
                             PO No:{" "}
-                            <span className="font-normal">{product?.poNo}</span>
+                            <span className="font-normal">
+                              {product?.poNo?.poNo}
+                            </span>
                           </h2>
                           {/* <h2 className="font-bold text-sm">
                             PO No:{" "}

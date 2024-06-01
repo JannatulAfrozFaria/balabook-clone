@@ -2,9 +2,8 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { generateId } from "@/lib/idGenerator";
 import { GRNFormSchema } from "./create/GRNFormSchema";
-
-
 
 export type Product = z.infer<typeof GRNFormSchema>;
 
@@ -28,94 +27,78 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveProduct = async (id: string, data: Product) => {
+export const saveGRN = async (data: Product) => {
+  const newGrnNo = await generateId("grn");
   try {
     console.log("action", data);
     let {
-      name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
+      id,
+      grnNo,
+      supplierId,
+      tpnId,
+      products,
       total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
+      poNoId,
+      grossTotal,
       grossTotalRound,
+      totalItem,
+      status,
+      userId,
       note,
-      containerId,
-      
     } = data;
 
-    if (!name || !articleCode) return false;
+    if (totalItem && totalItem < 0) {
+      console.error("Supplier ID is missing or total items are zero");
+      return false;
+    }
 
-    if (id !== "") {
-      const updateUnit = await prisma.product.update({
-        where: {
-          id: id,
-        },
+    console.log(data);
+
+    if (id === "") {
+      const createGrn = await prisma.grn.create({
+        // where: { id: id },
         data: {
-          //@ts-ignore
-          name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
-      total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
-      grossTotalRound,
-      note,
-      containerId,
+          grnNo: newGrnNo,
+          supplierId,
+          tpnId,
+          products,
+          total,
+          poNoId,
+          grossTotal,
+          grossTotalRound,
+          totalItem,
+          status,
+          note,
+          userId,
         },
       });
 
-      if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
-
-        revalidatePath("/dashboard/unit");
-        return updateUnit;
+      if (createGrn) {
+        console.log(`${createGrn.grnNo} created successfully!`);
+        revalidatePath("/dashboard/po");
+        return createGrn;
       }
-    } else {
-      const createProduct = await prisma.product.create({
-        data: {
-            name,
-            articleCode,
-            qty,
-            mrp,
-            tp,
-            total,
-            vat,
-            stock,
-            supplier,
-            tax,
-            hsCode,
-            country,
-            discount,
-            grosTotal,
-            grossTotalRound,
-            note,
-            containerId,
-        },
-      });
-
-      if (createProduct) {
-        console.log(`${createProduct.name} Create successful!`);
-
-        revalidatePath("/dashboard/unit");
-        return createProduct;
-      }
+      // } else {
+      //   const updateGrn = await prisma.gRN.update({
+      //     data: {
+      //       grnNo: newGrnNo,
+      //       supplierId,
+      //       poNoId,
+      //       tpnId,
+      //       products,
+      //       total,
+      //       grossTotal,
+      //       grossTotalRound,
+      //       totalItem,
+      //       status,
+      //       userId,
+      //     },
+      //   });
+      //   if (updateGrn) {
+      //     console.log(`${updateGrn.grnNo} created successfully!`);
+      //     revalidatePath("/dashboard/po");
+      //     return updateGrn;
+      //   }
     }
   } catch (err) {
     console.log(err);

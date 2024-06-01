@@ -26,111 +26,78 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
-import productPhoto from "./img/product.jpg";
-import Image from "next/image";
-import { DevTool } from "@hookform/devtools";
-import SelectSupplier from "@/components/ui/SelectSupplier";
-import SelectMc from "@/components/ui/SelectMc";
-import SelectCategory from "@/components/ui/SelectCategory";
-import SelectBrand from "@/components/ui/SelectBrand";
-import SelectUnit from "@/components/ui/SelectUnit";
-import { saveProduct } from "../_action";
+import { saveGRN } from "../_action";
 import { columns } from "../columns";
 import { GRNDataTable } from "./data-table";
-import { GRNFormSchema } from "./GRNFormSchema";
-import PageTitle from "@/components/ui/PageTitle";
 import { Label } from "@/components/ui/label";
 import SelectPO from "@/components/ui/selectPO";
 import { poById } from "../../po/_action";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux-store/store";
+import { GRNSingleProductDataTable } from "./single-data-table";
+import { GRNFormSchema } from "./GRNFormSchema";
+import {
+  reset,
+  setNote,
+  setPoInfo,
+  setUserId,
+} from "@/app/redux-store/Slice/GRNSlice";
+import { grnColumns } from "./columns";
+import { poColumns } from "./poColumns";
+import { revalidatePath } from "next/cache";
+import { redirect, useRouter } from "next/navigation";
 
 interface ProductFormEditProps {
   entry: any;
 }
 
 const data: any = [];
-function AdjustForm({ entry }: ProductFormEditProps) {
+function GrnForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
+  const dispatch = useDispatch();
   const [poData, setPoData] = useState<any>({});
+  const [singleProduct, setSingleProduct] = useState<any>({});
   const [formattedDate, setFormattedDate] = useState<string>("");
-  const form = useForm<z.infer<typeof GRNFormSchema>>({
-    resolver: zodResolver(GRNFormSchema),
-    defaultValues: {
-      name: "",
-      qty: 0,
-      mrp: 0,
-      tp: 0,
-      total: 0,
-      vat: 0,
-      stock: 0,
-      supplier: "",
-      tax: 0,
-      hsCode: "",
-      country: "",
-      supplierId: "",
-      discount: 0,
-      grosTotal: 0,
-      grossTotalRound: 0,
-      note: "",
-      containerId: "",
-    },
-  });
+  const router = useRouter();
+  const form = useForm();
 
   const handlePoSelect = async (id: string) => {
     const poDetails = await poById(id);
+    // set slice data
     setPoData(poDetails);
-    console.log(poDetails);
+    dispatch(setUserId(poDetails?.userId));
+    dispatch(
+      setPoInfo({
+        poNo: poDetails?.id,
+        supplierId: poDetails?.supplierId,
+      })
+    );
   };
-
-  useEffect(() => {
-    // Convert the createdAt string to a Date object
-    const date = new Date(poData?.createdAt);
-
-    // Format the date as needed
-    const formattedDateString = date.toLocaleString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-      timeZoneName: "short",
-    });
-
-    // Set the formatted date in state
-    setFormattedDate(formattedDateString);
-  }, [poData]);
-
-  console.log(formattedDate);
 
   const [poId, setPoId] = useState(false);
 
-  async function onSubmit(data: z.infer<typeof GRNFormSchema>) {
-    try {
-      console.log("product", data);
-      //@ts-ignore
-      const product = await saveProduct(id, data);
+  const grnData = useSelector((state: RootState) => state.grn);
+  const selectedProductData =
+    grnData?.products?.length > 0 ? grnData.products : [];
+  // console.log("selected product", selectedProductTotal.total);
 
-      if (product) {
-        form.reset();
-        toast.success(
-          id ? "Product Update Success" : "Product Creation Success"
-        );
+  async function onSubmitGRn(data: GRNFormSchema) {
+    try {
+      //@ts-ignore
+      // console.log(grnData);
+      const grn = await saveGRN(grnData);
+      if (grn) {
+        toast.success(grn ? "GRN Creation Success" : "GRN Update Success");
+        dispatch(reset());
+        setPoData({});
+        router.push("/dashboard/grn");
       } else {
-        toast.error(id ? "Product Update faield!" : "Product Creation faield!");
+        toast.error(grn ? "GRN Creation faield!" : "GRN Update faield!");
       }
     } catch (error) {
       console.error(error);
@@ -142,7 +109,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
       <div className="flex pt-8 w-full ">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmitGRn)}
             className="w-full space-y-4"
           >
             <div className="flex w-full">
@@ -217,26 +184,29 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                       </span>
                     </p>
                     <p className="font-bold">
-                      Date: <span className="font-normal">{formattedDate}</span>
+                      Date:{" "}
+                      <span className="font-normal">
+                        {format(new Date(poData?.createdAt), "MM/dd/yyyy")}
+                      </span>
                     </p>
                   </div>
                 ) : null}
                 {/* table, search, import */}
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0 mt-2">
                   <GRNDataTable
-                    columns={columns}
+                    columns={poColumns}
                     data={poData?.products?.length ? poData.products : []}
                     // className="bg-red-400"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 mt-4 pb-2 border-b">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 mt-4 pb-2 border-b">
                   <p className="font-bold text-sm">
                     Item:{" "}
                     <span className="font-normal">{poData?.totalItem}</span>
                   </p>
-                  <p className="font-bold text-sm">
+                  {/* <p className="font-bold text-sm">
                     Tax: <span className="font-normal">{poData?.tax}</span>
-                  </p>
+                  </p> */}
                   <p className="font-bold text-sm">
                     Total: <span className="font-normal">{poData?.total}</span>
                   </p>
@@ -255,30 +225,32 @@ function AdjustForm({ entry }: ProductFormEditProps) {
               <div className="w-1/2 mr-2">
                 <h1 className="font-bold">Receivable Products List</h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-1 mb-0">
-                  <GRNDataTable columns={columns} data={data} />
-                  <FormItem className="">
+                <div className="grid grid-cols-1 md:grid-cols-1 mb-0 mt-2">
+                  <GRNSingleProductDataTable
+                    columns={grnColumns}
+                    data={selectedProductData}
+                  />
+                  {/* <FormItem className="">
                     <FormLabel>Shipping Cost</FormLabel>
                     <FormControl>
                       <Input placeholder="TK" />
                     </FormControl>
                     <FormMessage />
-                  </FormItem>
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 mt-4 pb-2 border-b">
+                  </FormItem> */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 mt-4 pb-2 border-b">
                     <p className="font-bold text-sm">
-                      Item: <span className="font-normal"></span>
+                      Item:{" "}
+                      <span className="font-normal">{grnData?.totalItem}</span>
                     </p>
+
                     <p className="font-bold text-sm">
-                      Tax: <span className="font-normal"></span>
+                      Total:{" "}
+                      <span className="font-normal">{grnData?.total}</span>
                     </p>
+
                     <p className="font-bold text-sm">
-                      Total: <span className="font-normal"></span>
-                    </p>
-                    <p className="font-bold text-sm">
-                      Shipping Cost: <span className="font-normal"></span>
-                    </p>
-                    <p className="font-bold text-sm">
-                      Grand Total: <span className="font-normal"></span>
+                      Gross Total:{" "}
+                      <span className="font-normal">{grnData?.grossTotal}</span>
                     </p>
                   </div>
 
@@ -287,6 +259,10 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                     <Textarea
                       placeholder="Type your GRN Note here."
                       id="message"
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        dispatch(setNote(value));
+                      }}
                     />
                   </div>
 
@@ -307,4 +283,4 @@ function AdjustForm({ entry }: ProductFormEditProps) {
   );
 }
 
-export default AdjustForm;
+export default GrnForm;

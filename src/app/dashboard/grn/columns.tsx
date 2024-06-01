@@ -1,6 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedProduct } from "@/app/redux-store/Slice/GRNSlice";
+import { RootState } from "@/app/redux-store/store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,17 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import axios from "axios";
-import { toast } from "sonner";
-import { Toast } from "@/components/ui/toast";
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Image from "next/image";
-import { Checkbox } from "@/components/ui/checkbox";
+import { MoreHorizontal, Pencil, Printer, Trash } from "lucide-react";
+import { PoPrintalog } from "@/components/ui/po-print-pop";
+import { useState } from "react";
+import { GrnPrintLog } from "@/components/ui/grn-print-pop";
 export type Offer = {
   id: string;
   name: string;
@@ -43,42 +40,90 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Offer>[] = [
   {
-    accessorKey: "",
+    accessorKey: "no",
     header: "#",
+    cell: ({ row }: { row: any }) => {
+      const sl = row.index + 1; // row.index gives the zero-based index, add 1 to make it 1-based
+
+      return `${sl}.`;
+    },
   },
   {
-    accessorKey: "articleCode",
-    header: "Article Code",
+    accessorKey: "grnNo",
+    header: "GRN No",
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "user.name",
+    header: "User",
   },
   {
-    accessorKey: "tp",
-    header: "TP",
+    accessorKey: "supplier.name",
+    header: "Supplier",
   },
   {
-    accessorKey: "qty",
-    header: "Quantity",
+    accessorKey: "totalItem",
+    header: "Total Item",
   },
   {
     accessorKey: "total",
     header: "Total",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
   },
 
   // {
   //   accessorKey: "status",
   //   header: "Status",
   // },
+
   {
     accessorKey: "action",
     header: () => <div className="">Action</div>,
     id: "actions",
     cell: ({ row }) => {
-      const po = row.original;
-
-      return <Checkbox />;
+      const grn = row.original;
+      const [activate, setActive] = useState(false);
+      return (
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {/* <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(offer.id)}
+            >
+              View Details
+            </DropdownMenuItem> */}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setActive(true)}
+              >
+                <>
+                  <Printer size={16} className="mr-2" /> View
+                </>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {/* <Link href={`/dashboard/offers/${offer.id}`}> */}
+                <Pencil size={16} className="mr-2" /> Edit
+                {/* </Link> */}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDeleteTigger(grn.id)}>
+                <Trash size={16} className="mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <GrnPrintLog open={activate} setOpen={setActive} entry={grn} />
+        </>
+      );
     },
   },
 ];

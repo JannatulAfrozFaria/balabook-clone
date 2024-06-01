@@ -6,10 +6,32 @@ import { Toast } from "@/components/ui/toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BadgePlus } from "lucide-react";
+import { GRNFormSchema } from "./create/GRNFormSchema";
 
 export default async function ProductsPage() {
-  const data: any = []
+  const data: GRNFormSchema = await prisma.grn.findMany({
+    include: {
+      supplier: {
+        select: {
+          name: true, // Select only the name field from the supplier model
+          phone: true, // Select only the phone field from the
+          email: true, // Select only the email field from the
+        },
+      },
+      poNo: {
+        select: {
+          poNo: true, // Select only the name field from the supplier model
+        },
+      },
+      user: {
+        select: {
+          name: true, // Select only the name field from the user model
+        },
+      },
+    },
+  });
 
+  console.log("data", data);
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
       <div className=" flex-col flex w-full">
@@ -18,7 +40,10 @@ export default async function ProductsPage() {
             <PageTitle title="GRN" />
             <div className="flex items-center space-x-2">
               <Link href="/dashboard/grn/create">
-                <Button><BadgePlus className="mr-2 h-4 w-4" />Create GRN</Button>
+                <Button>
+                  <BadgePlus className="mr-2 h-4 w-4" />
+                  Create GRN
+                </Button>
               </Link>
             </div>
           </div>

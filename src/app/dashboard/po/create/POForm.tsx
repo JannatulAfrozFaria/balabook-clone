@@ -34,6 +34,7 @@ import {
   setContainerId,
   setPiNo,
   setNote,
+  reset,
 } from "@/app/redux-store/Slice/PoSlice";
 import { useSession } from "next-auth/react";
 import { RootState } from "@/app/redux-store/store";
@@ -41,6 +42,7 @@ import CsvUpload from "@/components/CsvUpload";
 import { importProduct, searchProductById } from "../../products/_action";
 import SearchProduct from "@/components/ui/searchProduct";
 import { addToDb, getStoredCart, removeFromDb } from "@/lib/poDb";
+import { redirect, useRouter } from "next/navigation";
 import { PoSchema } from "../PoSchema";
 import {
   Select,
@@ -69,7 +71,7 @@ interface ProductFormEditProps {
 
 function ProductForm({ entry }: ProductFormEditProps) {
   const form = useForm();
-
+  const router = useRouter();
   const dispatch = useDispatch();
   const { data: session } = useSession();
 
@@ -181,8 +183,9 @@ function ProductForm({ entry }: ProductFormEditProps) {
       const PO = await savePo(poData);
       console.log("product", PO);
       if (PO) {
-        form.reset();
         toast.success(PO ? "PO Creation Success" : "PO Update Success");
+        dispatch(reset());
+        router.push("/dashboard/po");
       } else {
         toast.error(PO ? "PO Creation faield!" : "PO Update faield!");
       }
