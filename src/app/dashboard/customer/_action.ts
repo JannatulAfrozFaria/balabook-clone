@@ -289,48 +289,39 @@ export const importCustomer = async (data: any) => {
   }
 };
 
-// export const updateCustomer = async (id: string, data: Customer) => {
-//   try {
-//     console.log(data);
-//     const {
-//       name,
-//       phone,
-//       email,
-//       address,
-//       district,
-//       division,
-//       company,
-//       designation,
-//       // @ts-ignore
-//       attend,
-//       status,
-//     } = data;
-//     if (!name || !phone) {
-//       return false;
-//     }
-//     const updatedUser = await prisma.customer.update({
-//       where: { id: id },
-//       data: {
-//         name,
-//         phone,
-//         email,
-//         address,
-//         district,
-//         division,
-//         company,
-//         designation,
-//         attend,
-//         // @ts-ignore
-//         status,
-//       },
-//     });
-//     if (updatedUser) {
-//       console.log(`${updatedUser.name} Update successful!`);
-//       revalidatePath("/dashboard/customer");
-//       return updatedUser;
-//     }
-//   } catch (err) {
-//     console.log("err", err);
-//     return false;
-//   }
-// };
+export const CustomerDw = async () => {
+  try {
+    const customers = await prisma.customer.findMany({
+      where: {
+        status: "Active",
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    let dw = [
+      {
+        value: "",
+        label: "Select Customer",
+      },
+    ];
+
+    // console.log(suppliers);
+    customers.map(
+      (customer) =>
+        (dw = [
+          ...dw,
+          {
+            value: customer.id,
+            label: customer.name,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent customers:", error);
+    throw new Error("Failed to fetch customers");
+  }
+};

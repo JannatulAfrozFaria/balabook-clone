@@ -1,0 +1,116 @@
+"use client";
+//@ts-ignore
+import { OrderFormSchema } from "@/app/dashboard/orders/OrderFormSchema";
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+
+// Define the initial state using that type
+const initialState: OrderFormSchema = {
+  id: "",
+  invoiceId: "",
+  source: "TCM",
+  warehouseId: "",
+  userId: "",
+  customerId: "",
+  products: [],
+  returnProducts: [],
+  returnCalculation: "",
+  totalItems: 0,
+  total: 0,
+  discount: 0,
+  vat: 0,
+  grossTotal: 0,
+  grossTotalRound: 0,
+  totalRecievable: 0,
+  totalRecieved: 0,
+  changeAmount: 0,
+  paidAmount: 0,
+  status: "Complete",
+};
+
+export const salesSlice = createSlice({
+  name: "salesSlice",
+  initialState,
+  reducers: {
+    setUserId: (state, action) => {
+      return {
+        ...state,
+        userId: action.payload,
+      };
+    },
+    setCustomerId: (state, action) => {
+      return {
+        ...state,
+        customerId: action.payload,
+      };
+    },
+    setAmount: (state, action) => {
+      return {
+        ...state,
+        amount: action.payload,
+      };
+    },
+    setTotalRecievable: (state, action) => {
+      return {
+        ...state,
+        totalRecievable: action.payload,
+      };
+    },
+    setPaidAmount: (state, action) => {
+      return {
+        ...state,
+        paidAmount: action.payload,
+      };
+    },
+    setPaymentMethod: (state, action) => {
+      return {
+        ...state,
+        paymentMethod: action.payload,
+      };
+    },
+    setNote: (state, action) => {
+      return {
+        ...state,
+        note: action.payload,
+      };
+    },
+    setProducts: (state, action) => {
+      const products = action.payload;
+      // const totalItem = products.length;
+      // //@ts-ignore
+      const total = products.reduce((acc, product) => acc + product.total, 0);
+      const grossTotal = products.reduce(
+        (acc, product) => acc + product.total,
+        0
+      );
+      // const grossTotal = total - state.tax - state.discount;
+      // const grossTotalRound = ceil(grossTotal);
+      return {
+        ...state,
+        products: products,
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: products.length,
+      };
+    },
+    reset: (state) => (state = initialState),
+    // Add more reducers as needed
+  },
+});
+export const {
+  setUserId,
+  setCustomerId,
+  setTotalRecievable,
+  setAmount,
+  setPaidAmount,
+  setPaymentMethod,
+  setNote,
+  reset,
+  setProducts,
+} = salesSlice.actions;
+
+// Other code such as selectors can use the imported `RootState` type
+export const selectCount = (state: RootState) => state.purchaseOrder;
+
+export default salesSlice.reducer;

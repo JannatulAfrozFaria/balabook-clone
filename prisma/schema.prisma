@@ -21,6 +21,8 @@ model User {
   type          UserType // Enum for user type
   status        Status // Enum for user Status
   photo         String?
+  warehouse       WareHouse   @relation(fields: [warehouseId], references: [id])
+  warehouseId     String @db.ObjectId // MongoDB ObjectId reference to User
   purchaseOrder PurchaseOrder[]
   grn           Grn[]
   tpn           Tpn[]
@@ -330,6 +332,8 @@ model WareHouse {
   // Define the relationship with products
   whToTpn   Tpn[]         @relation("whTo")
   whFromTpn Tpn[]         @relation("whFrom")
+  userToWh  User[] 
+  sales     Sales[]       
 }
 
 
@@ -378,12 +382,35 @@ model UserLogs {
 }
 
 model Sales {
-  id String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  user        User   @relation(fields: [userId], references: [id])
-  userId      String @db.ObjectId // MongoDB ObjectId reference to User
+  id              String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  invoiceId String
+  source String
+  warehouse       WareHouse   @relation(fields: [warehouseId], references: [id])
+  warehouseId     String @db.ObjectId // MongoDB ObjectId reference to User
+  user            User   @relation(fields: [userId], references: [id])
+  userId          String @db.ObjectId // MongoDB ObjectId reference to User
   customer        Customer   @relation(fields: [customerId], references: [id])
-  customerId      String @db.ObjectId // MongoDB ObjectId reference to User
+  customerId      String @db.ObjectId // MongoDB ObjectId reference to User\
+  products        Json[]
+  returnProducts  Json[]
+  returnCalculation Json []
+  totalItems      Int
+  total           Int
+  discount        Int
+  Vat             Int
+  grossTotal      Int
+  grossTotalRound Int
+  totalRecievable Int
+  totalRecieved   Int
+  changeAmount    Int
+  paidAmount      Json[]
+  status          Status
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+
+
 model Damage {
   id String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   user        User   @relation(fields: [userId], references: [id])

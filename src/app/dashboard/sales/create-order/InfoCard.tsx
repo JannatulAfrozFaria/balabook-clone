@@ -27,6 +27,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Printer, RotateCcw } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setTotalRecievable } from "@/app/redux-store/Slice/SalesSlice";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -34,13 +37,23 @@ const FormSchema = z.object({
   }),
 });
 
-export function InfoCard() {
+export function InfoCard({ salesData }) {
+  const dispatch = useDispatch();
+
+  // console.log(salesData);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
     },
   });
+
+  const totalRecievable = salesData?.total;
+  // console.log("totalRecivea", totalRecievable);
+
+  useEffect(() => {
+    dispatch(setTotalRecievable(totalRecievable));
+  }, [totalRecievable]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({
@@ -57,7 +70,7 @@ export function InfoCard() {
     <>
       <div className="w-full flex justify-between border-b pb-4 font-bold">
         <p>Finalize Order</p>
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <Checkbox id="terms" />
           <label
             htmlFor="terms"
@@ -65,27 +78,27 @@ export function InfoCard() {
           >
             Due Bill
           </label>
-        </div>
+        </div> */}
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total Item:</p>
-        <p>1</p>
+        <p>{salesData?.totalItem}</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total:</p>
-        <p>328.00 BDT</p>
+        <p>{salesData?.total} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Vat/Tax Amount:</p>
-        <p>328.00 BDT</p>
+        <p>{salesData?.vat} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Gross Total:</p>
-        <p>328.00 BDT</p>
+        <p>{salesData?.grossTotal} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Gross Total(Round):</p>
-        <p>328.00 BDT</p>
+        <p>{salesData?.grossTotalRound} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Cash Recieved:</p>

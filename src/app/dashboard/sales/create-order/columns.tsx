@@ -42,19 +42,19 @@ const handleDeleteTigger = async (id: string) => {
 
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "",
     header: "#",
   },
   {
-    accessorKey: "product",
-    header: "Product",
+    accessorKey: "articleCode",
+    header: "Article Code",
   },
   {
-    accessorKey: "stock",
-    header: "Stock",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "price",
+    accessorKey: "mrp",
     header: "Price",
   },
   {
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Product>[] = [
     header: "Vat",
   },
   {
-    accessorKey: "subTotal",
-    header: "Subtotal",
+    accessorKey: "total",
+    header: "Total",
   },
 ];
