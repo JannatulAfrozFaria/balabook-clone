@@ -27,44 +27,72 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Printer, RotateCcw } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { setTotalRecievable } from "@/app/redux-store/Slice/SalesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import {
+  setCardAmount,
+  setCardName,
+  setCash,
+  setChangeAmount,
+  setMfsAmount,
+  setMfsName,
+  setReceivedAmount,
+  setTotalRecievable,
+} from "@/app/redux-store/Slice/SalesSlice";
+import { RootState } from "@/app/redux-store/store";
+import { CreateOrderSchema } from "./CreateOrderSchema";
+import { createOrder, saveOrder } from "./../_action";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
 });
-
-export function InfoCard({ salesData }) {
+//@ts-ignore
+export function InfoCard() {
   const dispatch = useDispatch();
 
-  // console.log(salesData);
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
-  });
+  const posData = useSelector((state: RootState) => state.sales);
 
-  const totalRecievable = salesData?.total;
+  const totalRecievable = posData?.total;
   // console.log("totalRecivea", totalRecievable);
 
   useEffect(() => {
     dispatch(setTotalRecievable(totalRecievable));
   }, [totalRecievable]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  useEffect(() => {
+    const totalReceived =
+      parseFloat(posData?.paidAmount?.cash) +
+        parseFloat(posData?.paidAmount?.card.amount) +
+        parseFloat(posData?.paidAmount?.mfs.amount) || 0;
+
+    const changeAmount = totalReceived - parseFloat(posData?.totalRecievable);
+
+    dispatch(setReceivedAmount(totalReceived));
+    dispatch(setChangeAmount(changeAmount));
+  }, [posData.paidAmount]);
+
+  // submit order funciton
+  //@ts-ignore
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log("submitted");
+    try {
+      console.log("product", posData);
+      //@ts-ignore
+      // const order = await saveOrder(posData);
+      const order = await createOrder(posData);
+      if (order) {
+        console.log("order", order);
+      } else {
+        console.log("Error", order);
+      }
+      // console.log("order", order);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -82,31 +110,40 @@ export function InfoCard({ salesData }) {
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total Item:</p>
-        <p>{salesData?.totalItem}</p>
+        <p>{posData?.totalItem}</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total:</p>
-        <p>{salesData?.total} BDT</p>
+        <p>{posData?.total} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Vat/Tax Amount:</p>
-        <p>{salesData?.vat} BDT</p>
+        <p>{posData?.vat} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Gross Total:</p>
-        <p>{salesData?.grossTotal} BDT</p>
+        <p>{posData?.grossTotal} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Gross Total(Round):</p>
-        <p>{salesData?.grossTotalRound} BDT</p>
+        <p>{posData?.grossTotalRound} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Cash Recieved:</p>
-        <Input type="text" className="w-1/3" placeholder="1" />
+        <Input
+          type="text"
+          className="w-1/3"
+          placeholder="0"
+          //@ts-ignore
+          onChange={(e) => dispatch(setCash(e.target.value))}
+        />
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Card:</p>
-        <Select value={"visa"}>
+        <Select
+          // value={cardName && cardName}
+          onValueChange={(value: string) => dispatch(setCardName(value))}
+        >
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Visa" />
           </SelectTrigger>
@@ -124,11 +161,18 @@ export function InfoCard({ salesData }) {
           </SelectContent>
         </Select>
 
-        <Input className="w-1/3" placeholder="1" />
+        <Input
+          className="w-1/3"
+          placeholder="0" //@ts-ignore
+          onChange={(e) => dispatch(setCardAmount(e.target.value))}
+        />
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">MFS:</p>
-        <Select value={"bkash"}>
+        <Select
+          // value={mfsName && mfsName}
+          onValueChange={(value: string) => dispatch(setMfsName(value))}
+        >
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Bkash" />
           </SelectTrigger>
@@ -142,7 +186,11 @@ export function InfoCard({ salesData }) {
           </SelectContent>
         </Select>
 
-        <Input className="w-1/3" placeholder="1" />
+        <Input
+          className="w-1/3"
+          placeholder="0" //@ts-ignore
+          onChange={(e) => dispatch(setMfsAmount(e.target.value))}
+        />
       </div>
       <div className="w-full flex justify-between mt-4">
         <div className="flex items-center space-x-2">
@@ -154,22 +202,22 @@ export function InfoCard({ salesData }) {
             Discount
           </label>
         </div>
-        <Input type="text" className="w-1/3" placeholder="1" />
+        <Input type="text" className="w-1/3" placeholder="0" />
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total Recieved:</p>
-        <p>-328.00 BDT</p>
+        <p>{posData?.totalRecieved} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4 ">
         <p className="font-medium">Change Amount:</p>
-        <p>-328.00 BDT</p>
+        <p>{posData?.changeAmount} BDT</p>
       </div>
       <Separator orientation="horizontal" className="mt-2" />
       <div className="w-full flex justify-center gap-4  mt-8">
         <Button>
           <RotateCcw size={18} className="mr-2" /> Reset
         </Button>
-        <Button>
+        <Button onClick={onSubmit}>
           <Printer size={18} className="mr-2" /> Generate Order
         </Button>
       </div>

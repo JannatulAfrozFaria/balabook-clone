@@ -2,12 +2,13 @@ export interface CreateOrderSchema {
   id?: string; // Optional because it will be auto-generated
   invoiceId: string;
   source?: string;
+  customerId?: string;
   warehouseId?: string;
   userId?: string;
   products?: any;
   returnProducts?: any;
-  returnCalculation?: any;
-  totalItems?: number;
+  returnCalculation?: number;
+  totalItem?: number;
   total?: number;
   discount?: number;
   vat?: number;

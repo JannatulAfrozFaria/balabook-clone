@@ -43,6 +43,18 @@ export const generateId = async (module: string) => {
       modulePrefix = "GRN";
       break;
   }
+  switch (module) {
+    case "sale":
+      todayTotal = await prisma.sales.count({
+        where: {
+          createdAt: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter documents created today
+          },
+        },
+      });
+      modulePrefix = "INV";
+      break;
+  }
   //   switch (module) {
   //     case "order":
   //       todayTotal = await prisma.sales.count({
@@ -54,8 +66,6 @@ export const generateId = async (module: string) => {
   //       });
   //       break;
   //   }
-
-  console.log("todayTotal:", todayTotal);
 
   const number = ("000" + (todayTotal + 1)).toString();
   const current = number.substring(number.length - 4);

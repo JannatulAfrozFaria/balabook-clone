@@ -4,7 +4,7 @@ import Link from "next/link";
 import { LucideIcon, Power } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { buttonVariants,Button } from "@/components/ui/button";
+import { buttonVariants, Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -27,9 +27,13 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const router = useRouter();
-    
- 
+
   const pathName = usePathname();
+  const segments = pathName.split("/").filter(Boolean);
+  const path = `/${segments.slice(0, 2).join("/")}`;
+
+  console.log(path);
+
   const onlyWidth = useWindowWidth();
   const logOutHandler = async () => {
     const signout = await signOut();
@@ -52,7 +56,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   href={link.href}
                   className={cn(
                     buttonVariants({
-                      variant: link.href === pathName ? "default" : "ghost",
+                      variant: link.href === path ? "default" : "ghost",
                       size: "icon",
                     }),
                     "h-9 w-9",
@@ -103,48 +107,44 @@ export function Nav({ links, isCollapsed }: NavProps) {
             </Link>
           )
         )}
-        
-        {
-          isCollapsed ? (
-            <Tooltip  delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={logOutHandler}
-                  variant="ghost"
-                  className="h-9 w-9 p-0"
-                >
-                  <Power className="h-4 w-4" />
-                  <span className="sr-only">Logout</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="flex items-center gap-4">
-                Logout
-                  {/* <span className="ml-auto text-muted-foreground">
+
+        {isCollapsed ? (
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={logOutHandler}
+                variant="ghost"
+                className="h-9 w-9 p-0"
+              >
+                <Power className="h-4 w-4" />
+                <span className="sr-only">Logout</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="flex items-center gap-4">
+              Logout
+              {/* <span className="ml-auto text-muted-foreground">
                     Logout
                   </span> */}
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Button
-              onClick={logOutHandler}
-              variant="ghost"
-              className="justify-start "
-            >
-              <Power className="mr-2 ml-4 h-4 w-4" />
-                Logout
-              
-                {/* <span
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            onClick={logOutHandler}
+            variant="ghost"
+            className="justify-start "
+          >
+            <Power className="mr-2 ml-4 h-4 w-4" />
+            Logout
+            {/* <span
                   className={cn(
                     // "ml-auto",
                   )}
                 >
                   Logout
                 </span> */}
-            </Button>
-          )
-        }
+          </Button>
+        )}
       </nav>
- 
     </div>
   );
 }

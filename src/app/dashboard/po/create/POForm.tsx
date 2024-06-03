@@ -171,17 +171,12 @@ function ProductForm({ entry }: ProductFormEditProps) {
     }
   };
 
-  // const products = poData ? poData.products : null;
-
   const products = poData ? poData.products : null;
-
-  console.log(poData);
 
   async function onSubmit(data: PoSchema) {
     try {
       //@ts-ignore
       const PO = await savePo(poData);
-      console.log("product", PO);
       if (PO) {
         toast.success(PO ? "PO Creation Success" : "PO Update Success");
         dispatch(reset());

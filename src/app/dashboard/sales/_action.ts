@@ -2,14 +2,13 @@
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { TPNFormSchema } from "./create/TPNFormSchema";
-
-export type Product = z.infer<typeof TPNFormSchema>;
+import { CreateOrderSchema } from "./create-order/CreateOrderSchema";
+import { generateId } from "@/lib/idGenerator";
 
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);
   try {
-    const deleteProduct = await prisma.product.delete({
+    const deleteProduct = await prisma.sales.delete({
       where: {
         id: id,
       },
@@ -26,96 +25,66 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveProduct = async (id: string, data: Product) => {
+export const createOrder = async (data: CreateOrderSchema) => {
+  const newInvoiceNo = await generateId("sale");
+  const {
+    id,
+    invoiceId,
+    source,
+    warehouseId,
+    userId,
+    customerId,
+    products,
+    returnProducts,
+    returnCalculation,
+    totalItem,
+    total,
+    discount,
+    vat,
+    grossTotal,
+    grossTotalRound,
+    totalRecievable,
+    totalRecieved,
+    changeAmount,
+    paidAmount,
+    status,
+  } = data;
+
+  
   try {
-    console.log("action", data);
-    let {
-      name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
-      total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
-      grossTotalRound,
-      note,
-      containerId,
-    } = data;
 
-    if (!name || !articleCode) return false;
-
-    if (id !== "") {
-      const updateUnit = await prisma.product.update({
-        where: {
-          id: id,
-        },
+    if (id === "") {
+      console.log("create")
+      const createOrder = await prisma.sales.create({
         data: {
-          //@ts-ignore
-          name,
-          articleCode,
-          qty,
-          mrp,
-          tp,
+          invoiceId: newInvoiceNo,
+          source,
+          warehouseId,
+          userId,
+          customerId,
+          products,
+          returnProducts,
+          returnCalculation,
+          totalItem,
           total,
-          vat,
-          stock,
-          supplier,
-          tax,
-          hsCode,
-          country,
           discount,
-          grosTotal,
+          vat,
+          grossTotal,
           grossTotalRound,
-          note,
-          containerId,
+          totalRecievable,
+          totalRecieved,
+          changeAmount,
+          paidAmount,
+          status,
         },
       });
-
-      if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
-
-        revalidatePath("/dashboard/unit");
-        return updateUnit;
-      }
-    } else {
-      const createProduct = await prisma.product.create({
-        data: {
-          name,
-          articleCode,
-          qty,
-          mrp,
-          tp,
-          total,
-          vat,
-          stock,
-          supplier,
-          tax,
-          hsCode,
-          country,
-          discount,
-          grosTotal,
-          grossTotalRound,
-          note,
-          containerId,
-        },
-      });
-
-      if (createProduct) {
-        console.log(`${createProduct.name} Create successful!`);
-
-        revalidatePath("/dashboard/unit");
-        return createProduct;
+      if (createOrder) {
+        console.log(`${createOrder.invoiceId} updated successfully!`);
+        revalidatePath("/dashboard/sales");
+        return createOrder;
       }
     }
-  } catch (err) {
-    console.log(err);
-    return false;
+  } catch (error) {
+    console.log(error);
   }
 };

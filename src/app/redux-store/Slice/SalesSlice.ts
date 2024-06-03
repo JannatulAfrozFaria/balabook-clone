@@ -14,8 +14,8 @@ const initialState: OrderFormSchema = {
   customerId: "",
   products: [],
   returnProducts: [],
-  returnCalculation: "",
-  totalItems: 0,
+  returnCalculation: 0,
+  totalItem: 0,
   total: 0,
   discount: 0,
   vat: 0,
@@ -24,7 +24,11 @@ const initialState: OrderFormSchema = {
   totalRecievable: 0,
   totalRecieved: 0,
   changeAmount: 0,
-  paidAmount: 0,
+  paidAmount: {
+    cash: 0,
+    card: { name: "visa", amount: 0 },
+    mfs: { name: "bkash", amount: 0 },
+  },
   status: "Complete",
 };
 
@@ -48,6 +52,18 @@ export const salesSlice = createSlice({
       return {
         ...state,
         amount: action.payload,
+      };
+    },
+    setWarehouseId: (state, action) => {
+      return {
+        ...state,
+        warehouseId: action.payload,
+      };
+    },
+    setChangeAmount: (state, action) => {
+      return {
+        ...state,
+        changeAmount: action.payload,
       };
     },
     setTotalRecievable: (state, action) => {
@@ -94,6 +110,69 @@ export const salesSlice = createSlice({
         totalItem: products.length,
       };
     },
+    setCash: (state, action) => {
+      return {
+        ...state,
+        paidAmount: {
+          ...state.paidAmount,
+          cash: action.payload,
+        },
+      };
+    },
+    setCardName: (state, action) => {
+      return {
+        ...state,
+        paidAmount: {
+          ...state.paidAmount,
+          card: {
+            ...state.paidAmount.card,
+            name: action.payload,
+          },
+        },
+      };
+    },
+    setCardAmount: (state, action) => {
+      return {
+        ...state,
+        paidAmount: {
+          ...state.paidAmount,
+          card: {
+            ...state.paidAmount.card,
+            amount: action.payload,
+          },
+        },
+      };
+    },
+    setMfsName: (state, action) => {
+      return {
+        ...state,
+        paidAmount: {
+          ...state.paidAmount,
+          mfs: {
+            name: action.payload,
+            amount: 0,
+          },
+        },
+      };
+    },
+    setMfsAmount: (state, action) => {
+      return {
+        ...state,
+        paidAmount: {
+          ...state.paidAmount,
+          mfs: {
+            name: state.paidAmount.mfs.name,
+            amount: action.payload,
+          },
+        },
+      };
+    },
+    setReceivedAmount: (state, action) => {
+      return {
+        ...state,
+        totalRecieved: action.payload,
+      };
+    },
     reset: (state) => (state = initialState),
     // Add more reducers as needed
   },
@@ -108,6 +187,14 @@ export const {
   setNote,
   reset,
   setProducts,
+  setCash,
+  setCardName,
+  setCardAmount,
+  setMfsName,
+  setMfsAmount,
+  setReceivedAmount,
+  setChangeAmount,
+  setWarehouseId,
 } = salesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

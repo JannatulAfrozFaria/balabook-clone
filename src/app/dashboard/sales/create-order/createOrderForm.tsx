@@ -32,6 +32,7 @@ import {
   setCustomerId,
   setProducts,
   setUserId,
+  setWarehouseId,
 } from "@/app/redux-store/Slice/SalesSlice";
 import { addToDb } from "@/lib/salesDb";
 import SelectCustomer from "@/components/ui/SelectCustomer";
@@ -62,8 +63,12 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
   //getting user information
   //@ts-ignore
   const sessionUserId = session?.user?.id;
+  //@ts-ignore
+  const sessionUserWarehouseId = session?.user?.warehouseId;
+
   useEffect(() => {
     dispatch(setUserId(sessionUserId));
+    dispatch(setWarehouseId(sessionUserWarehouseId));
   }, [sessionUserId]);
 
   //product selection function
@@ -116,30 +121,12 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
     }
   };
 
-  async function onSubmit(data: CreateOrderSchema) {
-    // try {
-    //   console.log("product", data);
-    //   //@ts-ignore
-    //   const product = await saveProduct(id, data);
-    //   if (product) {
-    //     form.reset();
-    //     toast.success(
-    //       id ? "Product Update Success" : "Product Creation Success"
-    //     );
-    //   } else {
-    //     toast.error(id ? "Product Update faield!" : "Product Creation faield!");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
-  }
-
-  console.log("productData", salesData);
   return (
     <div className="flex">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          //@ts-ignore
+          onSubmit={form.handleSubmit()}
           className="w-full space-y-4"
         >
           <div className="flex w-full">

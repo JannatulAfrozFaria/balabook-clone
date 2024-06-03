@@ -6,9 +6,27 @@ import CreateOrderSheet from "./createOrderSheet";
 import prisma from "../../../../prisma";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { CreateOrderSchema } from "./create-order/CreateOrderSchema";
 
 export default async function OrderPage() {
-  const data: any = [];
+  const data = await prisma.sales.findMany({
+    include: {
+      customer: {
+        select: {
+          name: true, // Select only the name field from the supplier model
+          phone: true, // Select only the name field from the supplier model
+          company: true, // Select only the name field from the supplier model
+        },
+      },
+      user: {
+        select: {
+          name: true, // Select only the name field from the user model
+        },
+      },
+    },
+  });
+
+  // console.log("sales data");
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

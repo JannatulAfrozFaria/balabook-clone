@@ -21,8 +21,8 @@ model User {
   type          UserType // Enum for user type
   status        Status // Enum for user Status
   photo         String?
-  warehouse       WareHouse   @relation(fields: [warehouseId], references: [id])
-  warehouseId     String @db.ObjectId // MongoDB ObjectId reference to User
+  warehouse     WareHouse       @relation(fields: [warehouseId], references: [id])
+  warehouseId   String          @db.ObjectId // MongoDB ObjectId reference to User
   purchaseOrder PurchaseOrder[]
   grn           Grn[]
   tpn           Tpn[]
@@ -64,7 +64,7 @@ model Customer {
   cLimitAmount       String?
   cLimitDay          String?
 
-  sales               Sales[]
+  sales Sales[]
 
   @@index([phone, email, username])
   @@map("customers")
@@ -237,10 +237,10 @@ model ClosingStock {
 
 // Define the PurchaseOrder model
 model PurchaseOrder {
-  id              String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   poNo            String
-  supplier        Supplier?    @relation(fields: [supplierId], references: [id])
-  supplierId      String      @db.ObjectId // MongoDB ObjectId reference to Supplier
+  supplier        Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId      String    @db.ObjectId // MongoDB ObjectId reference to Supplier
   containerId     String?
   products        Json[] // Array of products in the purchase order
   grn             Grn[]
@@ -250,10 +250,10 @@ model PurchaseOrder {
   total           Int?
   tax             Int?
   discount        Int?
-  country        String?
+  country         String?
   grossTotal      Int?
   grossTotalRound Int?
-  note    String?
+  note            String?
 
   status DataStatus
   user   User       @relation(fields: [userId], references: [id])
@@ -289,7 +289,7 @@ model PurchaseOrder {
 
 // Define the PurchaseOrder model
 model Tpn {
-  id       String       @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   tpnNo    String
   // supplier    Supplier    @relation(fields: [supplierId], references: [id])
   // supplierId  String      @db.ObjectId // MongoDB ObjectId reference to Supplier
@@ -332,10 +332,9 @@ model WareHouse {
   // Define the relationship with products
   whToTpn   Tpn[]         @relation("whTo")
   whFromTpn Tpn[]         @relation("whFrom")
-  userToWh  User[] 
-  sales     Sales[]       
+  userToWh  User[]
+  sales     Sales[]
 }
-
 
 // Define the GRN model
 model Grn {
@@ -346,86 +345,81 @@ model Grn {
   poNo       PurchaseOrder? @relation(fields: [poNoId], references: [id])
   poNoId     String?        @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
 
-  tpnNo       Tpn?         @relation(fields: [tpnId], references: [id])
-  tpnId       String?      @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
-  products    Json[] // Array of products in the GRN
+  tpnNo    Tpn?    @relation(fields: [tpnId], references: [id])
+  tpnId    String? @db.ObjectId // MongoDB ObjectId reference to PurchaseOrder
+  products Json[] // Array of products in the GRN
 
-  note    String?
+  note            String?
   total           Int?
   grossTotal      Int?
   grossTotalRound Int?
   totalItem       Int
   tax             Int?
   discount        Int?
-  status          DataStatus 
+  status          DataStatus
 
-  user            User   @relation(fields: [userId], references: [id])
-  userId          String @db.ObjectId // MongoDB ObjectId reference to User
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId // MongoDB ObjectId reference to User
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
-
-
 model UserLogs {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  user        User   @relation(fields: [userId], references: [id])
-  userId      String @db.ObjectId // MongoDB ObjectId reference to User
-  date        DateTime @default(now())
-  otType      String?
-  otInvoice   String?
-  module      String?
-  userAgent   String?
-  userStatus  String?
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @db.ObjectId // MongoDB ObjectId reference to User
+  date       DateTime @default(now())
+  otType     String?
+  otInvoice  String?
+  module     String?
+  userAgent  String?
+  userStatus String?
 }
 
 model Sales {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  invoiceId String
-  source String
-  warehouse       WareHouse   @relation(fields: [warehouseId], references: [id])
-  warehouseId     String @db.ObjectId // MongoDB ObjectId reference to User
-  user            User   @relation(fields: [userId], references: [id])
-  userId          String @db.ObjectId // MongoDB ObjectId reference to User
-  customer        Customer   @relation(fields: [customerId], references: [id])
-  customerId      String @db.ObjectId // MongoDB ObjectId reference to User\
-  products        Json[]
-  returnProducts  Json[]
-  returnCalculation Json []
-  totalItems      Int
-  total           Int
-  discount        Int
-  Vat             Int
-  grossTotal      Int
-  grossTotalRound Int
-  totalRecievable Int
-  totalRecieved   Int
-  changeAmount    Int
-  paidAmount      Json[]
-  status          Status
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  invoiceId         String
+  source            String
+  warehouse         WareHouse @relation(fields: [warehouseId], references: [id])
+  warehouseId       String    @db.ObjectId // MongoDB ObjectId reference to User
+  user              User      @relation(fields: [userId], references: [id])
+  userId            String    @db.ObjectId // MongoDB ObjectId reference to User
+  customer          Customer  @relation(fields: [customerId], references: [id])
+  customerId        String    @db.ObjectId // MongoDB ObjectId reference to User\
+  products          Json[]
+  returnProducts    Json[]
+  soldProducts    Json[]
+  returnCalculation Json?
+  soldCalculation Json?
+  totalItem         Int
+  total             Int
+  discount          Int
+  vat               Int
+  grossTotal        Int
+  grossTotalRound   Int
+  totalRecievable   Int
+  totalRecieved     Int
+  changeAmount      Int
+  paidAmount        Json?
+  status            DataStatus
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
-
-
 
 model Damage {
-  id String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  user        User   @relation(fields: [userId], references: [id])
-  products    Json[]
-  userId      String @db.ObjectId // MongoDB ObjectId reference to User
+  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  user     User   @relation(fields: [userId], references: [id])
+  products Json[]
+  userId   String @db.ObjectId // MongoDB ObjectId reference to User
 }
-
 
 model OrderProducts {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-
+  id String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
 }
-model ReturnProducts {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
 
+model ReturnProducts {
+  id String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
 }
 
 enum UserType {

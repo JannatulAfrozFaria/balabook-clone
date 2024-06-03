@@ -68,6 +68,15 @@ export const poSlice = createSlice({
         note: action.payload,
       };
     },
+    // setPrice: (state, action) => {
+    //   return {
+    //     ...state,
+    //     paidAmount: {
+    //       ...state.paidAmount,
+    //       cash: action.payload,
+    //     },
+    //   };
+    // },
     setProducts: (state, action) => {
       console.log(action.payload);
       const products = action.payload;
