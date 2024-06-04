@@ -50,11 +50,9 @@ export const createOrder = async (data: CreateOrderSchema) => {
     status,
   } = data;
 
-  
   try {
-
     if (id === "") {
-      console.log("create")
+      console.log("create");
       const createOrder = await prisma.sales.create({
         data: {
           invoiceId: newInvoiceNo,
@@ -84,6 +82,44 @@ export const createOrder = async (data: CreateOrderSchema) => {
         return createOrder;
       }
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const salesById = async (id: string) => {
+  try {
+    const sales = await prisma.sales.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        customer: {
+          select: {
+            name: true,
+            phone: true,
+            address: true,
+            email: true,
+          },
+        },
+        user: {
+          select: {
+            name: true,
+            phone: true,
+            email: true,
+          },
+        },
+        warehouse: {
+          select: {
+            name: true,
+            phone: true,
+            email: true,
+          },
+        },
+      },
+    });
+    console.log(sales);
+    return sales;
   } catch (error) {
     console.log(error);
   }

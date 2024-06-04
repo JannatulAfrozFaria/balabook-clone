@@ -6,16 +6,19 @@ import { z } from "zod";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -41,7 +44,8 @@ import {
 } from "@/app/redux-store/Slice/SalesSlice";
 import { RootState } from "@/app/redux-store/store";
 import { CreateOrderSchema } from "./CreateOrderSchema";
-import { createOrder, saveOrder } from "./../_action";
+import { createOrder } from "./../_action";
+import { SalePrintLog } from "@/components/ui/sell-print-pop";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -51,7 +55,8 @@ const FormSchema = z.object({
 //@ts-ignore
 export function InfoCard() {
   const dispatch = useDispatch();
-
+  const [activate, setActive] = useState(false);
+  const [savedData, setSavedData] = useState();
   const posData = useSelector((state: RootState) => state.sales);
 
   const totalRecievable = posData?.total;
@@ -73,6 +78,8 @@ export function InfoCard() {
     dispatch(setChangeAmount(changeAmount));
   }, [posData.paidAmount]);
 
+  const confirmOrder = () => {};
+
   // submit order funciton
   //@ts-ignore
   const onSubmit = async (e) => {
@@ -85,8 +92,11 @@ export function InfoCard() {
       const order = await createOrder(posData);
       if (order) {
         console.log("order", order);
+        setActive(true);
+        setSavedData(order);
+        toast.success("Order Creation Success :)");
       } else {
-        console.log("Error", order);
+        toast.success("Order Creation Failed :(");
       }
       // console.log("order", order);
     } catch (error) {
@@ -214,12 +224,34 @@ export function InfoCard() {
       </div>
       <Separator orientation="horizontal" className="mt-2" />
       <div className="w-full flex justify-center gap-4  mt-8">
-        <Button>
-          <RotateCcw size={18} className="mr-2" /> Reset
-        </Button>
-        <Button onClick={onSubmit}>
-          <Printer size={18} className="mr-2" /> Generate Order
-        </Button>
+        <AlertDialog>
+          <Button>
+            <RotateCcw size={18} className="mr-2" /> Reset
+          </Button>
+          <AlertDialogTrigger asChild>
+            <Button>
+              <Printer size={18} className="mr-2" /> Generate Order
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you absolutely sure to procced the Order?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Hey, Dude. Are you sure to process the order?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onSubmit}>
+                <Printer size={18} className="mr-2" /> Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <Toaster />
+        <SalePrintLog open={activate} setOpen={setActive} entry={savedData} />
       </div>
     </>
   );
