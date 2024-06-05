@@ -24,6 +24,7 @@ export default function SearchProduct({ handleSelect }: { handleSelect: any }) {
   // Function to handle custom selection of an option
   const handleCustomSelect = (option: any) => {
     setSelectedOption(option);
+    console.log(option);
     handleSelect(option.value);
   };
 

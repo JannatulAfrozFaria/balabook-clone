@@ -46,6 +46,7 @@ import { RootState } from "@/app/redux-store/store";
 import { CreateOrderSchema } from "./CreateOrderSchema";
 import { createOrder } from "./../_action";
 import { SalePrintLog } from "@/components/ui/sell-print-pop";
+import { createUserLogs } from "../../users/_action";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -92,6 +93,7 @@ export function InfoCard() {
       const order = await createOrder(posData);
       if (order) {
         console.log("order", order);
+        createUserLogs(order?.userId, order?.id, "Sale", "Create");
         setActive(true);
         setSavedData(order);
         toast.success("Order Creation Success :)");

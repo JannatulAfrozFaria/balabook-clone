@@ -82,8 +82,8 @@ export const poSlice = createSlice({
       const products = action.payload;
       // const totalItem = products.length;
       // //@ts-nocheck
-      const total = products.reduce((acc, product) => acc + product.total, 0);
-      const grossTotal = products.reduce(
+      const total = products?.reduce((acc, product) => acc + product.total, 0);
+      const grossTotal = products?.reduce(
         (acc, product) => acc + product.total,
         0
       );
@@ -95,7 +95,7 @@ export const poSlice = createSlice({
         total: total,
         grossTotal: grossTotal,
         grossTotalRound: Math.round(grossTotal),
-        totalItem: products.length,
+        totalItem: products?.length,
       };
     },
     reset: (state) => (state = initialState),

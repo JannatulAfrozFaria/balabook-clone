@@ -94,13 +94,13 @@ const removeQuantity = (id: string): boolean => {
   const storedCart = localStorage.getItem("sales_cart");
   if (storedCart) {
     const salesCart: Cart = JSON.parse(storedCart);
-    const item = salesCart.find((item) => item.article_code === id);
+    const item = salesCart.find((item) => item.articleCode === id);
     if (item) {
       item.qty = (item.qty || 1) - 1;
       if (item.qty <= 0) {
         return removeFromDb(id);
       } else {
-        const restItems = salesCart.filter((item) => item.article_code !== id);
+        const restItems = salesCart.filter((item) => item.articleCode !== id);
         restItems.push(item);
         localStorage.setItem("sales_cart", JSON.stringify(restItems));
         return true;
@@ -114,10 +114,10 @@ const addQuantity = (id: string): boolean => {
   const storedCart = localStorage.getItem("sales_cart");
   if (storedCart) {
     const salesCart: Cart = JSON.parse(storedCart);
-    const item = salesCart.find((item) => item.article_code === id);
+    const item = salesCart.find((item) => item.articleCode === id);
     if (item) {
       item.qty = (item.qty || 0) + 1;
-      const restItems = salesCart.filter((item) => item.article_code !== id);
+      const restItems = salesCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
       localStorage.setItem("sales_cart", JSON.stringify(restItems));
       return true;
@@ -130,10 +130,10 @@ const customQuantity = (id: string, value: number): boolean => {
   const storedCart = localStorage.getItem("sales_cart");
   if (storedCart) {
     const salesCart: Cart = JSON.parse(storedCart);
-    const item = salesCart.find((item) => item.article_code === id);
+    const item = salesCart.find((item) => item.articleCode === id);
     if (item) {
       item.qty = value;
-      const restItems = salesCart.filter((item) => item.article_code !== id);
+      const restItems = salesCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
       localStorage.setItem("sales_cart", JSON.stringify(restItems));
       return true;
@@ -146,10 +146,10 @@ const customTP = (id: string, value: number): boolean => {
   const storedCart = localStorage.getItem("sales_cart");
   if (storedCart) {
     const salesCart: Cart = JSON.parse(storedCart);
-    const item = salesCart.find((item) => item.article_code === id);
+    const item = salesCart.find((item) => item.articleCode === id);
     if (item) {
       item.unit = value.toString(); // Assuming unit is a string, if not adjust accordingly
-      const restItems = salesCart.filter((item) => item.article_code !== id);
+      const restItems = salesCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
       localStorage.setItem("sales_cart", JSON.stringify(restItems));
       return true;

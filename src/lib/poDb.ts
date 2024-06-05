@@ -38,9 +38,9 @@ const addToDb = (product: Product): boolean => {
   // get the shopping cart from local storage
   const storedCart = getStoredCart();
   if (storedCart) {
-    console.log(storedCart);
+    // console.log("storecart", storedCart);
     const selectedItem = storedCart.find(
-      (p) => p.articleCode === item.articleCode
+      (p: any) => p.articleCode === item.articleCode
     );
     if (selectedItem) {
       return false;
@@ -62,16 +62,20 @@ const addToDb = (product: Product): boolean => {
     ];
   }
 
-  console.log("stored Cart:", storedCart);
-  console.log("purchase cart:", purchaseCart);
+  // console.log("stored Cart:", storedCart);
+  // console.log("purchase cart:", purchaseCart);
 
   localStorage.setItem("purchase_cart", JSON.stringify(purchaseCart));
   return true;
 };
 
-const getStoredCart = (): Cart | null => {
-  const storedCart = localStorage.getItem("purchase_cart");
-  return storedCart ? (JSON.parse(storedCart) as Cart) : null;
+const getStoredCart = () => {
+  const cart = localStorage.getItem("purchase_cart");
+  console.log(cart);
+  if (cart !== null) {
+    const storedCart = JSON.parse(cart);
+    return storedCart;
+  }
 };
 
 const getSetCart = (cart: Cart): void => {
@@ -94,14 +98,14 @@ const removeQuantity = (id: string): boolean => {
   const storedCart = localStorage.getItem("purchase_cart");
   if (storedCart) {
     const purchaseCart: Cart = JSON.parse(storedCart);
-    const item = purchaseCart.find((item) => item.article_code === id);
+    const item = purchaseCart.find((item) => item.articleCode === id);
     if (item) {
       item.qty = (item.qty || 1) - 1;
       if (item.qty <= 0) {
         return removeFromDb(id);
       } else {
         const restItems = purchaseCart.filter(
-          (item) => item.article_code !== id
+          (item) => item.articleCode !== id
         );
         restItems.push(item);
         localStorage.setItem("purchase_cart", JSON.stringify(restItems));
@@ -116,10 +120,10 @@ const addQuantity = (id: string): boolean => {
   const storedCart = localStorage.getItem("purchase_cart");
   if (storedCart) {
     const purchaseCart: Cart = JSON.parse(storedCart);
-    const item = purchaseCart.find((item) => item.article_code === id);
+    const item = purchaseCart.find((item) => item.articleCode === id);
     if (item) {
       item.qty = (item.qty || 0) + 1;
-      const restItems = purchaseCart.filter((item) => item.article_code !== id);
+      const restItems = purchaseCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
       localStorage.setItem("purchase_cart", JSON.stringify(restItems));
       return true;
@@ -132,10 +136,10 @@ const customQuantity = (id: string, value: number): boolean => {
   const storedCart = localStorage.getItem("purchase_cart");
   if (storedCart) {
     const purchaseCart: Cart = JSON.parse(storedCart);
-    const item = purchaseCart.find((item) => item.article_code === id);
+    const item = purchaseCart.find((item) => item.articleCode === id);
     if (item) {
       item.qty = value;
-      const restItems = purchaseCart.filter((item) => item.article_code !== id);
+      const restItems = purchaseCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
       localStorage.setItem("purchase_cart", JSON.stringify(restItems));
       return true;
@@ -148,10 +152,10 @@ const customTP = (id: string, value: number): boolean => {
   const storedCart = localStorage.getItem("purchase_cart");
   if (storedCart) {
     const purchaseCart: Cart = JSON.parse(storedCart);
-    const item = purchaseCart.find((item) => item.article_code === id);
+    const item = purchaseCart.find((item) => item.articleCode === id);
     if (item) {
       item.unit = value.toString(); // Assuming unit is a string, if not adjust accordingly
-      const restItems = purchaseCart.filter((item) => item.article_code !== id);
+      const restItems = purchaseCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
       localStorage.setItem("purchase_cart", JSON.stringify(restItems));
       return true;

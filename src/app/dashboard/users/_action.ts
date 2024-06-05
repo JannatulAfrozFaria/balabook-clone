@@ -87,3 +87,34 @@ export const updateUser = async (id: string, data: User) => {
     return err;
   }
 };
+
+export const createUserLogs = async (
+  userId: string,
+  oInvoice: string,
+  module: string,
+  otype: string
+) => {
+  try {
+    const createUserLog = await prisma.userLogs.create({
+      data: {
+        userId: userId,
+        otInvoice: oInvoice,
+        module: module,
+        otType: otype,
+        date: new Date(), // Automatically use the current date
+      },
+      include: {
+        user: true, // Include related user information
+      },
+    });
+
+    if (createUserLog) {
+      console.log(`User log created successfully!`, createUserLog);
+      // revalidatePath("/dashboard/user-logs"); // Adjust the path as needed
+      return createUserLog;
+    }
+  } catch (err) {
+    console.log("Error creating user log:", err);
+    return false;
+  }
+};

@@ -24,7 +24,6 @@ import SelectSupplier from "@/components/ui/SelectSupplier";
 import SelectBrand from "@/components/ui/SelectBrand";
 import { savePo } from "../_action";
 import { PoDataTable } from "./data-tables";
-import { columns } from "./columns";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUserId,
@@ -51,6 +50,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { columns } from "../columns";
 
 interface PoCart {
   id: string;
@@ -78,7 +78,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   // @ts-ignore
   const sessionUserId = session?.user?.id;
 
-  console.log(sessionUserId);
+  // console.log(sessionUserId);
 
   const poData = useSelector((state: RootState) => state.purchaseOrder);
   const storeProduct = getStoredCart();
@@ -112,11 +112,14 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
   const handleSelectedProduct = async (productId: string) => {
     try {
+      const product = await searchProductById(productId);
+
       // Check if exist
-      const exist = poData.products.find(
+      const exist = poData?.products.find(
         (poProduct: any) => poProduct.id === productId
       );
-      const rest = poData.products.filter(
+      console.log(exist);
+      const rest = poData?.products.filter(
         (poProduct: any) => poProduct.id !== productId
       );
       let newProduct;
@@ -132,9 +135,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
         addToDb(newProduct);
         dispatch(setProducts([...rest, newProduct]));
       } else {
+        console.log("product not found");
         // add new
         const product = await searchProductById(productId);
-
+        console.log(product);
         newProduct = {
           id: product?.id,
           name: product?.name,
@@ -327,13 +331,19 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                <PoDataTable
-                  columns={columns}
-                  data={poData?.products
-                    ?.slice()
-                    // @ts-ignore
-                    .sort((a, b) => a.order - b.order)}
-                />
+                {poData?.products?.length > 0 && (
+                  <PoDataTable
+                    columns={columns}
+                    data={
+                      poData?.products?.length > 0
+                        ? poData?.products
+                            ?.slice()
+                            // @ts-ignore
+                            .sort((a, b) => a.order - b.order)
+                        : []
+                    }
+                  />
+                )}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
                 <FormField

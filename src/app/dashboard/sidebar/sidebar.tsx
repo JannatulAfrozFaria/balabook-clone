@@ -45,6 +45,7 @@ function Sidebar() {
   useEffect(() => {
     mobileWidth ? setIsCollapsed(true) : setIsCollapsed(false);
   }, [mobileWidth]);
+  const userType = session?.user?.type;
   return (
     <TooltipProvider>
       <div className="relative min-w-[80px] border-r px-3 pb-20 pt-10 h-screen">
@@ -169,6 +170,15 @@ function Sidebar() {
                 variant: "ghost",
                 href: "/dashboard/users",
               },
+              userType === "Admin"
+                ? {
+                    title: "UserLogs",
+                    label: "",
+                    icon: Users2,
+                    variant: "ghost",
+                    href: "/dashboard/user-logs",
+                  }
+                : null,
               {
                 title: "Warehouse",
                 label: "",
@@ -183,7 +193,7 @@ function Sidebar() {
                 variant: "ghost",
                 href: "/dashboard/setting",
               },
-            ]}
+            ].filter(Boolean)}
           />
         </div>
         {/* <div className={`${isCollapsed && "hidden"}`}>
