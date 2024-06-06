@@ -9,6 +9,7 @@ export interface PoSchema {
   totalItem?: number;
   total?: number;
   tax?: number;
+  qty?: number;
   discount?: number;
   grossTotal?: number;
   grossTotalRound?: number;

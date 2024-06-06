@@ -112,27 +112,22 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
   const handleSelectedProduct = async (productId: string) => {
     try {
-      const product = await searchProductById(productId);
-
       // Check if exist
-      const exist = poData?.products?.find(
+      const exist = poData.products.find(
         (poProduct: any) => poProduct.id === productId
       );
-
-      const rest = poData?.products?.filter(
+      const rest = poData.products.filter(
         (poProduct: any) => poProduct.id !== productId
       );
-
       let newProduct;
+      if (exist) {
+        // inrease qty
 
-      if (exist === true) {
-        // increase qty
         newProduct = {
           ...exist,
           qty: exist.qty + 1,
           total: (exist.qty + 1) * exist.tp,
         };
-
         dispatch(setProducts(rest));
         addToDb(newProduct);
         dispatch(setProducts([...rest, newProduct]));
@@ -155,11 +150,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
           // @ts-ignore
           total: 1 * product?.tp,
         };
-
-        console.log("New product created:", newProduct); // Debug log
-        addToDb(newProduct);
-        dispatch(setProducts([...rest, newProduct]));
       }
+
+      addToDb(newProduct);
+      dispatch(setProducts([...rest, newProduct]));
     } catch (error) {
       console.error("Error fetching product by id:", error);
     }

@@ -24,6 +24,7 @@ const initialState: PoSchema = {
   grossTotalRound: 0,
   status: "Pending",
   country: "China",
+  qty: 0,
   //@ts-ignore
   userId: ``,
 };
