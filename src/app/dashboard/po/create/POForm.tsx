@@ -50,7 +50,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { columns } from "../columns";
+import { columns } from "./columns";
 
 interface PoCart {
   id: string;
@@ -115,30 +115,31 @@ function ProductForm({ entry }: ProductFormEditProps) {
       const product = await searchProductById(productId);
 
       // Check if exist
-      const exist = poData?.products.find(
+      const exist = poData?.products?.find(
         (poProduct: any) => poProduct.id === productId
       );
-      console.log(exist);
-      const rest = poData?.products.filter(
+
+      const rest = poData?.products?.filter(
         (poProduct: any) => poProduct.id !== productId
       );
-      let newProduct;
-      if (exist) {
-        // inrease qty
 
+      let newProduct;
+
+      if (exist === true) {
+        // increase qty
         newProduct = {
           ...exist,
           qty: exist.qty + 1,
           total: (exist.qty + 1) * exist.tp,
         };
+
         dispatch(setProducts(rest));
         addToDb(newProduct);
         dispatch(setProducts([...rest, newProduct]));
       } else {
-        console.log("product not found");
         // add new
         const product = await searchProductById(productId);
-        console.log(product);
+
         newProduct = {
           id: product?.id,
           name: product?.name,
@@ -154,10 +155,11 @@ function ProductForm({ entry }: ProductFormEditProps) {
           // @ts-ignore
           total: 1 * product?.tp,
         };
-      }
 
-      addToDb(newProduct);
-      dispatch(setProducts([...rest, newProduct]));
+        console.log("New product created:", newProduct); // Debug log
+        addToDb(newProduct);
+        dispatch(setProducts([...rest, newProduct]));
+      }
     } catch (error) {
       console.error("Error fetching product by id:", error);
     }
@@ -176,6 +178,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   };
 
   const products = poData ? poData.products : null;
+  console.log("product", poData);
 
   async function onSubmit(data: PoSchema) {
     try {
@@ -331,19 +334,17 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                {poData?.products?.length > 0 && (
-                  <PoDataTable
-                    columns={columns}
-                    data={
-                      poData?.products?.length > 0
-                        ? poData?.products
-                            ?.slice()
-                            // @ts-ignore
-                            .sort((a, b) => a.order - b.order)
-                        : []
-                    }
-                  />
-                )}
+                <PoDataTable
+                  columns={columns}
+                  data={
+                    poData?.products?.length > 0
+                      ? poData?.products
+                          ?.slice()
+                          // @ts-ignore
+                          .sort((a, b) => a.order - b.order)
+                      : []
+                  }
+                />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
                 <FormField

@@ -297,7 +297,7 @@ export const searchProductDw = async (queryString: string) => {
 
 export const searchProductById = async (id: string) => {
   try {
-    const product = await prisma.product.findUnique({
+    const product = await prisma.product.findFirst({
       where: {
         id: id,
       },

@@ -1,114 +1,92 @@
 "use client";
 
+import { ColumnDef } from "@tanstack/react-table";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  Printer,
+  Trash,
+} from "lucide-react";
+import Link from "next/link";
+import axios from "axios";
 import { toast } from "sonner";
-import { importProduct } from "../../products/_action";
-import CsvUpload from "@/components/CsvUpload";
+import { Toast } from "@/components/ui/toast";
+// This type is used to define the shape of our data.
+// You can use a Zod schema here if you want.
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
+import { useState } from "react";
+import { PoPrintalog } from "@/components/ui/po-print-pop";
+export type Offer = {
+  id: string;
+  pono: string;
+  supplier: string;
+  supplierId: string;
+  cantainerID: string;
+  totalItem: number;
+  total: number;
+  tax: number;
+  discount: number;
+  grossTotalRound: number;
+  status: "Active" | "Inactive";
+  price: number;
+  user: string;
+  userId: string;
+};
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+const handleDeleteTigger = async (id: string) => {
+  // const del = await handleDelete(id);
+  // if (del) {
+  //   console.log(`Offer Delete Successful!`);
+  //   // toast.success(`${del.name} deleted successful!`);
+  // } else {
+  //   console.log(`Deleted Faild!`);
+  // }
+};
 
-export function PoDataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
+export const columns: ColumnDef<Offer>[] = [
+  {
+    accessorKey: "no",
+    header: "#",
+    cell: ({ row }: { row: any }) => {
+      const sl = row.index + 1; // row.index gives the zero-based index, add 1 to make it 1-based
+
+      return `${sl}.`;
     },
-  });
-
-  return (
-    <>
-      {/* Search */}
-
-      <div className="rounded-md border min-h-64">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table?.getRowModel().rows ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-2"></div>
-    </>
-  );
-}
+  },
+  {
+    accessorKey: "articleCode",
+    header: "Article Code",
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "mrp",
+    header: "Price",
+  },
+  {
+    accessorKey: "qty",
+    header: "Quantity",
+  },
+  {
+    accessorKey: "vat",
+    header: "Vat",
+  },
+  {
+    accessorKey: "total",
+    header: "Total",
+  },
+];

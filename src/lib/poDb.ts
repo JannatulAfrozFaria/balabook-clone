@@ -29,7 +29,7 @@ const addToDb = (product: Product): boolean => {
     hsCode: product.hsCode,
     openingQty: product.openingQty,
     closingQty: product.closingQty,
-    qty: 1,
+    qty: product?.qty,
     total: product.tp,
     order: purchaseCart.length > 1 ? purchaseCart.length + 1 : 1,
   };
