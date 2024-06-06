@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
@@ -50,18 +50,22 @@ export function UserDataTable<TData, TValue>({
       columnFilters,
     },
   });
-
+  const [filterValue, setFilterValue] = useState(
+    (table.getColumn("invoiceId")?.getFilterValue() as string) ?? ""
+  );
   return (
     <>
       <div>
         {/* Search */}
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter Customer Phone..."
-            value={(table.getColumn("Customer.phone")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("Customer.phone")?.setFilterValue(event.target.value)
-            }
+            placeholder="Search Order By Id..."
+            value={filterValue} // Bind the input value to the state variable
+            onChange={(event) => {
+              const newValue = event.target.value;
+              setFilterValue(newValue); // Update the state variable
+              table.getColumn("invoiceId")?.setFilterValue(newValue); // Update the table filter
+            }}
             className="max-w-sm"
           />
         </div>

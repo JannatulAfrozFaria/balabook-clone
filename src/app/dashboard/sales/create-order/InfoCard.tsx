@@ -33,10 +33,12 @@ import { Printer, RotateCcw } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
+  reset,
   setCardAmount,
   setCardName,
   setCash,
   setChangeAmount,
+  setDiscount,
   setMfsAmount,
   setMfsName,
   setReceivedAmount,
@@ -58,6 +60,7 @@ export function InfoCard() {
   const dispatch = useDispatch();
   const [activate, setActive] = useState(false);
   const [savedData, setSavedData] = useState();
+
   const posData = useSelector((state: RootState) => state.sales);
 
   const totalRecievable = posData?.total;
@@ -73,7 +76,12 @@ export function InfoCard() {
         parseFloat(posData?.paidAmount?.card.amount) +
         parseFloat(posData?.paidAmount?.mfs.amount) || 0;
 
-    const changeAmount = totalReceived - parseFloat(posData?.totalRecievable);
+    const changeAmount =
+      totalReceived +
+      (posData?.discount ? parseFloat(posData.discount.toString()) : 0) -
+      (posData?.totalRecievable
+        ? parseFloat(posData.totalRecievable.toString())
+        : 0);
 
     dispatch(setReceivedAmount(totalReceived));
     dispatch(setChangeAmount(changeAmount));
@@ -96,6 +104,11 @@ export function InfoCard() {
         createUserLogs(order?.userId, order?.id, "Sale", "Create");
         setActive(true);
         setSavedData(order);
+        // Dispatch the reset action to clear the poSlice
+        dispatch(reset());
+
+        // Clear relevant local storage items
+        localStorage.removeItem("sales_cart");
         toast.success("Order Creation Success :)");
       } else {
         toast.success("Order Creation Failed :(");
@@ -206,7 +219,6 @@ export function InfoCard() {
       </div>
       <div className="w-full flex justify-between mt-4">
         <div className="flex items-center space-x-2">
-          <Checkbox id="terms" />
           <label
             htmlFor="terms"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -214,7 +226,12 @@ export function InfoCard() {
             Discount
           </label>
         </div>
-        <Input type="text" className="w-1/3" placeholder="0" />
+        <Input
+          type="number"
+          className="w-1/3"
+          placeholder="0"
+          onChange={(e) => dispatch(setDiscount(e.target.value))}
+        />
       </div>
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Total Recieved:</p>

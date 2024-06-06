@@ -26,7 +26,6 @@ import { Button } from "./button";
 import { Printer } from "lucide-react";
 import { Toaster } from "./toaster";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PrismaClient } from "@prisma/client";
 import Barcode from "react-barcode";
 import {
   Card,
@@ -35,15 +34,12 @@ import {
   CardHeader,
   CardTitle,
 } from "./card";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux-store/store";
-import { salesById } from "@/app/dashboard/sales/_action";
-const prisma = new PrismaClient();
+import { ConvertToWord } from "@/lib/numberToWord";
 
-export function SalePrintLog({
+export function PoPrintalog({
   entry,
   open,
   setOpen,
@@ -59,145 +55,6 @@ export function SalePrintLog({
   };
   const productsInfo = product?.products;
   // console.log(productsInfo);
-
-  function convertToWords(number: number): string {
-    const ones: string[] = [
-      "",
-      "One",
-      "Two",
-      "Three",
-      "Four",
-      "Five",
-      "Six",
-      "Seven",
-      "Eight",
-      "Nine",
-    ];
-    const teens: string[] = [
-      "",
-      "Eleven",
-      "Twelve",
-      "Thirteen",
-      "Fourteen",
-      "Fifteen",
-      "Sixteen",
-      "Seventeen",
-      "Eighteen",
-      "Nineteen",
-    ];
-    const tens: string[] = [
-      "",
-      "Ten",
-      "Twenty",
-      "Thirty",
-      "Forty",
-      "Fifty",
-      "Sixty",
-      "Seventy",
-      "Eighty",
-      "Ninety",
-    ];
-    const thousands: string[] = [
-      "",
-      "Thousand",
-      "Million",
-      "Billion",
-      "Trillion",
-    ];
-
-    if (number === 0) {
-      return "Zero";
-    }
-
-    let numStr: string = "";
-    let count: number = 0;
-
-    while (number > 0) {
-      if (number % 1000 !== 0) {
-        numStr =
-          convertThreeDigitsToWords(number % 1000) +
-          " " +
-          thousands[count] +
-          " " +
-          numStr;
-      }
-      number = Math.floor(number / 1000);
-      count++;
-    }
-
-    return numStr.trim();
-  }
-
-  function convertThreeDigitsToWords(num: number): string {
-    const ones: string[] = [
-      "",
-      "One",
-      "Two",
-      "Three",
-      "Four",
-      "Five",
-      "Six",
-      "Seven",
-      "Eight",
-      "Nine",
-    ];
-    const teens: string[] = [
-      "",
-      "Eleven",
-      "Twelve",
-      "Thirteen",
-      "Fourteen",
-      "Fifteen",
-      "Sixteen",
-      "Seventeen",
-      "Eighteen",
-      "Nineteen",
-    ];
-    const tens: string[] = [
-      "",
-      "Ten",
-      "Twenty",
-      "Thirty",
-      "Forty",
-      "Fifty",
-      "Sixty",
-      "Seventy",
-      "Eighty",
-      "Ninety",
-    ];
-
-    let numStr: string = "";
-
-    if (num >= 100) {
-      numStr += ones[Math.floor(num / 100)] + " Hundred ";
-      num %= 100;
-    }
-
-    if (num >= 11 && num <= 19) {
-      numStr += teens[num - 10] + " ";
-    } else if (num === 10 || num >= 20) {
-      numStr += tens[Math.floor(num / 10)] + " ";
-      num %= 10;
-    }
-
-    if (num >= 1 && num <= 9) {
-      numStr += ones[num] + " ";
-    }
-
-    return numStr.trim();
-  }
-  const [orderData, setOrderData] = useState();
-
-  useEffect(() => {
-    const getSaleData = async () => {
-      const data = await salesById(product.id);
-      setOrderData(data);
-      // Log salesData to the browser console
-    };
-    getSaleData();
-  }, [entry]);
-  console.log(orderData);
-  // console.log("convert to word", convertToWords(product.total));
 
   return (
     <div>
@@ -222,14 +79,14 @@ export function SalePrintLog({
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5mm;
+            padding: 10mm;
             font-size: 12px; /* Adjust font size as needed */
           }
         }
       `}</style>
 
       <AlertDialog open={open}>
-        <AlertDialogContent className="max-w-[900px] min-w-[200px]">
+        <AlertDialogContent className="max-w-[800px] min-w-[200px]">
           <AlertDialogHeader>
             {/* <AlertDialogTitle className="mb-2">Create New Order</AlertDialogTitle> */}
             <AlertDialogDescription>
@@ -261,26 +118,24 @@ export function SalePrintLog({
                     </CardTitle>
                     <Separator />
                     <CardDescription>
-                      <div className="flex justify-between   mb-2 h-[100px]">
-                        <div className="text-black mr-2">
-                          <h1 className="font-bold ">Customer Info</h1>
-                          <h2>{orderData?.customer?.name}</h2>
-                          <h2>{orderData?.customer?.email}</h2>
-                          <h2>{orderData?.customer?.phone}</h2>
+                      <div className="flex justify-between mb-2 ">
+                        <div className="text-black">
+                          <h1 className="font-bold ">Name of Supplier</h1>
+                          <h2>{product?.supplier?.name}</h2>
+                          <h2>demo@gmail.com</h2>
+                          <h2>1316842636</h2>
                         </div>
                         <div className="text-black">
-                          <h1 className="font-bold">Warehouse Info</h1>
-                          <h2>{orderData?.warehouse?.name}</h2>
-                          <h2>{orderData?.warehouse?.email}</h2>
-                          <h2>{orderData?.warehouse?.phone}</h2>
+                          <h1 className="font-bold">Warehouse</h1>
+                          <h2>{product?.user?.name}</h2>
+                          <h2>demo@gmail.com</h2>
+                          <h2>1316842636</h2>
                         </div>
                         <div className=" flex flex-col items-end text-black">
-                          <h1 className=" font-bold  ">Selling Details</h1>
+                          <h1 className=" font-bold  ">Good Recieve Note</h1>
                           <h2 className="font-bold text-sm">
-                            Invoice No:{" "}
-                            <span className="font-normal">
-                              {product?.invoiceId}
-                            </span>
+                            PO No:{" "}
+                            <span className="font-normal">{product?.poNo}</span>
                           </h2>
                           {/* <h2 className="font-bold text-sm">
                             PO No:{" "}
@@ -364,16 +219,16 @@ export function SalePrintLog({
                         <div className="w-full flex  justify-end mt-2 text-black font-bold">
                           <div className="flex">
                             <p className="mr-2">Total:</p>
-                            <p className="mr-4">{product?.total}</p>
+                            <p className="mr-4">{product.total}</p>
                           </div>
                           <div className="flex">
                             <p className="">Gross Total:</p>
-                            <p className="">{product?.grossTotal}</p>
+                            <p className="">{product.grossTotal}</p>
                           </div>
                         </div>
                         <p className="text-black mt-4">
                           <span className="font-bold">In Word:</span>{" "}
-                          {convertToWords(product?.total)} Taka Only
+                          {ConvertToWord(product.total)} Taka Only
                         </p>
                         {/*  */}
                       </div>
@@ -381,7 +236,7 @@ export function SalePrintLog({
                       <div className=" absolute bottom-0.5 w-[80%]">
                         <div className="flex justify-between w-full">
                           <p className="font-bold">
-                            <span>Prepared By: {orderData?.user?.name}</span>
+                            <span>Prepared By:</span>
                           </p>
                           <p className="font-bold">
                             <span>Checked By:</span>

@@ -66,6 +66,12 @@ export const salesSlice = createSlice({
         changeAmount: action.payload,
       };
     },
+    setDiscount: (state, action) => {
+      return {
+        ...state,
+        discount: action.payload,
+      };
+    },
     setTotalRecievable: (state, action) => {
       return {
         ...state,
@@ -194,6 +200,7 @@ export const {
   setMfsAmount,
   setReceivedAmount,
   setChangeAmount,
+  setDiscount,
   setWarehouseId,
 } = salesSlice.actions;
 
