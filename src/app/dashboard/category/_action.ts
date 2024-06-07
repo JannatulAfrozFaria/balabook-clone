@@ -166,6 +166,45 @@ export const categoryDw = async (id: string) => {
   }
 };
 
+export const categoryMCDw = async () => {
+  try {
+    let categories;
+
+    categories = await prisma.category.findMany({
+      where: {
+        parentId: null,
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    let dw = [
+      {
+        value: "",
+        label: "Select Category",
+      },
+    ];
+
+    // console.log(categories);
+    categories.map(
+      (category) =>
+        (dw = [
+          ...dw,
+          {
+            value: category.id,
+            label: category.name,
+          },
+        ])
+    );
+    return dw;
+  } catch (error) {
+    console.error("Error fetching parent categories:", error);
+    throw new Error("Failed to fetch categories");
+  }
+};
+
 //import product from csv function
 export const importCategory = async (data: any, isPatent: boolean) => {
   console.log("Importing category");

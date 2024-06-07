@@ -215,7 +215,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
                       <FormLabel>Supplier</FormLabel>
 
                       <FormControl>
-                        <SelectSupplier handleSelect={handleSupplierId} />
+                        <SelectSupplier
+                          handleSelect={handleSupplierId}
+                          handleSelect
+                        />
                       </FormControl>
 
                       <FormMessage />

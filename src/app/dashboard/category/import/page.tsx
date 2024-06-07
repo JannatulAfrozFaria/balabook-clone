@@ -9,13 +9,15 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { CategoryDataTable } from "./data-table";
-import { importCategory, saveCategory } from "./../_action";
+import { categoryMCDw, importCategory, saveCategory } from "./../_action";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CustomeSelectImport from "@/components/ui/customeSelectImport";
 
 export default function CustomerImportPage() {
   type Category = {
     name: string;
     code: string;
+    parent: string;
     parentId: string | null;
     description: string;
     status: string;
@@ -60,8 +62,23 @@ export default function CustomerImportPage() {
       header: "Code",
     },
     {
-      accessorKey: "parentId",
-      header: "Parent",
+      accessorKey: "parent",
+      header: "parent",
+      cell: ({ row }) => {
+        const category = row.original;
+        console.log(category);
+        const handleCategorySelect = (option: any) => {
+          console.log("Cateogty: ", option);
+        };
+        //@ts-ignore
+        return (
+          <CustomeSelectImport
+            type="mc"
+            selected={category.parent}
+            handleSelect={handleCategorySelect}
+          />
+        );
+      },
     },
     {
       accessorKey: "description",
@@ -79,11 +96,13 @@ export default function CustomerImportPage() {
   const [isParent, setIsParent] = useState(true);
 
   useEffect(() => {
-    const cat = CSV.filter((item) => !item.parentId && item.name);
-    const subCat = CSV.filter((item) => item.parentId && item.name);
-    setCategories(cat);
-    setSubCategories(subCat);
+    if (isParent) {
+      setCategories(CSV);
+    } else {
+      setSubCategories(CSV);
+    }
   }, [CSV]);
+  console.log("printing", subCategories, isParent);
 
   // console.log("csv", isParent);
 
