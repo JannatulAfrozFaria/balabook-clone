@@ -167,7 +167,8 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
   async function onSubmit(data: z.infer<typeof ProductFormSchema>) {
     try {
-      console.log("product", data);
+      // console.log("product", data);
+
       //@ts-ignore
       const product = await saveProduct(id, data);
 

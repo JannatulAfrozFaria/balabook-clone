@@ -65,7 +65,7 @@ const addToDb = (product: Product): boolean => {
   // console.log("stored Cart:", storedCart);
   // console.log("purchase cart:", purchaseCart);
 
-  localStorage.setItem("purchase_cart", JSON.stringify(purchaseCart));
+  // localStorage.setItem("purchase_cart", JSON.stringify(purchaseCart));
   return true;
 };
 

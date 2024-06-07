@@ -177,7 +177,7 @@ model Category {
   description String?
   code        String  @unique
   status      String
-  photo       String // Assuming photo is stored as a URL
+  photo       String? // Assuming photo is stored as a URL
 
   // Define the relationship for parent category
   parent   Category? @relation("subcategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Optional parentId category

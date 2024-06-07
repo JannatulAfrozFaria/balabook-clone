@@ -125,11 +125,14 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
         newProduct = {
           ...exist,
-          qty: exist.qty + 1,
-          total: (exist.qty + 1) * exist.tp,
+          qty: parseInt(exist.qty) + 1,
+          total: parseInt(exist.qty + 1) * exist.tp,
         };
         dispatch(setProducts(rest));
-        addToDb(newProduct);
+        localStorage.setItem(
+          "purchase_cart",
+          JSON.stringify([...rest, newProduct])
+        );
         dispatch(setProducts([...rest, newProduct]));
       } else {
         // add new

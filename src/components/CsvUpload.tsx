@@ -47,7 +47,7 @@ function CsvUpload({ setCSV, handelImport }: any) {
               Remove
             </Button> */}
             <div className="py-4">
-              <Button onClick={() => handelImport()}>Import Customer</Button>
+              <Button onClick={handelImport}>Import</Button>
             </div>
           </div>
           <ProgressBar style={{ backgroundColor: "black" }} />

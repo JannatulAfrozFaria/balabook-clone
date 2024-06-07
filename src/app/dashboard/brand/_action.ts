@@ -115,3 +115,21 @@ export const brandDw = async () => {
     throw new Error("Failed to fetch categories");
   }
 };
+
+export const getBrandNameById = async (id: string): Promise<string | null> => {
+  try {
+    const brand = await prisma.brand.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        name: true,
+      },
+    });
+
+    return brand ? brand.name : null;
+  } catch (error) {
+    console.error("Error fetching brand name by ID:", error);
+    return null;
+  }
+};

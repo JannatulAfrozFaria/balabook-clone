@@ -25,57 +25,53 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveCategory = async (id: string, data: Category) => {
+export const saveCategory = async (id: string, categories: Category[]) => {
   try {
-    //ts-ignore
-    console.log("action", data);
-    let { name, code, photo, parentId, description, status } = data;
+    const savedCategories = [];
 
-    if (!name || !code) return false;
+    for (const category of categories) {
+      const { name, code, photo, parentId, description, status } = category;
 
-    if (id !== "") {
-      const updateCategory = await prisma.category.update({
-        where: {
-          id: id,
-        },
-        data: {
-          name,
-          code,
-          photo,
-          //@ts-ignore
-          parentId: parentId || null,
-          description,
-          status,
-        },
-      });
+      if (!name || !code) continue;
 
-      if (updateCategory) {
-        console.log(`${updateCategory.name} Create successful!`);
+      if (id !== "") {
+        const updateCategory = await prisma.category.update({
+          where: { id: id },
+          data: {
+            name,
+            code,
+            photo,
+            parentId: parentId || null,
+            description,
+            status,
+          },
+        });
 
-        revalidatePath("/dashboard/category");
-        return updateCategory;
-      }
-    } else {
-      const createCategory = await prisma.category.create({
-        data: {
-          name,
-          code,
-          description,
-          //@ts-ignore
-          photo,
-          //@ts-ignore
-          parentId: parentId || null,
-          status,
-        },
-      });
+        if (updateCategory) {
+          console.log(`${updateCategory.name} updated successfully!`);
+          savedCategories.push(updateCategory);
+        }
+      } else {
+        const createCategory = await prisma.category.create({
+          data: {
+            name,
+            code,
+            description,
+            photo,
+            parentId: parentId || null,
+            status,
+          },
+        });
 
-      if (createCategory) {
-        console.log(`${createCategory.name} Create successful!`);
-
-        revalidatePath("/dashboard/category");
-        return createCategory;
+        if (createCategory) {
+          console.log(`${createCategory.name} created successfully!`);
+          savedCategories.push(createCategory);
+        }
       }
     }
+
+    revalidatePath("/dashboard/category");
+    return savedCategories;
   } catch (err) {
     console.log(err);
     return false;
@@ -167,5 +163,34 @@ export const categoryDw = async (id: string) => {
   } catch (error) {
     console.error("Error fetching parent categories:", error);
     throw new Error("Failed to fetch categories");
+  }
+};
+
+//import product from csv function
+export const importCategory = async (data: any, isPatent: boolean) => {
+  console.log("Importing category");
+  try {
+    if (isPatent) {
+      const category = await prisma.category.createMany({
+        data: data.map(({ name, code, description, status }) => ({
+          name,
+          code,
+          description,
+          // photo,
+          // parentId: parentId || "",
+          status,
+        })),
+      });
+
+      if (category.count > 0) {
+        console.log(`${category.count} Categories created successfully!`);
+        revalidatePath("/dashboard/category");
+        return category;
+      }
+    } else {
+      console.log("subCategory");
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

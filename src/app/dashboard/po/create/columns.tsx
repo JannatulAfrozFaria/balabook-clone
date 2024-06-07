@@ -28,21 +28,22 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import { useState } from "react";
 import { PoPrintalog } from "@/components/ui/po-print-pop";
+import { useDispatch, useSelector } from "react-redux";
+import { setProducts } from "@/app/redux-store/Slice/PoSlice";
+import { RootState } from "@/app/redux-store/store";
+import { addToDb } from "@/lib/poDb";
 export type Offer = {
   id: string;
-  pono: string;
-  supplier: string;
-  supplierId: string;
-  cantainerID: string;
-  totalItem: number;
+  name: string;
+  articleCode: string;
+  mrp: number;
+  tp: number;
+  hsCode: string;
+  openingQty: number;
+  cogs: number;
+  closingQty: number;
+  qty: number;
   total: number;
-  tax: number;
-  discount: number;
-  grossTotalRound: number;
-  status: "Active" | "Inactive";
-  price: number;
-  user: string;
-  userId: string;
 };
 
 const handleDeleteTigger = async (id: string) => {
@@ -74,12 +75,51 @@ export const columns: ColumnDef<Offer>[] = [
     header: "Name",
   },
   {
-    accessorKey: "mrp",
+    accessorKey: "tp",
     header: "Price",
   },
   {
     accessorKey: "qty",
     header: "Quantity",
+    cell: ({ row, table }) => {
+      const product = row.original;
+      const dispatch = useDispatch();
+      const poData = useSelector((state: RootState) => state.purchaseOrder);
+      const handleQtyChange = (e: number) => {
+        const exist = poData.products.find(
+          (poProduct: any) => poProduct.id === product.id
+        );
+        const rest = poData.products.filter(
+          (poProduct: any) => poProduct.id !== product.id
+        );
+        let newProduct;
+        if (exist) {
+          // inrease qty
+
+          newProduct = {
+            ...exist,
+            qty: e.target.value,
+            total: parseInt(e.target.value) * exist.tp,
+          };
+          dispatch(setProducts(rest));
+          localStorage.setItem(
+            "purchase_cart",
+            JSON.stringify([...rest, newProduct])
+          );
+          dispatch(setProducts([...rest, newProduct]));
+        } else {
+        }
+      };
+
+      return (
+        <input
+          type="number"
+          value={product.qty}
+          onChange={handleQtyChange}
+          className="w-full border rounded p-1"
+        />
+      );
+    },
   },
   {
     accessorKey: "vat",

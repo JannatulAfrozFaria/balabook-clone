@@ -5,7 +5,7 @@ import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, UploadCloud } from "lucide-react";
 import CreateCategorySheet from "./categorySheet";
 
 export default async function ProductsPage() {
@@ -33,6 +33,11 @@ export default async function ProductsPage() {
               <PageTitle title="Category" />
             </div>
             <div className="flex items-center space-x-2">
+              <Link href="/dashboard/category/import">
+                <Button>
+                  <UploadCloud className="mr-2 h-4 w-4" /> Import
+                </Button>
+              </Link>
               <CreateCategorySheet />
             </div>
           </div>

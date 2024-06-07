@@ -1,31 +1,33 @@
 "use client";
+import React, { useState } from "react";
 import PageTitle from "@/components/ui/PageTitle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { X } from "lucide-react";
 import CsvUpload from "@/components/CsvUpload";
-import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-// import { UserDataTable } from "./data-table";
-// import { importCustomer } from "../_action";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import { UserDataTable } from "../../customer/data-table";
-import { importCustomer } from "../../customer/_action";
 import { ProductDataTable } from "../data-table";
 import { importProduct } from "../_action";
+import { getBrandNameById } from "../../brand/_action";
 
 export default function CustomerImportPage() {
-  type Customer = {
+  const [CSV, setCSV] = useState<any>([]);
+  const [updatedCSV, setUpdatedCSV] = useState<any>([]); // New state to store updated CSV data
+
+  type Product = {
     id: string;
     name: string;
-    phone: string;
-    email: string;
-    district: string;
-    division: string;
+    articleCode: string;
+    categoryId: string;
+    brandName: string; // Changed type from 'brandId' to 'brandName'
+    supplierId: string;
+    price: string;
+    status: string;
   };
 
-  const columns: ColumnDef<Customer>[] = [
+  const columns: ColumnDef<Product>[] = [
     {
       accessorKey: "",
       header: "#",
@@ -41,15 +43,15 @@ export default function CustomerImportPage() {
     },
     {
       accessorKey: "categoryId",
-      header: "Category Id",
+      header: "Category",
     },
     {
-      accessorKey: "brandId",
-      header: "Brand Id",
+      accessorKey: "brandName",
+      header: "Brand",
     },
     {
       accessorKey: "supplierId",
-      header: "Supplier Id",
+      header: "Supplier",
     },
     {
       accessorKey: "price",
@@ -60,14 +62,25 @@ export default function CustomerImportPage() {
       header: "Status",
     },
   ];
-  //   const data: any = await prisma.customer.findMany();
-  const [CSV, setCSV] = useState<any>([]);
 
-  const handelImport = async () => {
-    // console.log("Import", CSV);
+  const handleImport = async () => {
+    console.log("Import", CSV);
+
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
       if (product) {
+        const brand = await Promise.all(
+          CSV.map((item) => getBrandNameById(item.brandId))
+        );
+        console.log("Brand Names:", brand);
+
+        const updatedData = CSV.map((item, index) => ({
+          ...item,
+          brandName: brand[index],
+        }));
+
+        setUpdatedCSV(updatedData); // Update the updatedCSV state with new data
+
         toast.success("Product Import Success");
       }
     }
@@ -80,9 +93,7 @@ export default function CustomerImportPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="Import Products" />
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              {/* <CreateCustomerSheet /> */}
-              <CsvUpload setCSV={setCSV} handelImport={handelImport} />
+              <CsvUpload setCSV={setCSV} handelImport={handleImport} />
               <Link href={"/dashboard/products"}>
                 <Button>
                   <X size="16" className="mr-2" /> Cancle
@@ -92,12 +103,7 @@ export default function CustomerImportPage() {
           </div>
 
           <div className="">
-            <ProductDataTable
-              columns={columns}
-              data={CSV}
-              //@ts-ignore
-              //   handelImport={handelImport}
-            />
+            <ProductDataTable columns={columns} data={updatedCSV} />
           </div>
         </div>
       </div>
