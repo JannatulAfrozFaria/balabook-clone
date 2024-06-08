@@ -10,9 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Barcode, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  Printer,
+  Trash,
+} from "lucide-react";
 import Link from "next/link";
-import { handleDelete } from "../_action";
+import axios from "axios";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -20,31 +26,45 @@ import { Toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-export type Product = {
+import { useState } from "react";
+import { PoPrintalog } from "@/components/ui/po-print-pop";
+import { useDispatch, useSelector } from "react-redux";
+import { setProducts } from "@/app/redux-store/Slice/PoSlice";
+import { RootState } from "@/app/redux-store/store";
+import { addToDb } from "@/lib/tpnDb";
+export type Offer = {
   id: string;
   name: string;
-  photo: string;
-  status: "Active" | "Inactive";
-  mrp: number;
   articleCode: string;
-  stock: number;
+  mrp: number;
+  tp: number;
+  hsCode: string;
+  openingQty: number;
+  cogs: number;
+  closingQty: number;
+  qty: number;
+  total: number;
 };
 
 const handleDeleteTigger = async (id: string) => {
-  const del = await handleDelete(id);
-  if (del) {
-    console.log(`Offer Delete Successful!`);
-    // toast.success(`${del.name} deleted successful!`);
-  } else {
-    console.log(`Deleted Faild!`);
-  }
+  // const del = await handleDelete(id);
+  // if (del) {
+  //   console.log(`Offer Delete Successful!`);
+  //   // toast.success(`${del.name} deleted successful!`);
+  // } else {
+  //   console.log(`Deleted Faild!`);
+  // }
 };
 
-export const columns: ColumnDef<Product>[] = [
-  
+export const columns: ColumnDef<Offer>[] = [
   {
     accessorKey: "no",
     header: "#",
+    cell: ({ row }: { row: any }) => {
+      const sl = row.index + 1; // row.index gives the zero-based index, add 1 to make it 1-based
+
+      return `${sl}.`;
+    },
   },
   {
     accessorKey: "articleCode",
@@ -55,32 +75,55 @@ export const columns: ColumnDef<Product>[] = [
     header: "Name",
   },
   {
+    accessorKey: "tp",
+    header: "Price",
+  },
+  {
     accessorKey: "qty",
     header: "Quantity",
-  }, 
-  {
-    accessorKey: "stock",
-    header: "Stock",
+    cell: ({ row, table }) => {
+      const product = row.original;
+      const dispatch = useDispatch();
+      const poData = useSelector((state: RootState) => state.purchaseOrder);
+      const handleQtyChange = (e: number) => {
+        const exist = poData.products.find(
+          (poProduct: any) => poProduct.id === product.id
+        );
+        const rest = poData.products.filter(
+          (poProduct: any) => poProduct.id !== product.id
+        );
+        let newProduct;
+        if (exist) {
+          // inrease qty
+
+          newProduct = {
+            ...exist,
+            qty: e.target.value,
+            total: parseInt(e.target.value) * exist.tp,
+          };
+          dispatch(setProducts(rest));
+          localStorage.setItem("tpn", JSON.stringify([...rest, newProduct]));
+          dispatch(setProducts([...rest, newProduct]));
+        } else {
+        }
+      };
+
+      return (
+        <input
+          type="number"
+          value={product.qty}
+          onChange={handleQtyChange}
+          className="w-full border rounded p-1"
+        />
+      );
+    },
   },
   {
-    accessorKey: "hsCode",
-    header: "HS Code",
-  },
-  {
-    accessorKey: "mrp",
-    header: "MRP",
-  },
-  {
-    accessorKey: "tp",
-    header: "TP",
-  },
-  {
-    accessorKey: "tax",
-    header: "Tax",
+    accessorKey: "vat",
+    header: "Vat",
   },
   {
     accessorKey: "total",
     header: "Total",
   },
- 
 ];

@@ -1,22 +1,16 @@
-import { z } from "zod";
+export interface TPNFormSchema {
+  id?: string; // Optional because it will be auto-generated
+  tpnNo: string; // PO Number must be provided
+  products?: any; // MongoDB ObjectId reference to Supplier
 
-export const TPNFormSchema = z.object({
-  name: z.string().min(1, "Name is Required"), //done
-  articleCode: z.string().min(1, "Article Code is Required"), //done
-  qty: z.number().optional(), //done
-  mrp: z.number().optional(), //done
-  tp: z.number().optional(), //done
-  total: z.number().optional(), //done
-  supplierId: z.string().optional(),
-  vat: z.number().optional(), //done
-  stock: z.number().optional(), //done
-  hsCode: z.string().optional(), //done
-  supplier: z.string().optional(), //done
-  tax: z.number().optional(), //done
-  country: z.string().optional(),
-  discount: z.number().optional(),
-  grosTotal: z.number().optional(),
-  grossTotalRound: z.number().optional(), //done
-  note: z.string(), //done
-  containerId: z.string(), //done
-});
+  totalItem?: number;
+  total?: number;
+  tax?: number;
+  discount?: number;
+  grossTotal?: number;
+  grossTotalRound?: number;
+  whToId?: String;
+  whFromId?: String;
+  userId?: string;
+  status?: string; // Assuming status is a string; refine based on possible values
+}

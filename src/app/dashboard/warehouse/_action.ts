@@ -31,7 +31,7 @@ export const saveUnit = async (id: string, data: Unit) => {
     console.log("action", data);
     let { name, company, code, address, type, email, phone, status } = data;
 
-    if (!name ) return false;
+    if (!name) return false;
 
     if (id !== "") {
       const updateUnit = await prisma.wareHouse.update({
@@ -83,7 +83,7 @@ export const saveUnit = async (id: string, data: Unit) => {
   }
 };
 
-export const unitDw = async () => {
+export const whDw = async () => {
   try {
     const wareHouses = await prisma.wareHouse.findMany({
       where: {
@@ -98,7 +98,7 @@ export const unitDw = async () => {
     let dw = [
       {
         value: "",
-        label: "Select Unit",
+        label: "Select Warehouse",
       },
     ];
 

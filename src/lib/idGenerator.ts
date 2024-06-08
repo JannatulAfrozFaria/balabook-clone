@@ -21,7 +21,7 @@ export const generateId = async (module: string) => {
   }
   switch (module) {
     case "tpn":
-      todayTotal = await prisma.tPN.count({
+      todayTotal = await prisma.tpn.count({
         where: {
           createdAt: {
             gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter documents created today

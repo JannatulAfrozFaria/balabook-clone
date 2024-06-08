@@ -113,10 +113,10 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const handleSelectedProduct = async (productId: string) => {
     try {
       // Check if exist
-      const exist = poData.products.find(
+      const exist = poData?.products.find(
         (poProduct: any) => poProduct.id === productId
       );
-      const rest = poData.products.filter(
+      const rest = poData?.products.filter(
         (poProduct: any) => poProduct.id !== productId
       );
       let newProduct;

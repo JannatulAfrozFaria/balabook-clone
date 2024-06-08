@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import poReducer from "./Slice/PoSlice";
 import grnReducer from "./Slice/GRNSlice";
 import salesReducer from "./Slice/SalesSlice";
+import tpnReducer from "./Slice/TPNSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -10,6 +11,7 @@ export const makeStore = () => {
       purchaseOrder: poReducer, // Add the poSlice reducer to the store
       grn: grnReducer, // Add the poSlice reducer to the store
       sales: salesReducer,
+      tpn: tpnReducer,
     },
   });
 };

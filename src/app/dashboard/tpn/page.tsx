@@ -6,9 +6,30 @@ import { Toast } from "@/components/ui/toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BadgePlus, Plus } from "lucide-react";
+import { TPNFormSchema } from "./create/TPNFormSchema";
 
 export default async function ProductsPage() {
-  const data: any = [];
+  const data: TPNFormSchema = await prisma.tpn.findMany({
+    include: {
+      whTo: {
+        select: {
+          name: true, // Select only the name field from the supplier model
+        },
+      },
+      user: {
+        select: {
+          name: true, // Select only the name field from the supplier model
+        },
+      },
+      whFrom: {
+        select: {
+          name: true, // Select only the name field from the user model
+        },
+      },
+    },
+  });
+
+  console.log("data", data);
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

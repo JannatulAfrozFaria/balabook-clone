@@ -47,13 +47,25 @@ import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
 import SelectUnit from "@/components/ui/SelectUnit";
-import { saveProduct } from "../_action";
 import { columns } from "./columns";
 import { TPNFormSchema } from "./TPNFormSchema";
 import { TPNDataTable } from "./data-table";
 import SearchProduct from "@/components/ui/searchProduct";
 import CsvUpload from "@/components/CsvUpload";
-import { importProduct } from "../../products/_action";
+import { importProduct, searchProductById } from "../../products/_action";
+import SelectWarehouse from "@/components/ui/SelectWareHouse";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectWhFrom,
+  selectWhTo,
+  setProducts,
+  setUserId,
+} from "@/app/redux-store/Slice/TPNSlice";
+import { RootState } from "@/app/redux-store/store";
+import { addToDb } from "@/lib/tpnDb";
+import { saveTpn } from "../_action";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 interface ProductFormEditProps {
   entry: any;
@@ -62,106 +74,82 @@ const data: any = [];
 function TPNForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
   const [mcId, setMcId] = useState<string>("");
-  const form = useForm<z.infer<typeof TPNFormSchema>>({
-    resolver: zodResolver(TPNFormSchema),
-    defaultValues: {
-      name: "",
-      qty: 0,
-      mrp: 0,
-      tp: 0,
-      total: 0,
-      vat: 0,
-      stock: 0,
-      supplier: "",
-      tax: 0,
-      hsCode: "",
-      country: "",
-      supplierId: "",
-      discount: 0,
-      grosTotal: 0,
-      grossTotalRound: 0,
-      note: "",
-      containerId: "",
-    },
-  });
+  const form = useForm();
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const tpnData = useSelector((state: RootState) => state.tpn);
+  const sessionUserId = session?.user?.id;
 
-  useEffect(() => {
-    // console.log(data);
-    if (entry?.id) {
-      form.setValue("name", entry.name);
-      form.setValue("articleCode", entry.articleCode);
-      form.setValue("qty", entry.qty);
-      form.setValue("mrp", entry.mrp);
-      form.setValue("tp", entry.tp);
-      form.setValue("total", entry.total);
-      form.setValue("vat", entry.vat);
-      form.setValue("stock", entry.stock);
-      form.setValue("hsCode", entry.hsCode);
-      form.setValue("supplier", entry.supplier);
-      form.setValue("supplierId", entry.supplierId);
-      form.setValue("tax", entry.tax);
-      form.setValue("hsCode", entry.hsCode);
-      form.setValue("country", entry.country);
-      form.setValue("grosTotal", entry.grosTotal);
-      form.setValue("grossTotalRound", entry.grossTotalRound);
-      form.setValue("note", entry.note);
-      // form.setValue("price", entry.price);
-      form.setValue("containerId", entry.containerId);
-      setId(entry?.id);
-    }
-  }, []);
-
-  //   const handleSlug = (name: string) => {
-  //     const slug = name.split(" ").join("-");
-  //     form.setValue("slug", slug);
-  //   };
-
-  const handleSupplierId = (id: string) => {
-    form.setValue("supplierId", id);
+  const handleWhFrom = (id: string) => {
+    console.log("handleWhFrom", id);
+    dispatch(selectWhFrom(id));
+  };
+  const handleWhTo = (id: string) => {
+    dispatch(selectWhTo(id));
   };
 
-  //   const handleMcId = (id: string) => {
-  //     form.setValue("masterCategoryId", id);
-  //     setMcId(id);
-  //   };
-  //   const handleCategoryId = (id: string) => {
-  //     form.setValue("categoryId", id);
-  //     setMcId(id);
-  //   };
+  useEffect(() => {
+    dispatch(setUserId(sessionUserId));
+  }, [sessionUserId]);
   const handleBrandId = (id: string) => {
     form.setValue("brandId", id);
     setMcId(id);
   };
-  //   const handleUnitId = (id: string) => {
-  //     form.setValue("unitId", id);
-  //     setMcId(id);
-  //   };
+
   const onSearchChange = (query: any) => {
     console.log(query);
   };
-  // handleSelectedProduct;
-  // handleSelectedProduct;
-  const handleSelectedProduct = (product: any) => {
-    console.log(product);
+
+  const handleSelectedProduct = async (productId: string) => {
+    try {
+      // Check if exist
+      console.log("productidtpn", tpnData);
+      const exist = tpnData.products.find(
+        (poProduct: any) => poProduct.id === productId
+      );
+      const rest = tpnData.products.filter(
+        (poProduct: any) => poProduct.id !== productId
+      );
+      let newProduct;
+
+      if (exist) {
+        // inrease qty
+
+        newProduct = {
+          ...exist,
+          qty: parseInt(exist.qty) + 1,
+          total: parseInt(exist.qty + 1) * exist.tp,
+        };
+        dispatch(setProducts(rest));
+        localStorage.setItem("tpn", JSON.stringify([...rest, newProduct]));
+        dispatch(setProducts([...rest, newProduct]));
+      } else {
+        // add new
+        const product = await searchProductById(productId);
+        // console.log("hello", product);
+        newProduct = {
+          id: product?.id,
+          name: product?.name,
+          articleCode: product?.articleCode,
+          //@ts-ignore
+          mrp: product?.mrp !== null ? product.mrp : 0,
+          tp: product?.tp !== null ? product.tp : 0,
+          hsCode: product.hsCode,
+          openingQty: product.openingQty,
+          cogs: product.cogs,
+          closingQty: product.closingQty,
+          qty: 1,
+          // @ts-ignore
+          total: 1 * product?.tp,
+        };
+      }
+
+      addToDb(newProduct);
+      dispatch(setProducts([...rest, newProduct]));
+    } catch (error) {
+      console.error("Error fetching product by id:", error);
+    }
   };
-
-  // async function onSubmit(data: z.infer<typeof POFormSchema>) {
-  //   try {
-  //     console.log("product", data);
-  //     //@ts-ignore
-  //     const product = await saveProduct(id, data);
-
-  //     if (product) {
-  //       toast.success(
-  //         id ? "Product Update Success" : "Product Creation Success"
-  //       );
-  //     } else {
-  //       toast.error(id ? "Product Update faield!" : "Product Creation faield!");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 
   const [CSV, setCSV] = useState<any>([]);
 
@@ -175,19 +163,16 @@ function TPNForm({ entry }: ProductFormEditProps) {
     }
   };
 
-  async function onSubmit(data: z.infer<typeof TPNFormSchema>) {
+  async function onSubmit() {
     try {
-      console.log("product", data);
       //@ts-ignore
-      const product = await saveProduct(id, data);
-
-      if (product) {
-        form.reset();
-        toast.success(
-          id ? "Product Update Success" : "Product Creation Success"
-        );
+      const TPN = await saveTpn(tpnData);
+      if (TPN) {
+        toast.success(TPN ? "TPN  Creation Success" : "TPN Update Success");
+        // dispatch(reset());
+        // router.push("/dashboard/po");
       } else {
-        toast.error(id ? "Product Update faield!" : "Product Creation faield!");
+        toast.error(TPN ? "TPN Creation faield!" : "TPN Update faield!");
       }
     } catch (error) {
       console.error(error);
@@ -212,7 +197,8 @@ function TPNForm({ entry }: ProductFormEditProps) {
                     <FormItem>
                       <FormLabel>Warehouse From</FormLabel>
                       <FormControl>
-                        <SelectSupplier handleSelect={handleSupplierId} />
+                        {/* <SelectSupplier handleSelect={handleSupplierId} /> */}
+                        <SelectWarehouse handleSelect={handleWhFrom} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -227,7 +213,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
                       <FormLabel>Warehouse To</FormLabel>
 
                       <FormControl>
-                        <SelectSupplier handleSelect={handleSupplierId} />
+                        <SelectWarehouse handleSelect={handleWhTo} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -252,20 +238,29 @@ function TPNForm({ entry }: ProductFormEditProps) {
               </div>
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                <TPNDataTable columns={columns} data={data} />
+                <TPNDataTable
+                  columns={columns}
+                  data={
+                    tpnData?.products?.length > 0
+                      ? tpnData?.products
+                          ?.slice()
+                          // @ts-ignore
+                          .sort((a, b) => a.order - b.order)
+                      : []
+                  }
+                />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 pb-2 border-b">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 mt-4 pb-2 border-b">
+                <p className="font-bold">{/* Discount: <span>0.00</span> */}</p>
+                <p className="font-bold">{/* Tax: <span>0.00</span> */}</p>
                 <p className="font-bold">
-                  Total Item: <span>0.00</span>
+                  Total Item: <span>{tpnData.totalItem}</span>
                 </p>
                 <p className="font-bold">
-                  Product Cost: <span>0.00</span>
+                  Gross Total: <span>{tpnData.grossTotal}</span>
                 </p>
                 <p className="font-bold">
-                  Shipping Cost: <span>0.00</span>
-                </p>
-                <p className="font-bold">
-                  Total Cost: <span>0.00</span>
+                  Gross Total Round: <span>{tpnData.grossTotalRound}</span>
                 </p>
               </div>
             </div>
