@@ -62,25 +62,13 @@ export default function CustomerImportPage() {
       header: "Status",
     },
   ];
-
+  console.log("Import", CSV);
   const handleImport = async () => {
-    console.log("Import", CSV);
-
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
+      console.log("importProduct", product);
       if (product) {
-        const brand = await Promise.all(
-          CSV.map((item) => getBrandNameById(item.brandId))
-        );
-        console.log("Brand Names:", brand);
-
-        const updatedData = CSV.map((item, index) => ({
-          ...item,
-          brandName: brand[index],
-        }));
-
-        setUpdatedCSV(updatedData); // Update the updatedCSV state with new data
-
+        // Update the updatedCSV state with new data
         toast.success("Product Import Success");
       }
     }
@@ -103,7 +91,7 @@ export default function CustomerImportPage() {
           </div>
 
           <div className="">
-            <ProductDataTable columns={columns} data={updatedCSV} />
+            <ProductDataTable columns={columns} data={CSV} />
           </div>
         </div>
       </div>

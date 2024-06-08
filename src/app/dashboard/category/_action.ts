@@ -206,17 +206,15 @@ export const categoryMCDw = async () => {
 };
 
 //import product from csv function
-export const importCategory = async (data: any, isPatent: boolean) => {
-  console.log("Importing category");
+export const importCategory = async (data: any, isParent: boolean) => {
   try {
-    if (isPatent) {
+    console.log("Importing category", isParent);
+    if (isParent) {
       const category = await prisma.category.createMany({
         data: data.map(({ name, code, description, status }) => ({
           name,
           code,
           description,
-          // photo,
-          // parentId: parentId || "",
           status,
         })),
       });
@@ -227,9 +225,26 @@ export const importCategory = async (data: any, isPatent: boolean) => {
         return category;
       }
     } else {
-      console.log("subCategory");
+      console.log("Importing subcategories");
+
+      const promises = data.map(
+        async ({ name, code, parentId, description, status }) => {
+          await prisma.category.create({
+            data: {
+              name,
+              code,
+              description,
+              parentId: parentId,
+              status,
+            },
+          });
+        }
+      );
+
+      await Promise.all(promises);
+      revalidatePath("/dashboard/category");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error importing categories:", error);
   }
 };

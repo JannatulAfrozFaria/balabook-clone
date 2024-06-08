@@ -158,89 +158,80 @@ export const saveProduct = async (id: string, data: Product) => {
 
 //import product from csv function
 export const importProduct = async (data: any) => {
+  console.log("productData", data);
+
   try {
-    await Promise.all(
-      data.map(async (productData: Product) => {
-        const {
-          name,
-          salesType,
-          articleCode,
-          categoryId,
-          brandId,
-          supplierId,
-          price,
-          ean,
-          vat,
-          vatMethod,
-          hsCode,
-          shipping,
-          featured,
-          website,
-          slug,
-          description,
-          specification,
-          promoPrice,
-          promoStart,
-          promoEnd,
-          photo,
-          mrp,
-          tp,
-          pisInPackege,
-          status,
-          type,
-        } = productData;
-
-        // Check if required fields are present
-        if (!name || !articleCode) {
-          return false;
-        }
-
-        // Create the product
-        const product = await prisma.product.create({
+    const promises = data.map(
+      async ({
+        name,
+        salesType,
+        articleCode,
+        categoryId,
+        brandId,
+        supplierId,
+        price,
+        ean,
+        vat,
+        vatMethod,
+        hsCode,
+        shipping,
+        featured,
+        website,
+        slug,
+        description,
+        specification,
+        promoPrice,
+        promoStart,
+        promoEnd,
+        photo,
+        mrp,
+        tp,
+        pisInPackege,
+        masterCategoryId,
+        status,
+        type,
+        unitId,
+      }) => {
+        await prisma.product.create({
           data: {
             name,
+            salesType,
+            articleCode,
             categoryId,
             brandId,
             supplierId,
-            price,
-            salesType: salesType || "", // Default value or check for undefined
-            articleCode,
-            ean: ean || "", // Default value or check for undefined
-            vat: vat || 0, // Default value or check for undefined
-            vatMethod: vatMethod || "", // Default value or check for undefined
-            hsCode: hsCode || "", // Default value or check for undefined
-            shipping: shipping || "", // Default value or check for undefined
+            price: price ? parseFloat(price) : null, // Convert price to number
+            ean,
+            vat,
+            vatMethod: vatMethod === "true",
+            hsCode,
+            shipping,
             featured,
             website,
-            slug: slug || "", // Default value or check for undefined
+            slug,
             description,
             specification,
-            promoPrice,
+            promoPrice: promoPrice ? parseFloat(promoPrice) : null, // Convert promoPrice to number if needed
             promoStart,
             promoEnd,
             photo,
             mrp,
             tp,
             pisInPackege,
+            masterCategoryId,
             status,
             type,
+            unitId,
           },
         });
-
-        console.log(product);
-      })
+      }
     );
 
-    // if (products?.length > 0) {
-    //   console.log(products);
-    //   return "Product Import Successful!";
-    // }
+    await Promise.all(promises);
+    revalidatePath("/dashboard/product");
   } catch (err) {
     console.log(err);
     return false;
-  } finally {
-    revalidatePath("/dashboard/products");
-    return true;
   }
 };
 

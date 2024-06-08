@@ -62,23 +62,8 @@ export default function CustomerImportPage() {
       header: "Code",
     },
     {
-      accessorKey: "parent",
-      header: "parent",
-      cell: ({ row }) => {
-        const category = row.original;
-        console.log(category);
-        const handleCategorySelect = (option: any) => {
-          console.log("Cateogty: ", option);
-        };
-        //@ts-ignore
-        return (
-          <CustomeSelectImport
-            type="mc"
-            selected={category.parent}
-            handleSelect={handleCategorySelect}
-          />
-        );
-      },
+      accessorKey: "parentId",
+      header: "Parent Id",
     },
     {
       accessorKey: "description",
@@ -107,10 +92,14 @@ export default function CustomerImportPage() {
   // console.log("csv", isParent);
 
   const handelImportSubCategory = async () => {
-    console.log("import");
-    const category = await importCategory(categories, isParent);
+    console.log("import", subCategories, categories, isParent);
 
-    console.log("category", categories);
+    if (isParent) {
+      const category = await importCategory(categories, isParent);
+    } else {
+      const subCategory = await importCategory(subCategories, isParent);
+      console.log(subCategory);
+    }
   };
 
   return (
