@@ -20,7 +20,7 @@ function EditCategorySheet({
   open: boolean;
   setOpen: any;
 }) {
-  // console.log(entry);
+  console.log(entry);
   return (
     <div>
       <Sheet open={open} onOpenChange={setOpen}>

@@ -153,6 +153,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
     setMcId(id);
   };
   const handleCategoryId = (id: string) => {
+    console.log(id);
     form.setValue("categoryId", id);
     setMcId(id);
   };

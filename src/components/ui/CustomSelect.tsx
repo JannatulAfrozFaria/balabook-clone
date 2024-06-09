@@ -24,12 +24,12 @@ export default function CustomSelect({ handleSelect }: { handleSelect: any }) {
       console.error(error);
     }
   };
+  fetchCategories();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  // }, []);
 
-  console.log(options);
+  // console.log(options);
   return (
     <div className="App">
       <Select

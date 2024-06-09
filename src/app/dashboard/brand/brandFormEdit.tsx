@@ -55,11 +55,11 @@ function BrandFormEdit({ entry, setOpen }: BrandFormEditProps) {
   useEffect(() => {
     // console.log(data);
     if (entry?.id) {
-      // form.setValue("name", entry.name);
-      // form.setValue("description", entry.description);
-      // form.setValue("code", entry.code);
-      // form.setValue("logo", entry.logo);
-      // form.setValue("status", entry.status);
+      form.setValue("name", entry.name);
+      form.setValue("description", entry.description);
+      form.setValue("code", entry.code);
+      form.setValue("logo", entry.logo);
+      form.setValue("status", entry.status);
     }
   }, []);
 

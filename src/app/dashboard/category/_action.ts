@@ -25,53 +25,98 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveCategory = async (id: string, categories: Category[]) => {
+export const saveCategory = async (id: string, data: Category) => {
   try {
-    const savedCategories = [];
+    let { name, code, photo, parentId, description, status } = data;
 
-    for (const category of categories) {
-      const { name, code, photo, parentId, description, status } = category;
+    if (!name || !parentId) return false;
+    if (id !== "") {
+      const updateCategory = await prisma.category.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name,
+          code,
+          photo,
+          parentId,
+          description,
+          status,
+        },
+      });
 
-      if (!name || !code) continue;
+      if (updateCategory) {
+        console.log(`${updateCategory.name} Update successful!`);
 
+        revalidatePath("/dashboard/category");
+        return updateCategory;
+      }
       if (id !== "") {
-        const updateCategory = await prisma.category.update({
-          where: { id: id },
-          data: {
-            name,
-            code,
-            photo,
-            parentId: parentId || null,
-            description,
-            status,
-          },
-        });
+      }
+    } else {
+      const createCategory = await prisma.category.create({
+        data: {
+          name,
+          code,
+          photo,
+          parentId,
+          description,
+          status,
+        },
+      });
 
-        if (updateCategory) {
-          console.log(`${updateCategory.name} updated successfully!`);
-          savedCategories.push(updateCategory);
-        }
-      } else {
-        const createCategory = await prisma.category.create({
-          data: {
-            name,
-            code,
-            description,
-            photo,
-            parentId: parentId || null,
-            status,
-          },
-        });
+      if (createCategory) {
+        console.log(`${createCategory.name} Create successful!`);
 
-        if (createCategory) {
-          console.log(`${createCategory.name} created successfully!`);
-          savedCategories.push(createCategory);
-        }
+        revalidatePath("/dashboard/category");
+        return createCategory;
       }
     }
+    // const savedCategories = [];
 
-    revalidatePath("/dashboard/category");
-    return savedCategories;
+    // for (const category of data) {
+    //   const { name, code, photo, parentId, description, status } = category;
+
+    //   if (!name || !code) continue;
+
+    //   if (id !== "") {
+    //     const updateCategory = await prisma.category.update({
+    //       where: { id: id },
+    //       data: {
+    //         name,
+    //         code,
+    //         photo,
+    //         parentId: parentId || null,
+    //         description,
+    //         status,
+    //       },
+    //     });
+
+    //     if (updateCategory) {
+    //       console.log(`${updateCategory.name} updated successfully!`);
+    //       savedCategories.push(updateCategory);
+    //     }
+    //   } else {
+    //     const createCategory = await prisma.category.create({
+    //       data: {
+    //         name,
+    //         code,
+    //         description,
+    //         photo,
+    //         parentId: parentId || null,
+    //         status,
+    //       },
+    //     });
+
+    //     if (createCategory) {
+    //       console.log(`${createCategory.name} created successfully!`);
+    //       savedCategories.push(createCategory);
+    //     }
+    //   }
+    // }
+
+    // revalidatePath("/dashboard/category");
+    // return savedCategories;
   } catch (err) {
     console.log(err);
     return false;
@@ -115,7 +160,8 @@ export const parentCategory = async () => {
   }
 };
 
-export const categoryDw = async (id: string) => {
+// Sub Category List
+export const categoryDw = async (id?: string) => {
   try {
     let categories;
 
@@ -166,6 +212,7 @@ export const categoryDw = async (id: string) => {
   }
 };
 
+//Master Category List
 export const categoryMCDw = async () => {
   try {
     let categories;
@@ -211,6 +258,7 @@ export const importCategory = async (data: any, isParent: boolean) => {
     console.log("Importing category", isParent);
     if (isParent) {
       const category = await prisma.category.createMany({
+        //@ts-ignore
         data: data.map(({ name, code, description, status }) => ({
           name,
           code,
@@ -228,6 +276,7 @@ export const importCategory = async (data: any, isParent: boolean) => {
       console.log("Importing subcategories");
 
       const promises = data.map(
+        //@ts-ignore
         async ({ name, code, parentId, description, status }) => {
           await prisma.category.create({
             data: {

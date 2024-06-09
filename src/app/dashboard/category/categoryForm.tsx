@@ -1,15 +1,12 @@
 "use client";
 import { Input } from "@/components/ui/input";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,11 +24,12 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { saveCategory } from "./_action";
 import { CategoryFormSchema } from "./CategoryFormSchema";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import CustomSelect from "@/components/ui/CustomSelect";
+import { saveCategory } from "./_action";
+import SelectCategory from "@/components/ui/SelectCategory";
 
 interface CategoryFormEditProps {
   entry: any;
@@ -39,7 +37,8 @@ interface CategoryFormEditProps {
 }
 
 function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
-  const [parent, setParent] = useState<string>("");
+  // const [parent, setParent] = useState<string>(entry?.parentId || "");
+  const [mcId, setMcId] = useState<string>("");
   const [id, setId] = useState<string>("");
   const form = useForm<z.infer<typeof CategoryFormSchema>>({
     resolver: zodResolver(CategoryFormSchema),
@@ -48,46 +47,40 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
       description: "",
       code: "",
       photo: "",
-      parentId: parent || "",
+      parentId: "",
       status: "Active",
     },
   });
 
   useEffect(() => {
-    // console.log(data);
     if (entry?.id) {
-      // form.setValue("name", entry.name);
-      // form.setValue("description", entry.description);
-      // form.setValue("code", entry.code);
-      // form.setValue("photo", entry.photo);
-      // form.setValue("parentId", entry.parentId || "");
-      // form.setValue("status", entry.status);
+      form.setValue("name", entry.name);
+      form.setValue("description", entry.description);
+      form.setValue("code", entry.code);
+      form.setValue("photo", entry.photo);
+      form.setValue("parentId", entry.parentId || "");
+      form.setValue("status", entry.status);
       setId(entry?.id);
+      setMcId(entry?.parentId);
     }
-  }, []);
+  }, [entry]);
 
-  useEffect(() => {
-    form.setValue("parentId", parent);
-  }, [parent]);
+  // useEffect(() => {
+  //   console.log("parent", parent);
+  //   form.setValue("parentId", parent);
+  // }, [parent]);
+
+  const handleCategoryId = (id: string) => {
+    form.setValue("parentId", id);
+    setMcId(id);
+  };
 
   async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
     try {
-      //@ts-ignore
+      console.log("category saved", id, data);
       const category = await saveCategory(id, data);
-
-      if (category) {
-        form.reset();
-        setOpen(false);
-        toast.success(
-          id ? "Category Update Success" : "Category Creation Success"
-        );
-      } else {
-        toast.error(
-          id ? "Category Update Success" : "Category Creation faield!"
-        );
-      }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -107,9 +100,6 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
                 <FormControl>
                   <Input placeholder="Category Name" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -140,27 +130,19 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="parentId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Parent Category</FormLabel>
-                {/* <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                > */}
+                <FormLabel>Category</FormLabel>
                 <FormControl>
-                  <CustomSelect handleSelect={setParent} />
+                  <SelectCategory handleSelect={handleCategoryId} mcId={mcId} />
                 </FormControl>
-                {/* </Select> */}
-
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="status"
@@ -172,7 +154,7 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="">
+                    <SelectTrigger>
                       <SelectValue placeholder="Active" />
                     </SelectTrigger>
                   </FormControl>
@@ -181,7 +163,6 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
                     <SelectItem value="Inactive">Inactive</SelectItem>
                   </SelectContent>
                 </Select>
-
                 <FormMessage />
               </FormItem>
             )}

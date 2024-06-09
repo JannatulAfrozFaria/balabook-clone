@@ -32,7 +32,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   const segments = pathName.split("/").filter(Boolean);
   const path = `/${segments.slice(0, 2).join("/")}`;
 
-  console.log(path);
+  // console.log(path);
 
   const onlyWidth = useWindowWidth();
   const logOutHandler = async () => {

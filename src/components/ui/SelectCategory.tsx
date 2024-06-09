@@ -2,7 +2,7 @@
 import { categoryDw, parentCategory } from "@/app/dashboard/category/_action";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
+import Select, { components } from "react-select";
 
 export default function SelectCategory({
   handleSelect,
@@ -13,37 +13,67 @@ export default function SelectCategory({
 }) {
   const [selectedOption, setSelectedOption] = useState<any>(null);
   const [options, setOptions] = useState<any>([
-    { value: "", label: "Select Category" },
+    { value: "", label: "Select Sub Category" },
   ]);
 
   const handleCustomSelect = (option: any) => {
-    console.log(option);
     setSelectedOption(option);
     handleSelect(option.value);
   };
 
-  const fetchCategories = async (id: string) => {
+  const fetchCategories = async () => {
     try {
-      const categoriesData = await categoryDw(id);
+      const categoriesData = await categoryDw();
+      // Ensure that all categories are set as options
       setOptions(categoriesData);
     } catch (error) {
       console.error(error);
     }
   };
-
   useEffect(() => {
-    fetchCategories(mcId);
+    fetchCategories();
   }, []);
 
+  // console.log("mcid", options);
+  // if (options.length > 2) {
+  //   const defaultOption = options.find((option) => option.value === id);
+  //   setOptions(defaultOption);
+  // } else {
+  //   console.log("wait");
+  // }
+  const defaultOption = options.find((opt: any) => opt.value === mcId);
+  console.log("mcid", defaultOption);
+
+  if (defaultOption?.length > 0) {
+    setSelectedOption(defaultOption);
+  }
+
   useEffect(() => {
-    fetchCategories(mcId);
+    console.log("selected option", selectedOption);
+    if (mcId) {
+      console.log("defaultOption", options);
+    }
+    // console.log("default Option", defaultOption);
   }, [mcId]);
 
-  console.log(options);
+  // Custom Option component to add a tick mark
+  const CustomOption = (props: any) => (
+    <components.Option {...props}>
+      <div className="flex justify-between items-center">
+        {props.data.label}
+        {/* {props.data.value === id && (
+          <span className="ml-2 text-green-500">✓</span>
+        )} */}
+      </div>
+    </components.Option>
+  );
+
   return (
     <div className="App">
       <Select
         unstyled // Remove all non-essential styles
+        classNamePrefix="custom-select"
+        components={{ Option: CustomOption }}
         classNames={{
           control: ({ isFocused }) =>
             clsx(
@@ -63,8 +93,7 @@ export default function SelectCategory({
               "px-2 py-1.5 text-sm"
             ),
         }}
-        // className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        defaultValue={selectedOption}
+        value={selectedOption}
         onChange={handleCustomSelect}
         options={options}
       />
