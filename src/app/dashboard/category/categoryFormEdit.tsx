@@ -28,7 +28,7 @@ import { CategoryFormSchema } from "./CategoryFormSchema";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import CustomSelect from "@/components/ui/CustomSelect";
-import { saveCategory, updateCategory } from "./_action";
+import { saveCategory } from "./_action";
 import SelectCategory from "@/components/ui/SelectCategory";
 
 interface CategoryFormEditProps {
@@ -36,7 +36,7 @@ interface CategoryFormEditProps {
   setOpen: React.Dispatch<React.SetStateAction<any>>;
 }
 
-function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
+function CategoryFormEdit({ entry, setOpen }: CategoryFormEditProps) {
   // const [parent, setParent] = useState<string>(entry?.parentId || "");
   const [mcId, setMcId] = useState<string>("");
   const [id, setId] = useState<string>("");
@@ -62,6 +62,8 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
       form.setValue("status", entry.status);
       setId(entry?.id);
       setMcId(entry?.parentId);
+
+      console.log("entry", entry);
     }
   }, [entry]);
 
@@ -73,18 +75,38 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
   const handleCategoryId = (id: string) => {
     console.log("handleCategoryId", id);
     form.setValue("parentId", id);
+    console.log("hello", id, "type:", typeof id);
     setMcId(id);
   };
   //  console.log("category saved", id, data);
+  // async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
+  //   // try {
+  //   //   const category = await updateCategory(entry.id, data);
+  //   //   console.log("category", category);
+  //   // } catch (err) {
+  //   //   console.log(err);
+  //   // }
+  // }
   async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
+    console.log(data);
     try {
-      const category = await updateCategory(entry.id, data);
-      console.log("category", category);
-    } catch (err) {
-      console.log(err);
+      //@ts-ignore
+      const newCategory = await saveCategory(entry.id, data);
+      console.log("brand", newCategory);
+
+      if (newCategory) {
+        form.reset();
+        setOpen(false);
+        toast.success("Category Update Success");
+      } else {
+        toast.error("Brand Creatation faield!");
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
-
+  // console.log("from11", entry);
+  // console.log("hello");
   return (
     <div>
       <Form {...form}>
@@ -176,4 +198,4 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
   );
 }
 
-export default CategoryForm;
+export default CategoryFormEdit;

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import React from "react";
 import CategoryForm from "./categoryForm";
+import CategoryFormEdit from "./categoryFormEdit";
 
 function EditCategorySheet({
   entry,
@@ -20,7 +21,7 @@ function EditCategorySheet({
   open: boolean;
   setOpen: any;
 }) {
-  console.log(entry);
+  // console.log("edit category", entry);
   return (
     <div>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -31,7 +32,8 @@ function EditCategorySheet({
           <SheetHeader>
             <SheetTitle>Edit Category</SheetTitle>
             <SheetDescription>
-              <CategoryForm entry={entry} setOpen={setOpen} />
+              {/* <CategoryForm entry={entry} setOpen={setOpen} /> */}
+              <CategoryFormEdit entry={entry} setOpen={setOpen} />
             </SheetDescription>
           </SheetHeader>
         </SheetContent>

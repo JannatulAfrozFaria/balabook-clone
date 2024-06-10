@@ -4,6 +4,7 @@ import poReducer from "./Slice/PoSlice";
 import grnReducer from "./Slice/GRNSlice";
 import salesReducer from "./Slice/SalesSlice";
 import tpnReducer from "./Slice/TPNSlice";
+import adjustReducer from "./Slice/AdjustSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -12,6 +13,7 @@ export const makeStore = () => {
       grn: grnReducer, // Add the poSlice reducer to the store
       sales: salesReducer,
       tpn: tpnReducer,
+      adjust: adjustReducer,
     },
   });
 };
