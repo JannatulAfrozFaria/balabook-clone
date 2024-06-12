@@ -5,6 +5,7 @@ import grnReducer from "./Slice/GRNSlice";
 import salesReducer from "./Slice/SalesSlice";
 import tpnReducer from "./Slice/TPNSlice";
 import adjustReducer from "./Slice/AdjustSlice";
+import damageReducer from "./Slice/DamageSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -14,6 +15,7 @@ export const makeStore = () => {
       sales: salesReducer,
       tpn: tpnReducer,
       adjust: adjustReducer,
+      damage: damageReducer,
     },
   });
 };

@@ -55,6 +55,30 @@ export const generateId = async (module: string) => {
       modulePrefix = "INV";
       break;
   }
+  switch (module) {
+    case "adj":
+      todayTotal = await prisma.sales.count({
+        where: {
+          createdAt: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter documents created today
+          },
+        },
+      });
+      modulePrefix = "ADJ";
+      break;
+  }
+  switch (module) {
+    case "dmg":
+      todayTotal = await prisma.damage.count({
+        where: {
+          createdAt: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter documents created today
+          },
+        },
+      });
+      modulePrefix = "DMG";
+      break;
+  }
   //   switch (module) {
   //     case "order":
   //       todayTotal = await prisma.sales.count({

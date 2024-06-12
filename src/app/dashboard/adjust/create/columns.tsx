@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Barcode, MoreHorizontal, X } from "lucide-react";
 import Link from "next/link";
-import { handleDelete } from "./_action";
+import { handleDelete } from "../_action";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -31,8 +31,15 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { useDispatch } from "react-redux";
-import { setRcvAdjustmentTotal } from "@/app/redux-store/Slice/AdjustSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setIssueAdjustmentQty,
+  setProducts,
+  setRcvAdjustmentQty,
+  setRcvAdjustmentTotal,
+} from "@/app/redux-store/Slice/AdjustSlice";
+import { useState } from "react";
+import { RootState } from "@/app/redux-store/store";
 export type Product = {
   id: string;
   name: string;
@@ -86,21 +93,46 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "qty",
     header: "Quantity",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const product = row.original;
+      const dispatch = useDispatch();
+      const adjustData = useSelector((state: RootState) => state.adjust);
+      const handleQtyChange = (e: number) => {
+        const exist = adjustData.products.find(
+          (adjustProduct: any) => adjustProduct.id === product.id
+        );
+        const rest = adjustData.products.filter(
+          (adjustProduct: any) => adjustProduct.id !== product.id
+        );
+        let newProduct;
+        if (exist) {
+          // inrease qty
 
-      const handleChange = (event) => {
-        const value = event.target.value;
-        console.log(`Quantity for ${product.name} changed to ${value}`);
-        // You can add logic here to handle the input change, e.g., updating state or making API calls
+          newProduct = {
+            ...exist,
+            //@ts-ignore
+            qty: e.target.value,
+            //@ts-ignore
+            total: parseInt(e.target.value) * exist.tp,
+          };
+          dispatch(setProducts(rest));
+          localStorage.setItem(
+            "purchase_cart",
+            JSON.stringify([...rest, newProduct])
+          );
+          dispatch(setProducts([...rest, newProduct]));
+        } else {
+        }
       };
 
       return (
-        <Input
+        <input
           type="number"
-          defaultValue={product?.qty}
-          onChange={handleChange}
-          className="w-20" // Set width or any other Tailwind CSS classes
+          //@ts-ignore
+          value={product?.qty}
+          //@ts-ignore
+          onChange={handleQtyChange}
+          className="w-full border rounded p-1"
         />
       );
     },
@@ -112,16 +144,33 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const product = row.original;
       const dispatch = useDispatch();
+      const adjustData = useSelector((state: RootState) => state.adjust);
+      console.log("adjustData", adjustData);
       const handleSelectChange = (value: string) => {
-        // Access the product price here
-        console.log(`Selected value: ${value}`);
-        if (value == "in") {
-          dispatch(setRcvAdjustmentTotal(product?.tp));
+        const exist = adjustData.products.find(
+          (adjustProduct: any) => adjustProduct.id === product.id
+        );
+        const rest = adjustData.products.filter(
+          (adjustProduct: any) => adjustProduct.id !== product.id
+        );
+        let newProduct;
+        if (exist) {
+          newProduct = {
+            ...exist,
+            type: value,
+          };
+        } else {
+          newProduct = {
+            ...product,
+            type: value,
+          };
         }
-        // You can perform any additional actions with the selected value and product price here
+        const updatedProducts = [...rest, newProduct];
+        localStorage.setItem("purchase_cart", JSON.stringify(updatedProducts));
+        dispatch(setProducts(updatedProducts));
       };
       return (
         <Select onValueChange={handleSelectChange}>
@@ -130,7 +179,6 @@ export const columns: ColumnDef<Product>[] = [
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {/* <SelectLabel>Fruits</SelectLabel> */}
               <SelectItem value="in">In</SelectItem>
               <SelectItem value="out">Out</SelectItem>
             </SelectGroup>

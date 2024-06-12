@@ -47,8 +47,7 @@ import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
 import SelectUnit from "@/components/ui/SelectUnit";
-import { saveProduct } from "../_action";
-import { columns } from "../columns";
+import { columns } from "./columns";
 import { AdjustDataTable } from "./data-table";
 import { AdjustFormSchema } from "./AdjustFormSchema";
 import SelectWarehouse from "@/components/ui/SelectWareHouse";
@@ -63,6 +62,7 @@ import {
 } from "@/app/redux-store/Slice/AdjustSlice";
 import { searchProductById } from "../../products/_action";
 import { useSession } from "next-auth/react";
+import { saveAdjust } from "../_action";
 
 interface ProductFormEditProps {
   entry: any;
@@ -70,34 +70,13 @@ interface ProductFormEditProps {
 const data: any = [];
 function AdjustForm({ entry }: ProductFormEditProps) {
   const [id, setId] = useState<string>("");
-  const [mcId, setMcId] = useState<string>("");
   const dispatch = useDispatch();
   const form = useForm();
   const { data: session } = useSession();
   const sessionUserId = session?.user?.id;
-  //   console.log(session?.user?.id);
+
   useEffect(() => {
-    // console.log(data);
     if (entry?.id) {
-      // form.setValue("name", entry.name);
-      // form.setValue("articleCode", entry.articleCode);
-      // form.setValue("qty", entry.qty);
-      // form.setValue("mrp", entry.mrp);
-      // form.setValue("tp", entry.tp);
-      // form.setValue("total", entry.total);
-      // form.setValue("vat", entry.vat);
-      // form.setValue("stock", entry.stock);
-      // form.setValue("hsCode", entry.hsCode);
-      // form.setValue("supplier", entry.supplier);
-      // form.setValue("supplierId", entry.supplierId);
-      // form.setValue("tax", entry.tax);
-      // form.setValue("hsCode", entry.hsCode);
-      // form.setValue("country", entry.country);
-      // form.setValue("grosTotal", entry.grosTotal);
-      // form.setValue("grossTotalRound", entry.grossTotalRound);
-      // form.setValue("note", entry.note);
-      // // form.setValue("price", entry.price);
-      // form.setValue("containerId", entry.containerId);
       setId(entry?.id);
     }
   }, []);
@@ -147,7 +126,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
           qty: 1,
           // @ts-ignore
           total: 1 * product?.tp,
-          type: "In",
+          type: "",
         };
       }
 
@@ -173,19 +152,20 @@ function AdjustForm({ entry }: ProductFormEditProps) {
       //  }
     }
   };
-  async function onSubmit(data: z.infer<typeof AdjustFormSchema>) {
+
+  async function onSubmit() {
     try {
-      // console.log("product", data);
-      // //@ts-ignore
-      // const product = await saveProduct(id, data);
-      // if (product) {
-      //     form.reset();
-      //     toast.success(
-      //         id ? "Product Update Success" : "Product Creation Success"
-      //     );
-      // } else {
-      //     toast.error(id ? "Product Update faield!" : "Product Creation faield!");
-      // }
+      console.log("product", adjustData);
+      //@ts-ignore
+      const product = await saveAdjust(adjustData);
+      if (product) {
+        form.reset();
+        toast.success(
+          id ? "Product Update Success" : "Product Creation Success"
+        );
+      } else {
+        toast.error(id ? "Product Update faield!" : "Product Creation faield!");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -243,26 +223,28 @@ function AdjustForm({ entry }: ProductFormEditProps) {
                   columns={columns}
                   data={
                     adjustData?.products?.length > 0
-                      ? adjustData?.products
-                          ?.slice()
-                          // @ts-ignore
-                          .sort((a, b) => a.order - b.order)
-                      : []
+                      ? adjustData?.products?.slice()
+                      : // // @ts-ignore
+                        // .sort((a, b) => a.order - b.order)
+                        []
                   }
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 pb-2 border-b">
                 <p className="font-bold">
-                  Recive Adjustment Qty: <span>0</span>
+                  Recive Adjustment Qty: <span>{adjustData?.adjustRcvQty}</span>
                 </p>
                 <p className="font-bold">
-                  Recive Adjustment Total: <span>0.00</span> TK
+                  Recive Adjustment Total:{" "}
+                  <span>{adjustData?.rcvAdjustTotal}</span> TK
                 </p>
                 <p className="font-bold">
-                  Issue Adjustment Qty: <span>0</span>
+                  Issue Adjustment Qty:{" "}
+                  <span>{adjustData?.issueAdjustQty}</span>
                 </p>
                 <p className="font-bold">
-                  Issue Adjustment Total: <span>0.00</span> TK
+                  Issue Adjustment Total:{" "}
+                  <span>{adjustData?.issueAdjustTotal}</span> TK
                 </p>
               </div>
             </div>

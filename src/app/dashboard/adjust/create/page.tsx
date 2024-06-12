@@ -7,7 +7,6 @@ import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import AdjustForm from "./AdjustForm";
 
-
 export default async function ProductsPage() {
   const data: any = [];
   // const [product, setProduct] = useState<any>([]);
@@ -16,7 +15,7 @@ export default async function ProductsPage() {
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-4 pt-4">
           <div className="flex items-center justify-between space-y-2">
-          <div className="flex">
+            <div className="flex">
               <Link href="/dashboard/adjust">
                 <Button variant="ghost">
                   <ArrowLeft />
@@ -24,7 +23,7 @@ export default async function ProductsPage() {
               </Link>
               <PageTitle title="Create New Adjust" />
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Link href="/dashboard/adjust">
                 <Button>Cancle</Button>
@@ -37,9 +36,8 @@ export default async function ProductsPage() {
         </div>
       </div>
       <div className="grid gap-0 md:grid-cols-1 lg:grid-cols-1">
-            <AdjustForm entry={""} />
-            
-          </div>
+        <AdjustForm entry={""} />
+      </div>
     </main>
   );
 }

@@ -11,27 +11,27 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -47,176 +47,224 @@ import SelectMc from "@/components/ui/SelectMc";
 import SelectCategory from "@/components/ui/SelectCategory";
 import SelectBrand from "@/components/ui/SelectBrand";
 import SelectUnit from "@/components/ui/SelectUnit";
-import { saveProduct } from "../_action";
-import { columns } from "../columns";
 import { DamageFormSchema } from "./DamageFromSchema";
 import { DGDataTable } from "./data-table";
-
+import SelectWarehouse from "@/components/ui/SelectWareHouse";
+import CsvUpload from "@/components/CsvUpload";
+import { AdjustDataTable } from "../../adjust/create/data-table";
+import SearchProduct from "@/components/ui/searchProduct";
+import {
+  setProducts,
+  setUserId,
+  setWareHouseId,
+} from "@/app/redux-store/Slice/DamageSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux-store/store";
+import { searchProductById } from "../../products/_action";
+import { columns } from "./columns";
+import { saveDamage } from "../_action";
+import { useSession } from "next-auth/react";
 
 interface ProductFormEditProps {
-    entry: any;
+  entry: any;
 }
-const data: any = []
+const data: any = [];
 function DamageForm({ entry }: ProductFormEditProps) {
-    const [id, setId] = useState<string>("");
-    const [mcId, setMcId] = useState<string>("");
-    const form = useForm<z.infer<typeof DamageFormSchema>>({
-        resolver: zodResolver(DamageFormSchema),
-        defaultValues: {
-            name: "",
-            qty: 0,
-            mrp: 0,
-            tp: 0,
-            total: 0,
-            vat: 0,
-            stock: 0,
-            supplier: "",
-            tax: 0,
-            hsCode: "",
-            country: "",
-            supplierId: "",
-            discount: 0,
-            grosTotal: 0,
-            grossTotalRound: 0,
-            note: "",
-            containerId: "",
-        },
-    });
+  const [id, setId] = useState<string>("");
+  const [mcId, setMcId] = useState<string>("");
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const sessionUserId = session?.user?.id;
+  const form = useForm();
 
-    useEffect(() => {
-        // console.log(data);
-        if (entry?.id) {
-            // form.setValue("name", entry.name);
-            // form.setValue("articleCode", entry.articleCode);
-            // form.setValue("qty", entry.qty);
-            // form.setValue("mrp", entry.mrp);
-            // form.setValue("tp", entry.tp);
-            // form.setValue("total", entry.total);
-            // form.setValue("vat", entry.vat);
-            // form.setValue("stock", entry.stock);
-            // form.setValue("hsCode", entry.hsCode);
-            // form.setValue("supplier", entry.supplier);
-            // form.setValue("supplierId", entry.supplierId);
-            // form.setValue("tax", entry.tax);
-            // form.setValue("hsCode", entry.hsCode);
-            // form.setValue("country", entry.country);
-            // form.setValue("grosTotal", entry.grosTotal);
-            // form.setValue("grossTotalRound", entry.grossTotalRound);
-            // form.setValue("note", entry.note);
-            // // form.setValue("price", entry.price);
-            // form.setValue("containerId", entry.containerId);
-            setId(entry?.id);
-        }
-    }, []);
-
-    //   const handleSlug = (name: string) => {
-    //     const slug = name.split(" ").join("-");
-    //     form.setValue("slug", slug);
-    //   };
-
-    const handleSupplierId = (id: string) => {
-        form.setValue("supplierId", id);
-    };
-
-    //   const handleMcId = (id: string) => {
-    //     form.setValue("masterCategoryId", id);
-    //     setMcId(id);
-    //   };
-    //   const handleCategoryId = (id: string) => {
-    //     form.setValue("categoryId", id);
-    //     setMcId(id);
-    //   };
-    const handleBrandId = (id: string) => {
-        form.setValue("brandId", id);
-        setMcId(id);
-    };
-    //   const handleUnitId = (id: string) => {
-    //     form.setValue("unitId", id);
-    //     setMcId(id);
-    //   };
-
-    async function onSubmit(data: z.infer<typeof DamageFormSchema>) {
-        try {
-            console.log("product", data);
-            //@ts-ignore
-            const product = await saveProduct(id, data);
-
-            if (product) {
-                form.reset();
-                toast.success(
-                    id ? "Product Update Success" : "Product Creation Success"
-                );
-            } else {
-                toast.error(id ? "Product Update faield!" : "Product Creation faield!");
-            }
-        } catch (error) {
-            console.error(error);
-        }
+  useEffect(() => {
+    if (entry?.id) {
+      setId(entry?.id);
     }
+  }, []);
 
-    return (
-        <div className="flex pt-8">
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full space-y-4"
-                >
-                    <div className="flex w-full">
-                        <div className="w-full mx-4 ">
-                            {/* masterCategory, shCode, salesType */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-0 ">
-                                <FormField
-                                    control={form.control}
-                                    name="supplierId"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Warehouse </FormLabel>                                         
-                                            <FormControl>                                              
-                                                <SelectSupplier handleSelect={handleSupplierId} />
-                                            </FormControl>                                          
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+  useEffect(() => {
+    dispatch(setUserId(sessionUserId));
+  }, [session]);
 
-                                <FormField
-                                    control={form.control}
-                                    name="supplierId"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Damage Status</FormLabel>
+  const handleSupplierId = (id: string) => {
+    form.setValue("supplierId", id);
+  };
 
-                                            <FormControl>
-                                                <SelectSupplier handleSelect={handleSupplierId} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            {/* table, search, import */}
-                            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                                <DGDataTable columns={columns} data={data} />
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 pb-2 border-b">
-                                <p className="font-bold">Total Item: <span>0.00</span></p>
-                                <p className="font-bold">Damage Value : <span>0.00</span> TK</p>   
-                            </div>
+  const handleWarehouse = (id: string) => {
+    console.log("warehouseID", id);
+    // form.setValue("warehouseId", id);
+    dispatch(setWareHouseId(id));
+  };
 
-                        </div>
+  const damageData = useSelector((state: RootState) => state.damage);
+  const handleSelectedProduct = async (productId: string) => {
+    console.log("handleSelectedProduct", productId);
+    try {
+      // Check if exist
+      const exist = damageData?.products.find(
+        (adjustProduct: any) => adjustProduct.id === productId
+      );
+      const rest = damageData?.products.filter(
+        (adjustProduct: any) => adjustProduct.id !== productId
+      );
+      let newProduct;
+      if (exist) {
+        // inrease qty
 
-                    </div>
+        newProduct = {
+          ...exist,
+          qty: parseInt(exist.qty) + 1,
+          total: parseInt(exist.qty + 1) * exist.tp,
+        };
+        dispatch(setProducts(rest));
+        localStorage.setItem("adjust", JSON.stringify([...rest, newProduct]));
+        dispatch(setProducts([...rest, newProduct]));
+      } else {
+        // add new
+        const product = await searchProductById(productId);
 
-                    <div className="w-full flex justify-end">
-                        <Button type="submit" className="mr-4">Reset Cart</Button>
-                        <Button type="submit" className="mr-4">Submit</Button>
-                    </div>
-                </form>
-                {/* <DevTool control={form.control} /> */}
-            </Form>
-            <Toaster />
-        </div>
-    );
+        newProduct = {
+          id: product?.id,
+          name: product?.name,
+          articleCode: product?.articleCode,
+          //@ts-ignore
+          mrp: product?.mrp !== null ? product.mrp : 0,
+          tp: product?.tp !== null ? product.tp : 0,
+          hsCode: product.hsCode,
+          openingQty: product.openingQty,
+          cogs: product.cogs,
+          closingQty: product.closingQty,
+          qty: 1,
+          // @ts-ignore
+          total: 1 * product?.tp,
+          type: "",
+        };
+      }
+
+      dispatch(setProducts([...rest, newProduct]));
+    } catch (error) {
+      console.error("Error fetching product by id:", error);
+    }
+  };
+
+  //csv Function call
+  const [CSV, setCSV] = useState<any>([]);
+  const handelImport = async () => {
+    // console.log("Import", CSV);
+    if (CSV?.length > 0) {
+      //  const product = await importProduct(CSV);
+      //  if (product) {
+      //    toast.success("Product Import Success");
+      //  }
+    }
+  };
+
+  async function onSubmit(data: z.infer<typeof DamageFormSchema>) {
+    try {
+      console.log("product", damageData);
+      //@ts-ignore
+      const damage = await saveDamage(damageData);
+      if (damage) {
+        form.reset();
+        toast.success(id ? "Damage Update Success" : "Damage Creation Success");
+      } else {
+        toast.error(id ? "Damage Update faield!" : "Damage Creation faield!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <div className="flex pt-8">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-4"
+        >
+          <div className="flex w-full  ">
+            <div className="w-full mx-4 ">
+              {/* masterCategory, shCode, salesType */}
+              <div className=" flex items-center justify-between gap-2">
+                <div className="w-1/2">
+                  <FormField
+                    control={form.control}
+                    name="productSearch"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <SearchProduct handleSelect={handleSelectedProduct} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex w-1/2 gap-2">
+                  <div className="w-1/2 mt-4">
+                    <FormField
+                      control={form.control}
+                      name="supplierId"
+                      render={({ field }) => (
+                        <FormItem>
+                          {/* <FormLabel>Warehouse </FormLabel> */}
+                          <FormControl>
+                            <SelectWarehouse handleSelect={handleWarehouse} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <CsvUpload setCSV={setCSV} handelImport={handelImport} />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
+                <DGDataTable
+                  columns={columns}
+                  data={
+                    damageData?.products?.length > 0
+                      ? damageData?.products?.slice()
+                      : // // @ts-ignore
+                        // .sort((a, b) => a.order - b.order)
+                        []
+                  }
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 pb-2 border-b">
+                <p className="font-bold">
+                  Total Item: <span>{damageData?.totalItem}</span>
+                </p>
+                <p className="font-bold">
+                  Total: <span>{damageData?.total}</span> TK
+                </p>
+                <p className="font-bold">
+                  Gross Total: <span>{damageData?.grossTotal}</span>
+                </p>
+                <p className="font-bold">
+                  Grosstotal Round: <span>{damageData?.grossTotalRound}</span>{" "}
+                  TK
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full flex justify-end">
+            <Button type="submit" className="mr-4">
+              Reset Cart
+            </Button>
+            <Button type="submit" className="mr-4">
+              Submit
+            </Button>
+          </div>
+        </form>
+        {/* <DevTool control={form.control} /> */}
+      </Form>
+      <Toaster />
+    </div>
+  );
 }
 
 export default DamageForm;

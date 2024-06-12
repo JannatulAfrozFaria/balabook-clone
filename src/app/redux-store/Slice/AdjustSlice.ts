@@ -7,24 +7,38 @@ import { useSession } from "next-auth/react";
 
 // Define a type for the slice state
 interface adjustState {
-  id: string;
+  id?: string;
+  adjustMentNo?: string;
   products?: any;
   note?: string;
   warehouseId?: string;
   userId?: string;
-  adjustRcvQty?: string;
-  adjustRcvTota?: string;
-  adjustIssueQty?: string;
-  adjustIssueTota?: string;
+  adjustRcvQty?: number;
+  rcvAdjustTotal?: number;
+  issueAdjustQty?: number;
+  issueAdjustTotal?: number;
+  total?: number;
+  totalItem?: number;
+  grossTotal?: number;
+  grossTotalRound?: number;
 }
 
 // Define the initial state using that type
 const initialState: adjustState = {
   id: "",
   products: [],
+  adjustMentNo: "",
   note: "",
   warehouseId: "",
   userId: ``,
+  adjustRcvQty: 0,
+  rcvAdjustTotal: 0,
+  issueAdjustQty: 0,
+  issueAdjustTotal: 0,
+  total: 0,
+  totalItem: 0,
+  grossTotal: 0,
+  grossTotalRound: 0,
 };
 
 export const adjustSlice = createSlice({
@@ -55,25 +69,61 @@ export const adjustSlice = createSlice({
         adjustRcvTota: action.payload,
       };
     },
-    setProducts: (state, action) => {
-      console.log(action.payload);
+    setIssueAdjustmentQty: (state, action) => {
+      return {
+        ...state,
+        issueAdjustQty: action.payload,
+      };
+    },
+    setIssueAdjustmentTotal: (state, action) => {
+      return {
+        ...state,
+        issueAdjustTotal: action.payload,
+      };
+    },
+    setType: (state, action) => {
+      return {
+        ...state,
+        adjustRcvTota: action.payload,
+      };
+    },
+    setProducts: (state, action: PayloadAction<any[]>) => {
       const products = action.payload;
-      // const totalItem = products.length;
-      // //@ts-nocheck
-      const total = products?.reduce((acc, product) => acc + product.total, 0);
-      const grossTotal = products?.reduce(
-        (acc, product) => acc + product.total,
-        0
-      );
-      // const grossTotal = total - state.tax - state.discount;
-      // const grossTotalRound = ceil(grossTotal);
+      let rcvAdjustQty: number = 0;
+      let rcvAdjustTotal: number = 0;
+      let issueAdjustQty: number = 0;
+      let issueAdjustTotal: number = 0;
+
+      let total = 0;
+      let grossTotal = 0;
+
+      if (products.length > 0) {
+        products.forEach((product) => {
+          if (product.type === "in") {
+            // Changed to access product.type instead of products.type
+            rcvAdjustQty += product.qty;
+            rcvAdjustTotal += product.total;
+          } else {
+            issueAdjustQty += product.qty;
+            issueAdjustTotal += product.total;
+          }
+        });
+
+        total = products.reduce((acc, product) => acc + product.total, 0);
+        grossTotal = products.reduce((acc, product) => acc + product.total, 0);
+      }
+
       return {
         ...state,
         products: products,
         total: total,
         grossTotal: grossTotal,
         grossTotalRound: Math.round(grossTotal),
-        totalItem: products?.length,
+        totalItem: products.length,
+        adjustRcvQty: rcvAdjustQty,
+        rcvAdjustTotal: rcvAdjustTotal, // Fix typo
+        issueAdjustQty: issueAdjustQty, // Added for issue adjustment
+        issueAdjustTotal: issueAdjustTotal, // Added for issue adjustment
       };
     },
     // Add more reducers as needed
@@ -85,6 +135,8 @@ export const {
   setProducts,
   setRcvAdjustmentQty,
   setRcvAdjustmentTotal,
+  setIssueAdjustmentQty,
+  setIssueAdjustmentTotal,
 } = adjustSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

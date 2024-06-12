@@ -3,9 +3,9 @@ import prisma from "@/index";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { AdjustFormSchema } from "./create/AdjustFormSchema";
+import { generateId } from "@/lib/idGenerator";
 
-
-export type Product = z.infer<typeof AdjustFormSchema>;
+export type Adjust = z.infer<typeof AdjustFormSchema>;
 
 export const handleDelete = async (id: string) => {
   console.log("Tigger Action", id);
@@ -27,93 +27,82 @@ export const handleDelete = async (id: string) => {
   }
 };
 
-export const saveProduct = async (id: string, data: Product) => {
+export const saveAdjust = async (data: Adjust) => {
+  const newAdjustNo = await generateId("adj");
+  console.log("AdjustNo", newAdjustNo);
   try {
     console.log("action", data);
     let {
-      name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
-      total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
-      grossTotalRound,
+      id,
+      userId,
+      adjustMentNo,
+      products,
       note,
-      containerId,
-      
+      warehouseId,
+      rcvAdjustmentQty,
+      rcvAdjustmentTotal,
+      issueAdjustQty,
+      issueAdjustTotal,
+      total,
+      totalItem,
+      grossTotal,
+      grossTotalRound,
     } = data;
 
-    if (!name || !articleCode) return false;
+    // if (!id || !articleCode) return false;
 
     if (id !== "") {
-      const updateUnit = await prisma.product.update({
+      const updateUnit = await prisma.adjust.update({
         where: {
           id: id,
         },
         data: {
           //@ts-ignore
-          name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
-      total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
-      grossTotalRound,
-      note,
-      containerId,
+          user: { connect: { id: userId } },
+          adjustMentNo,
+          products,
+          note,
+          warehouse: { connect: { id: warehouseId } },
+          rcvAdjustmentQty,
+          rcvAdjustmentTotal,
+          issueAdjustQty,
+          issueAdjustTotal,
+          total,
+          totalItem,
+          grossTotal,
+          grossTotalRound,
         },
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
+        console.log(`${updateUnit.id} Update successful!`);
 
-        revalidatePath("/dashboard/unit");
+        revalidatePath("/dashboard/adjust");
         return updateUnit;
       }
     } else {
-      const createProduct = await prisma.product.create({
+      const createAdjust = await prisma.adjust.create({
         data: {
-            name,
-            articleCode,
-            qty,
-            mrp,
-            tp,
-            total,
-            vat,
-            stock,
-            supplier,
-            tax,
-            hsCode,
-            country,
-            discount,
-            grosTotal,
-            grossTotalRound,
-            note,
-            containerId,
+          user: { connect: { id: userId } },
+          adjustMentNo: newAdjustNo,
+          products,
+          note,
+          warehouse: { connect: { id: warehouseId } },
+          rcvAdjustmentQty,
+          rcvAdjustmentTotal,
+          issueAdjustQty,
+          issueAdjustTotal,
+          total,
+          totalItem,
+          grossTotal,
+          grossTotalRound,
         },
       });
 
-      if (createProduct) {
-        console.log(`${createProduct.name} Create successful!`);
-
-        revalidatePath("/dashboard/unit");
-        return createProduct;
+      if (createAdjust) {
+        console.log(`${createAdjust.id} Create successful!`);
+        revalidatePath("/dashboard/adjust");
+        return createAdjust;
       }
     }
   } catch (err) {

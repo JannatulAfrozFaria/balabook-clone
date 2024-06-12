@@ -1,13 +1,14 @@
 import PageTitle from "@/components/ui/PageTitle";
 import { UserDataTable } from "./data-table";
-import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import { Toast } from "@/components/ui/toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { columns } from "./column";
 
 export default async function ProductsPage() {
-  const data: any = []
+  const data: any = await prisma.adjust.findMany({});
+  console.log(data);
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -16,7 +17,7 @@ export default async function ProductsPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="Adjust" />
             <div className="flex items-center space-x-2">
-            <Link href="/dashboard/adjust/create">
+              <Link href="/dashboard/adjust/create">
                 <Button>Create Adjust</Button>
               </Link>
             </div>

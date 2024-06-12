@@ -7,58 +7,83 @@ import { useSession } from "next-auth/react";
 
 // Define a type for the slice state
 interface damageState {
-  name: string;
-  articleCode: string;
-  qty: number;
-  mrp: number;
-  tp: number;
-  total: number;
-  supplierId: string;
-  vat: number;
-  stock: number;
-  hsCode: string;
-  supplier: string;
-  tax: number;
-  country: string;
-  discount: number;
-  grosTotal: number;
-  grossTotalRound: number;
-  note: string;
-  containerId: string;
+  id?: string;
+  damageNo?: string;
+  products?: any;
+  note?: string;
+  warehouseId?: string;
+  userId?: string;
+  total?: number;
+  totalItem?: number;
+  grossTotal?: number;
+  grossTotalRound?: number;
 }
 
 // Define the initial state using that type
 const initialState: damageState = {
-  name: "",
-  articleCode: "",
-  qty: 0,
-  mrp: 0,
-  tp: 0,
-  total: 0,
-  supplierId: "",
-  vat: 0,
-  stock: 0,
-  hsCode: "",
-  supplier: "",
-  tax: 0,
-  country: "",
-  discount: 0,
-  grosTotal: 0,
-  grossTotalRound: 0,
+  id: "",
+  damageNo: "",
+  products: [],
   note: "",
-  containerId: "",
+  warehouseId: "",
+  userId: ``,
+  total: 0,
+  totalItem: 0,
+  grossTotal: 0,
+  grossTotalRound: 0,
 };
 
 export const damageSlice = createSlice({
-  name: "tpn",
+  name: "damage",
   initialState,
   reducers: {
+    setUserId: (state, action) => {
+      return {
+        ...state,
+        userId: action.payload,
+      };
+    },
+    setWareHouseId: (state, action) => {
+      return {
+        ...state,
+        warehouseId: action.payload,
+      };
+    },
+
+    setType: (state, action) => {
+      return {
+        ...state,
+        adjustRcvTota: action.payload,
+      };
+    },
+    setProducts: (state, action: PayloadAction<any[]>) => {
+      const products = action.payload;
+
+      let total = 0;
+      let grossTotal = 0;
+
+      if (products.length > 0) {
+        total = products.reduce((acc, product) => acc + product.total, 0);
+        grossTotal = products.reduce((acc, product) => acc + product.total, 0);
+      }
+
+      return {
+        ...state,
+        products: products,
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: products.length,
+        // Added for issue adjustment
+      };
+    },
     // Add more reducers as needed
   },
 });
-export const {} = damageSlice.actions;
+export const { setUserId, setWareHouseId, setType, setProducts } =
+  damageSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCount = (state: RootState) => state.purchaseOrder;
+export const selectCount = (state: RootState) => state.damage;
 
 export default damageSlice.reducer;

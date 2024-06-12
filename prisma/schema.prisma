@@ -154,11 +154,18 @@ model Product {
 
   // inventory
   openingQty Int? @default(0)
-  soldQty    Int? @default(0)
+  grnQty     Int?@default(0)
   returnQty  Int? @default(0)
-  damageQty  Int? @default(0)
+  rcvAdjustQty  Int?@default(0)
+  availableQty Int? @default(0)
+  soldQty    Int? @default(0)
   tpnQty  Int? @default(0)
+  damageQty  Int? @default(0)
+  rtvQty  Int? @default(0)
+  issueAdjustQty  Int? @default(0)
   closingQty Int? @default(0)
+ 
+
   mrp        Int?
   tp         Int?
   cogs       Int? @default(0)
@@ -413,22 +420,41 @@ model Sales {
 
 model Adjust {
   id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  adjustMentNo    String
   user     User   @relation(fields: [userId], references: [id])
   userId   String @db.ObjectId // MongoDB ObjectId reference to User
   products Json[]
   note     String?
   warehouse         WareHouse @relation(fields: [warehouseId], references: [id])
   warehouseId       String    @db.ObjectId // MongoDB ObjectId reference to User
+  rcvAdjustmentQty     Int? @default(0)
+  rcvAdjustmentTotal   Int? @default(0)
+  issueAdjustQty       Int? @default(0)
+  issueAdjustTotal     Int? @default(0)
+  total     Int? @default(0)
+  totalItem     Int? @default(0)
+  grossTotal     Int? @default(0)
+  grossTotalRound     Int? @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Damage {
   id       String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
   user     User   @relation(fields: [userId], references: [id])
+   damageNo    String
   products Json[]
   userId   String @db.ObjectId // MongoDB ObjectId reference to User
   note     String?
   warehouse         WareHouse @relation(fields: [warehouseId], references: [id])
   warehouseId       String    @db.ObjectId // MongoDB ObjectId reference to User
+
+  total     Int? @default(0)
+  totalItem     Int? @default(0)
+  grossTotal     Int? @default(0)
+  grossTotalRound     Int? @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model OrderProducts {

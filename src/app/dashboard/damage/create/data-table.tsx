@@ -56,21 +56,21 @@ export function DGDataTable<TData, TValue>({
 
   const [CSV, setCSV] = useState<any>([]);
 
-    const handelImport = async () => {
-        // console.log("Import", CSV);
-        if (CSV?.length > 0) {
-            const product = await importProduct(CSV);
-            if (product) {
-                toast.success("Product Import Success");
-            }
-        }
-    };
+  const handelImport = async () => {
+    // console.log("Import", CSV);
+    if (CSV?.length > 0) {
+      const product = await importProduct(CSV);
+      if (product) {
+        toast.success("Product Import Success");
+      }
+    }
+  };
 
   return (
     <>
       <div>
         {/* Search */}
-        <div className="flex items-center py-2 grid grid-cols-2 md:grid-cols-2 gap-4">
+        {/* <div className="flex items-center py-2 grid grid-cols-2 md:grid-cols-2 gap-4">
           <Input
             placeholder="Search Product"
             value={(table.getColumn("Customer.phone")?.getFilterValue() as string) ?? ""}
@@ -80,7 +80,7 @@ export function DGDataTable<TData, TValue>({
             className="max-w-m"
           />
           <CsvUpload setCSV={setCSV} handelImport={handelImport} />
-        </div>
+        </div> */}
 
         <div className="rounded-md border min-h-64">
           <Table>
@@ -132,9 +132,7 @@ export function DGDataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-2">
-          
-        </div>
+        <div className="flex items-center justify-end space-x-2 py-2"></div>
       </div>
     </>
   );

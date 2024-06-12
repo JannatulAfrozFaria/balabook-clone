@@ -1,5 +1,5 @@
 import PageTitle from "@/components/ui/PageTitle";
-import { UserDataTable } from "./data-table";
+import { InventoryDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "../../../../prisma";
 import {
@@ -10,14 +10,14 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
-} from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeftRight, GitCompareArrows, Trash } from "lucide-react";
 
 export default async function ProductsPage() {
-  const data: any = []
-
+  const data: any = await prisma.product.findMany({});
+  console.log("productData", data);
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
       <div className=" flex-col flex w-full">
@@ -33,17 +33,21 @@ export default async function ProductsPage() {
                   </MenubarTrigger>
                 </MenubarMenu>
                 <MenubarMenu>
-                  <MenubarTrigger><GitCompareArrows className="mr-2 h-3 w-3" /> <Link href="/dashboard/adjust">Adjustment</Link></MenubarTrigger>
+                  <MenubarTrigger>
+                    <GitCompareArrows className="mr-2 h-3 w-3" />{" "}
+                    <Link href="/dashboard/adjust">Adjustment</Link>
+                  </MenubarTrigger>
                 </MenubarMenu>
-                
               </Menubar>
               <Link href="/dashboard/movement">
-                <Button><ArrowLeftRight className="mr-2 h-4 w-4" /> Product Movement</Button>
+                <Button>
+                  <ArrowLeftRight className="mr-2 h-4 w-4" /> Product Movement
+                </Button>
               </Link>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-            <UserDataTable columns={columns} data={data} />
+            <InventoryDataTable columns={columns} data={data} />
           </div>
         </div>
       </div>
