@@ -32,12 +32,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setIssueAdjustmentQty,
-  setProducts,
-  setRcvAdjustmentQty,
-  setRcvAdjustmentTotal,
-} from "@/app/redux-store/Slice/AdjustSlice";
+import { setProducts } from "@/app/redux-store/Slice/DamageSlice";
 import { useState } from "react";
 import { RootState } from "@/app/redux-store/store";
 export type Product = {
@@ -171,8 +166,22 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
+      const dispatch = useDispatch();
+      const damageData = useSelector((state: RootState) => state.damage);
 
-      return <X className="mr-2 h-4 w-4" />;
+      const handleRemoveProduct = (productId: string) => {
+        const updatedProducts = damageData.products.filter(
+          (product) => product.id !== productId
+        );
+        dispatch(setProducts(updatedProducts));
+      };
+
+      return (
+        <X
+          className="mr-2 h-4 w-4 cursor-pointer"
+          onClick={() => handleRemoveProduct(product.id)}
+        />
+      );
     },
   },
 ];

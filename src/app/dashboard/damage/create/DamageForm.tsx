@@ -119,7 +119,7 @@ function DamageForm({ entry }: ProductFormEditProps) {
         };
         dispatch(setProducts(rest));
         localStorage.setItem("adjust", JSON.stringify([...rest, newProduct]));
-        dispatch(setProducts([...rest, newProduct]));
+        dispatch(setProducts([...damageData?.products, newProduct]));
       } else {
         // add new
         const product = await searchProductById(productId);
@@ -146,6 +146,13 @@ function DamageForm({ entry }: ProductFormEditProps) {
     } catch (error) {
       console.error("Error fetching product by id:", error);
     }
+  };
+
+  const handleRemoveProduct = (productId: string) => {
+    const updatedProducts = damageData.products.filter(
+      (product: any) => product.id !== productId
+    );
+    dispatch(setProducts(updatedProducts));
   };
 
   //csv Function call
@@ -224,13 +231,7 @@ function DamageForm({ entry }: ProductFormEditProps) {
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
                 <DGDataTable
                   columns={columns}
-                  data={
-                    damageData?.products?.length > 0
-                      ? damageData?.products?.slice()
-                      : // // @ts-ignore
-                        // .sort((a, b) => a.order - b.order)
-                        []
-                  }
+                  data={damageData?.products ?? []}
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 pb-2 border-b">

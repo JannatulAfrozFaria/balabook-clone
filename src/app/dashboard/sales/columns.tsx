@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { SalePrintLog } from "@/components/ui/sell-print-pop";
+import { TaxInvoicePrint } from "@/components/ui/govt-format-invoice-sale";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Order = {
@@ -80,6 +81,7 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const sales = row.original;
       const [activate, setActive] = useState(false);
+      const [taxInvActive, setTaxInvActive] = useState(false);
       return (
         <>
           <DropdownMenu>
@@ -102,7 +104,16 @@ export const columns: ColumnDef<Order>[] = [
                 onClick={() => setActive(true)}
               >
                 <>
-                  <Printer size={16} className="mr-2" /> View
+                  <Printer size={16} className="mr-2" /> Invoice
+                </>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setTaxInvActive(true)}
+              >
+                <>
+                  <Printer size={16} className="mr-2" />
+                  Tax Invoice
                 </>
               </DropdownMenuItem>
               {/* <DropdownMenuItem>
@@ -111,6 +122,11 @@ export const columns: ColumnDef<Order>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
           <SalePrintLog open={activate} setOpen={setActive} entry={sales} />
+          <TaxInvoicePrint
+            open={taxInvActive}
+            setOpen={setTaxInvActive}
+            entry={sales}
+          />
         </>
       );
     },

@@ -38,7 +38,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
-export function PoPrintalog({
+export function DamagePrint({
   entry,
   open,
   setOpen,
@@ -183,7 +183,7 @@ export function PoPrintalog({
   }
 
   console.log("convert to word", convertToWords(product.total));
-
+  console.log("product", product);
   return (
     <div>
       <style jsx global>{`
@@ -214,15 +214,15 @@ export function PoPrintalog({
       `}</style>
 
       <AlertDialog open={open}>
-        <AlertDialogContent className="max-w-[800px] min-w-[200px]">
+        <AlertDialogContent className="max-w-[900px] min-w-[200px] ">
           <AlertDialogHeader>
             {/* <AlertDialogTitle className="mb-2">Create New Order</AlertDialogTitle> */}
             <AlertDialogDescription>
               {/* @ts-ignore */}
 
-              <div className="overflow-y-auto max-h-[80vh]">
+              <div className="overflow-y-auto max-h-[80vh] ">
                 <Card
-                  className=" rounded-none min-h-[840px] max-h-[3508px] relative"
+                  className=" rounded-none min-h-[840px] max-h-[3508px] relative "
                   ref={componentRef}
                 >
                   <CardHeader>
@@ -248,22 +248,24 @@ export function PoPrintalog({
                     <CardDescription>
                       <div className="flex justify-between mb-2 ">
                         <div className="text-black">
-                          <h1 className="font-bold ">Name of Supplier</h1>
-                          <h2>{product?.supplier?.name}</h2>
-                          <h2>demo@gmail.com</h2>
-                          <h2>1316842636</h2>
+                          <h1 className="font-bold ">Name of User</h1>
+                          <h2>{product?.user?.name}</h2>
+                          <h2>{product?.user?.email}</h2>
+                          <h2>{product?.user?.phone}</h2>
                         </div>
                         <div className="text-black">
                           <h1 className="font-bold">Warehouse</h1>
-                          <h2>{product?.user?.name}</h2>
-                          <h2>demo@gmail.com</h2>
-                          <h2>1316842636</h2>
+                          <h2>{product?.warehouse?.name}</h2>
+                          <h2>{product?.warehouse?.email}</h2>
+                          <h2>{product?.warehouse?.phone}</h2>
                         </div>
                         <div className=" flex flex-col items-end text-black">
-                          <h1 className=" font-bold  ">Purchase Order</h1>
+                          <h1 className=" font-bold  ">Damage Invoice</h1>
                           <h2 className="font-bold text-sm">
-                            PO No:{" "}
-                            <span className="font-normal">{product?.poNo}</span>
+                            Damage No:{" "}
+                            <span className="font-normal">
+                              {product?.damageNo}
+                            </span>
                           </h2>
                           {/* <h2 className="font-bold text-sm">
                             PO No:{" "}

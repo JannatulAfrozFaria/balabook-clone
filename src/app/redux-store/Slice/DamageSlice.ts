@@ -17,6 +17,7 @@ interface damageState {
   totalItem?: number;
   grossTotal?: number;
   grossTotalRound?: number;
+  status?: string;
 }
 
 // Define the initial state using that type
@@ -31,6 +32,7 @@ const initialState: damageState = {
   totalItem: 0,
   grossTotal: 0,
   grossTotalRound: 0,
+  status: "Pending",
 };
 
 export const damageSlice = createSlice({
@@ -50,10 +52,10 @@ export const damageSlice = createSlice({
       };
     },
 
-    setType: (state, action) => {
+    setStatus: (state, action) => {
       return {
         ...state,
-        adjustRcvTota: action.payload,
+        status: action.payload,
       };
     },
     setProducts: (state, action: PayloadAction<any[]>) => {
@@ -80,7 +82,7 @@ export const damageSlice = createSlice({
     // Add more reducers as needed
   },
 });
-export const { setUserId, setWareHouseId, setType, setProducts } =
+export const { setUserId, setWareHouseId, setStatus, setProducts } =
   damageSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
