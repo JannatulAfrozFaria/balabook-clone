@@ -62,11 +62,11 @@ export default function CustomerImportPage() {
       header: "Status",
     },
   ];
-  console.log("Import", CSV);
+  "Import", CSV;
   const handleImport = async () => {
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
-      console.log("importProduct", product);
+      "importProduct", product;
       if (product) {
         // Update the updatedCSV state with new data
         toast.success("Product Import Success");

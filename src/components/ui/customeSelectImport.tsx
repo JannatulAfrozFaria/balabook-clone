@@ -18,16 +18,16 @@ export default function CustomeSelectImport({
     { value: "", label: "Please Select" },
   ]);
 
-  console.log(type, selected);
+  type, selected;
   const getData = async () => {
     if (type === "mc") {
       const categoryDW = await categoryMCDw();
-      console.log(categoryDW);
+      categoryDW;
       setOptions(categoryDW);
     }
   };
   const handleCustomSelect = (option: any) => {
-    console.log(option);
+    option;
     setSelectedOption(option);
     handleSelect(option.value);
   };
@@ -44,7 +44,7 @@ export default function CustomeSelectImport({
     getData();
   }, []);
 
-  console.log(options);
+  options;
   return (
     <div className="App">
       <Select

@@ -58,7 +58,7 @@ export function SalePrintLog({
     setOpen(false);
   };
   const productsInfo = product?.products;
-  // console.log(productsInfo);
+  //  (productsInfo);
 
   function convertToWords(number: number): string {
     const ones: string[] = [
@@ -190,14 +190,14 @@ export function SalePrintLog({
 
   useEffect(() => {
     const getSaleData = async () => {
-      const data = await salesById(product.id);
+      const data = await salesById(product?.id);
       setOrderData(data);
       // Log salesData to the browser console
     };
     getSaleData();
   }, [entry]);
-  console.log(orderData);
-  // console.log("convert to word", convertToWords(product.total));
+  orderData;
+  //  ("convert to word", convertToWords(product.total));
 
   return (
     <div>

@@ -21,7 +21,7 @@ function EditCategorySheet({
   open: boolean;
   setOpen: any;
 }) {
-  // console.log("edit category", entry);
+  //  ("edit category", entry);
   return (
     <div>
       <Sheet open={open} onOpenChange={setOpen}>

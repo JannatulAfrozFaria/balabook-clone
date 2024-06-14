@@ -59,7 +59,7 @@ export function TaxInvoicePrint({
     setOpen(false);
   };
   const productsInfo = product?.products;
-  // console.log(productsInfo);
+  //  (productsInfo);
 
   function convertToWords(number: number): string {
     const ones: string[] = [
@@ -197,8 +197,8 @@ export function TaxInvoicePrint({
     };
     getSaleData();
   }, [entry]);
-  console.log("orderData", orderData);
-  // console.log("convert to word", convertToWords(product.total));
+  //  ("orderData", orderData);
+  //  ("convert to word", convertToWords(product.total));
 
   return (
     <div>

@@ -29,7 +29,7 @@ const initialState: OrderFormSchema = {
     card: { name: "visa", amount: 0 },
     mfs: { name: "bkash", amount: 0 },
   },
-  status: "Complete",
+  status: "Ordered",
 };
 
 export const salesSlice = createSlice({
@@ -94,6 +94,12 @@ export const salesSlice = createSlice({
       return {
         ...state,
         note: action.payload,
+      };
+    },
+    setStatus: (state, action) => {
+      return {
+        ...state,
+        status: action.payload,
       };
     },
     setProducts: (state, action) => {
@@ -202,6 +208,7 @@ export const {
   setChangeAmount,
   setDiscount,
   setWarehouseId,
+  setStatus,
 } = salesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

@@ -16,7 +16,7 @@ export default function SelectWarehouse({
   ]);
 
   const handleCustomSelect = (option: any) => {
-    console.log(option);
+    option;
     setSelectedOption(option);
     handleSelect(option.value);
   };
@@ -34,7 +34,7 @@ export default function SelectWarehouse({
     fetchCategories();
   }, []);
 
-  // console.log(options);
+  //  (options);
   return (
     <div className="App">
       <Select

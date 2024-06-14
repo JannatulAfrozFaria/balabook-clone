@@ -9,7 +9,7 @@ import prisma from "@/index";
 
 export default async function UserLogsPage() {
   const data: any = await prisma.userLogs.findMany({});
-  console.log("usrdata", data);
+  "usrdata", data;
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

@@ -30,10 +30,10 @@ export type Unit = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Unit Delete Successful!`);
+    `Unit Delete Successful!`;
     toast.success(`Unit Deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
     toast.success(`Unit Deleted Field!`);
   }
 };

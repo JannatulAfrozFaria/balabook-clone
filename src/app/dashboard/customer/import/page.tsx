@@ -47,7 +47,7 @@ export default function CustomerImportPage() {
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       const customer = await importCustomer(CSV);
       if (customer) {

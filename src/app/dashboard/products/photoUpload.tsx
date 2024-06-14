@@ -8,11 +8,11 @@ import { useState } from "react";
 
 function PhotoUpload({ photoName, setPhotoName }: any) {
   const [file, setFile] = useState<File>();
-  // console.log(file)
+  //  (file)
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Upload Tigger");
+    ("Upload Tigger");
     if (!file) return;
 
     try {

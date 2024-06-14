@@ -78,7 +78,7 @@ export const tpnSlice = createSlice({
     //   };
     // },
     setProducts: (state, action) => {
-      console.log(action.payload);
+      action.payload;
       const products = action.payload;
       // const totalItem = products.length;
       // //@ts-nocheck

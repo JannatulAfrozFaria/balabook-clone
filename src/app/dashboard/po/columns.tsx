@@ -28,6 +28,8 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import { useState } from "react";
 import { PoPrintalog } from "@/components/ui/po-print-pop";
+import { UpdatePOStatus } from "./_action";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 export type Offer = {
   id: string;
   pono: string;
@@ -48,10 +50,10 @@ export type Offer = {
 const handleDeleteTigger = async (id: string) => {
   // const del = await handleDelete(id);
   // if (del) {
-  //   console.log(`Offer Delete Successful!`);
+  //    (`Offer Delete Successful!`);
   //   // toast.success(`${del.name} deleted successful!`);
   // } else {
-  //   console.log(`Deleted Faild!`);
+  //    (`Deleted Faild!`);
   // }
 };
 
@@ -100,6 +102,28 @@ export const columns: ColumnDef<Offer>[] = [
     cell: ({ row }) => {
       const po = row.original;
       const [activate, setActive] = useState(false);
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdatePOStatus(po.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
       return (
         <>
           <DropdownMenu>
@@ -130,12 +154,19 @@ export const columns: ColumnDef<Offer>[] = [
                 <Pencil size={16} className="mr-2" /> Edit
                 {/* </Link> */}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDeleteTigger(po.id)}>
+              <DropdownMenuItem onClick={() => handleUpdate("Delete")}>
                 <Trash size={16} className="mr-2" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="PO"
+            operation={status}
+          />
           <PoPrintalog open={activate} setOpen={setActive} entry={po} />
         </>
       );

@@ -92,14 +92,14 @@ function DamageForm({ entry }: ProductFormEditProps) {
   };
 
   const handleWarehouse = (id: string) => {
-    console.log("warehouseID", id);
+    "warehouseID", id;
     // form.setValue("warehouseId", id);
     dispatch(setWareHouseId(id));
   };
 
   const damageData = useSelector((state: RootState) => state.damage);
   const handleSelectedProduct = async (productId: string) => {
-    console.log("handleSelectedProduct", productId);
+    "handleSelectedProduct", productId;
     try {
       // Check if exist
       const exist = damageData?.products.find(
@@ -158,7 +158,7 @@ function DamageForm({ entry }: ProductFormEditProps) {
   //csv Function call
   const [CSV, setCSV] = useState<any>([]);
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       //  const product = await importProduct(CSV);
       //  if (product) {
@@ -167,9 +167,8 @@ function DamageForm({ entry }: ProductFormEditProps) {
     }
   };
 
-  async function onSubmit(data: z.infer<typeof DamageFormSchema>) {
+  async function onSubmit() {
     try {
-      console.log("product", damageData);
       //@ts-ignore
       const damage = await saveDamage(damageData);
       if (damage) {

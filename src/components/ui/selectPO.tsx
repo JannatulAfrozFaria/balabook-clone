@@ -13,7 +13,7 @@ export default function SelectPO({ handleSelect }: { handleSelect: any }) {
   ]);
 
   const handleCustomSelect = (option: any) => {
-    console.log(option);
+    option;
     setSelectedOption(option);
     handleSelect(option.value);
   };
@@ -31,7 +31,7 @@ export default function SelectPO({ handleSelect }: { handleSelect: any }) {
     fetchCategories();
   }, []);
 
-  // console.log(options);
+  //  (options);
   return (
     <div className="App">
       <Select

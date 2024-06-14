@@ -38,7 +38,7 @@ const addToDb = (product: Product): boolean => {
   // get the shopping cart from local storage
   const storedCart = getStoredCart();
   if (storedCart) {
-    // console.log("storecart", storedCart);
+    //  ("storecart", storedCart);
     const selectedItem = storedCart.find(
       (p: any) => p.articleCode === item.articleCode
     );
@@ -62,8 +62,8 @@ const addToDb = (product: Product): boolean => {
     ];
   }
 
-  // console.log("stored Cart:", storedCart);
-  // console.log("purchase cart:", purchaseCart);
+  //  ("stored Cart:", storedCart);
+  //  ("purchase cart:", purchaseCart);
 
   // localStorage.setItem("tpn", JSON.stringify(purchaseCart));
   return true;
@@ -71,7 +71,7 @@ const addToDb = (product: Product): boolean => {
 
 const getStoredCart = () => {
   const cart = localStorage.getItem("tpn");
-  console.log(cart);
+  cart;
   if (cart !== null) {
     const storedCart = JSON.parse(cart);
     return storedCart;
@@ -83,7 +83,7 @@ const getSetCart = (cart: Cart): void => {
 };
 
 const removeFromDb = (id: string): boolean => {
-  console.log(id);
+  id;
   const storedCart = localStorage.getItem("tpn");
   if (storedCart) {
     const purchaseCart: Cart = JSON.parse(storedCart);

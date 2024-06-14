@@ -17,7 +17,7 @@ import { ArrowLeftRight, GitCompareArrows, Trash } from "lucide-react";
 
 export default async function ProductsPage() {
   const data: any = await prisma.product.findMany({});
-  console.log("productData", data);
+  "productData", data;
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
       <div className=" flex-col flex w-full">

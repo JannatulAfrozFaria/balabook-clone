@@ -87,7 +87,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
 
   const adjustData = useSelector((state: RootState) => state.adjust);
   const handleSelectedProduct = async (productId: string) => {
-    console.log("handleSelectedProduct", productId);
+    "handleSelectedProduct", productId;
     try {
       // Check if exist
       const exist = adjustData?.products.find(
@@ -137,14 +137,14 @@ function AdjustForm({ entry }: ProductFormEditProps) {
   };
 
   const handleWarehouse = (id: string) => {
-    console.log("warehouseID", id);
+    "warehouseID", id;
     // form.setValue("warehouseId", id);
     dispatch(setWareHouseId(id));
   };
 
   const [CSV, setCSV] = useState<any>([]);
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       //  const product = await importProduct(CSV);
       //  if (product) {
@@ -155,7 +155,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
 
   async function onSubmit() {
     try {
-      console.log("product", adjustData);
+      "product", adjustData;
       //@ts-ignore
       const product = await saveAdjust(adjustData);
       if (product) {
@@ -171,7 +171,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
     }
   }
 
-  console.log("adjustProduct", adjustData);
+  "adjustProduct", adjustData;
 
   return (
     <div className="flex pt-8">

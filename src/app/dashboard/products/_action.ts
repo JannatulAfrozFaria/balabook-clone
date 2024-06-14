@@ -8,28 +8,28 @@ import { ProductFormSchema } from "./create/ProductFormSchema";
 export type Product = z.infer<typeof ProductFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
 
 export const saveProduct = async (id: string, data: Product) => {
   try {
-    console.log("action", data);
+    "action", data;
     let {
       name,
       salesType,
@@ -103,7 +103,7 @@ export const saveProduct = async (id: string, data: Product) => {
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
+        `${updateUnit.name} Update successful!`;
 
         revalidatePath("/dashboard/unit");
         return updateUnit;
@@ -144,21 +144,21 @@ export const saveProduct = async (id: string, data: Product) => {
       });
 
       if (createProduct) {
-        console.log(`${createProduct.name} Create successful!`);
+        `${createProduct.name} Create successful!`;
 
         revalidatePath("/dashboard/unit");
         return createProduct;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
 
 //import product from csv function
 export const importProduct = async (data: any) => {
-  console.log("productData", data);
+  "productData", data;
 
   try {
     const promises = data.map(
@@ -230,7 +230,7 @@ export const importProduct = async (data: any) => {
     await Promise.all(promises);
     revalidatePath("/dashboard/product");
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -240,11 +240,11 @@ export const searchProductDw = async (queryString: string) => {
   // Check if the queryString contains only numbers
   const isNumericQuery = /^\d+$/.test(queryString);
 
-  console.log(isNumericQuery, queryString);
+  isNumericQuery, queryString;
 
   let productList = [];
   if (isNumericQuery) {
-    // console.log("check number");
+    //  ("check number");
     // If the query is a number, search for matches in the EAN code or article code
     productList = await prisma.product.findMany({
       where: {
@@ -316,5 +316,29 @@ export const searchProductById = async (id: string) => {
   } catch (error) {
     console.error("Error fetching product by id:", error);
     throw error;
+  }
+};
+
+export const UpdateProductStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.product.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/products");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
+    return false;
   }
 };

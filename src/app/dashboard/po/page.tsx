@@ -27,7 +27,7 @@ export default async function ProductsPage() {
     },
   });
 
-  console.log(data);
+  data;
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

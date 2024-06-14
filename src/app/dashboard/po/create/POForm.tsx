@@ -78,12 +78,12 @@ function ProductForm({ entry }: ProductFormEditProps) {
   // @ts-ignore
   const sessionUserId = session?.user?.id;
 
-  // console.log(sessionUserId);
+  //  (sessionUserId);
 
   const poData = useSelector((state: RootState) => state.purchaseOrder);
   const storeProduct = getStoredCart();
 
-  // console.log(poData);
+  //  (poData);
 
   useEffect(() => {
     dispatch(setUserId(sessionUserId));
@@ -165,7 +165,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
       if (product) {
@@ -175,7 +175,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   };
 
   const products = poData ? poData.products : null;
-  console.log("product", poData);
+  "product", poData;
 
   async function onSubmit(data: PoSchema) {
     try {

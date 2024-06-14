@@ -53,7 +53,7 @@ export function PoPrintalog({
     setOpen(false);
   };
   const productsInfo = product?.products;
-  // console.log(productsInfo);
+  //  (productsInfo);
 
   function convertToWords(number: number): string {
     const ones: string[] = [
@@ -182,7 +182,7 @@ export function PoPrintalog({
     return numStr.trim();
   }
 
-  console.log("convert to word", convertToWords(product.total));
+  "convert to word", convertToWords(product.total);
 
   return (
     <div>

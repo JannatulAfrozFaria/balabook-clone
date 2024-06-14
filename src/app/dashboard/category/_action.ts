@@ -7,7 +7,7 @@ import { CategoryFormSchema } from "./CategoryFormSchema";
 export type Category = z.infer<typeof CategoryFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const user = await prisma.category.delete({
       where: {
@@ -15,12 +15,12 @@ export const handleDelete = async (id: string) => {
       },
     });
     if (user) {
-      console.log(`Deleted successful!`);
+      `Deleted successful!`;
       revalidatePath("/dashboard/category");
       return true;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -46,7 +46,7 @@ export const saveCategory = async (id: string, data: Category) => {
       });
 
       if (updateCategory) {
-        console.log(`${updateCategory.name} Update successful!`);
+        `${updateCategory.name} Update successful!`;
 
         revalidatePath("/dashboard/category");
         return updateCategory;
@@ -66,7 +66,7 @@ export const saveCategory = async (id: string, data: Category) => {
       });
 
       if (createCategory) {
-        console.log(`${createCategory.name} Create successful!`);
+        `${createCategory.name} Create successful!`;
 
         revalidatePath("/dashboard/category");
         return createCategory;
@@ -93,7 +93,7 @@ export const saveCategory = async (id: string, data: Category) => {
     //     });
 
     //     if (updateCategory) {
-    //       console.log(`${updateCategory.name} updated successfully!`);
+    //        (`${updateCategory.name} updated successfully!`);
     //       savedCategories.push(updateCategory);
     //     }
     //   } else {
@@ -109,7 +109,7 @@ export const saveCategory = async (id: string, data: Category) => {
     //     });
 
     //     if (createCategory) {
-    //       console.log(`${createCategory.name} created successfully!`);
+    //        (`${createCategory.name} created successfully!`);
     //       savedCategories.push(createCategory);
     //     }
     //   }
@@ -118,7 +118,7 @@ export const saveCategory = async (id: string, data: Category) => {
     // revalidatePath("/dashboard/category");
     // return savedCategories;
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -142,7 +142,7 @@ export const parentCategory = async () => {
       },
     ];
 
-    // console.log(categories);
+    //  (categories);
     categories.map(
       (category) =>
         (dw = [
@@ -194,7 +194,7 @@ export const categoryDw = async (id?: string) => {
       },
     ];
 
-    // console.log(categories);
+    //  (categories);
     categories.map(
       (category) =>
         (dw = [
@@ -234,7 +234,7 @@ export const categoryMCDw = async () => {
       },
     ];
 
-    // console.log(categories);
+    //  (categories);
     categories.map(
       (category) =>
         (dw = [
@@ -255,7 +255,7 @@ export const categoryMCDw = async () => {
 //import product from csv function
 export const importCategory = async (data: any, isParent: boolean) => {
   try {
-    console.log("Importing category", isParent);
+    "Importing category", isParent;
     if (isParent) {
       const category = await prisma.category.createMany({
         //@ts-ignore
@@ -268,12 +268,12 @@ export const importCategory = async (data: any, isParent: boolean) => {
       });
 
       if (category.count > 0) {
-        console.log(`${category.count} Categories created successfully!`);
+        `${category.count} Categories created successfully!`;
         revalidatePath("/dashboard/category");
         return category;
       }
     } else {
-      console.log("Importing subcategories");
+      ("Importing subcategories");
 
       const promises = data.map(
         //@ts-ignore

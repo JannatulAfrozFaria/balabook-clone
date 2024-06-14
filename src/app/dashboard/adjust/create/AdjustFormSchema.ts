@@ -14,4 +14,5 @@ export const AdjustFormSchema = z.object({
   totalItem: z.number().optional(),
   grossTotal: z.number().optional(),
   grossTotalRound: z.number().optional(),
+  status: z.string().default("Complete"),
 });

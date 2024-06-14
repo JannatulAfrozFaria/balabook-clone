@@ -6,21 +6,20 @@ import { CreateOrderSchema } from "./create-order/CreateOrderSchema";
 import { generateId } from "@/lib/idGenerator";
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
   try {
     const deleteProduct = await prisma.sales.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -52,7 +51,7 @@ export const createOrder = async (data: CreateOrderSchema) => {
 
   try {
     if (id === "") {
-      console.log("create");
+      ("create");
       const createOrder = await prisma.sales.create({
         data: {
           invoiceId: newInvoiceNo,
@@ -77,13 +76,13 @@ export const createOrder = async (data: CreateOrderSchema) => {
         },
       });
       if (createOrder) {
-        console.log(`${createOrder.invoiceId} updated successfully!`);
+        `${createOrder.invoiceId} updated successfully!`;
         revalidatePath("/dashboard/sales");
         return createOrder;
       }
     }
   } catch (error) {
-    console.log(error);
+    error;
   }
 };
 
@@ -118,9 +117,32 @@ export const salesById = async (id: string) => {
         },
       },
     });
-    console.log(sales);
+    sales;
     return sales;
   } catch (error) {
-    console.log(error);
+    error;
+  }
+};
+export const UpdateSaleStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.sales.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/sales");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
+    return false;
   }
 };

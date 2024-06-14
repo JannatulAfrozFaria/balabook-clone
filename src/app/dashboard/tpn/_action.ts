@@ -8,21 +8,21 @@ import { generateId } from "@/lib/idGenerator";
 // export type TPN = z.infer<typeof TPNFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -47,9 +47,9 @@ export const tpnById = async (id: string) => {
 
 export const saveTpn = async (data: TPNFormSchema) => {
   const newTpnNo = await generateId("tpn");
-  console.log("newTpnNo:", newTpnNo);
+  "newTpnNo:", newTpnNo;
   try {
-    console.log("tpn", data);
+    "tpn", data;
     let {
       id,
       tpnNo,
@@ -88,7 +88,7 @@ export const saveTpn = async (data: TPNFormSchema) => {
       });
 
       if (createProduct) {
-        console.log(`${createProduct.id} Create successful!`);
+        `${createProduct.id} Create successful!`;
 
         revalidatePath("/dashboard/tpn");
         return createProduct;
@@ -114,14 +114,38 @@ export const saveTpn = async (data: TPNFormSchema) => {
       });
 
       if (updateTpn) {
-        console.log(`${updateTpn.id} Update successful!`);
+        `${updateTpn.id} Update successful!`;
 
         revalidatePath("/dashboard/tpn");
         return updateTpn;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
+    return false;
+  }
+};
+
+export const UpdateTPNStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.tpn.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/tpn");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("tpn update error", error);
     return false;
   }
 };

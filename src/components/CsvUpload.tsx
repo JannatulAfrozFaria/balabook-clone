@@ -14,13 +14,13 @@ function CsvUpload({ setCSV, handelImport }: any) {
   return (
     <CSVReader
       onUploadAccepted={(results: any) => {
-        // console.log("---------------------------");
-        // console.log(results);
+        //  ("---------------------------");
+        //  (results);
         let importData = results.data;
         // importData.pop();
         setCSV(importData);
-        // console.log(importData);
-        // console.log("---------------------------");
+        //  (importData);
+        //  ("---------------------------");
       }}
       config={{ header: true }}
     >

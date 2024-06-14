@@ -34,26 +34,26 @@ export default function SelectCategory({
     fetchCategories();
   }, []);
 
-  // console.log("mcid", options);
+  //  ("mcid", options);
   // if (options.length > 2) {
   //   const defaultOption = options.find((option) => option.value === id);
   //   setOptions(defaultOption);
   // } else {
-  //   console.log("wait");
+  //    ("wait");
   // }
   const defaultOption = options.find((opt: any) => opt.value === mcId);
-  console.log("mcid", defaultOption);
+  "mcid", defaultOption;
 
   if (defaultOption?.length > 0) {
     setSelectedOption(defaultOption);
   }
 
   useEffect(() => {
-    console.log("selected option", selectedOption);
+    "selected option", selectedOption;
     if (mcId) {
-      console.log("defaultOption", options);
+      "defaultOption", options;
     }
-    // console.log("default Option", defaultOption);
+    //  ("default Option", defaultOption);
   }, [mcId]);
 
   // Custom Option component to add a tick mark

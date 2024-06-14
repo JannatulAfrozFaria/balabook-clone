@@ -52,7 +52,7 @@ export function UserLogsDataTable<TData, TValue>({
     },
   });
 
-  console.log("userLogsData", data);
+  "userLogsData", data;
 
   return (
     <>

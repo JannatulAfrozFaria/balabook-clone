@@ -64,7 +64,7 @@ export function InfoCard() {
   const posData = useSelector((state: RootState) => state.sales);
 
   const totalRecievable = posData?.total;
-  // console.log("totalRecivea", totalRecievable);
+  //  ("totalRecivea", totalRecievable);
 
   useEffect(() => {
     dispatch(setTotalRecievable(totalRecievable));
@@ -93,14 +93,13 @@ export function InfoCard() {
   //@ts-ignore
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("submitted");
     try {
-      console.log("product", posData);
+      "product", posData;
       //@ts-ignore
       // const order = await saveOrder(posData);
       const order = await createOrder(posData);
       if (order) {
-        console.log("order", order);
+        "order", order;
         createUserLogs(order?.userId, order?.id, "Sale", "Create");
         setActive(true);
         setSavedData(order);
@@ -113,7 +112,7 @@ export function InfoCard() {
       } else {
         toast.success("Order Creation Failed :(");
       }
-      // console.log("order", order);
+      //  ("order", order);
     } catch (error) {
       console.error(error);
     }

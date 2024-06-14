@@ -51,7 +51,7 @@ function UserForm() {
     try {
       //@ts-ignore
       const newUser = await createUser(data);
-      console.log("newUser", newUser);
+      "newUser", newUser;
 
       if (newUser) {
         toast.success("User Creation Success");
@@ -63,20 +63,20 @@ function UserForm() {
       }
       // await axios.post('/api/user', data)
       // .then((res)=>{
-      //  console.log(res)
+      //   (res)
       //   // TODO:: SEND SMS WITH USER ID
       //   if(res?.data?.error?.code === "P2002"){
       //     let errorMassage = "Data Validation Error"
       //     const target = res?.data?.error?.meta?.target
 
-      //     // console.log(target)
+      //     //  (target)
 
       //     if(target === "users_phone_key"){
       //         errorMassage = "This Phone is Already used"
       //     }else if(target === "users_email_key"){
       //         errorMassage = "This Email is Already used"
       //     }
-      //     // console.log(errorMassage)
+      //     //  (errorMassage)
       //     toast.error(errorMassage)
       //   }else{
 
@@ -84,19 +84,19 @@ function UserForm() {
       //   }
 
       // }).catch(error=>{
-      // //   console.log(error)
+      // //    (error)
       //   if(error.data.error.code === "P2002"){
       //     let errorMassage = "Data Validation Error"
       //     const target = error.data.error.meta.target
 
-      //     // console.log(target)
+      //     //  (target)
 
       //     if(target === "users_phone_key"){
       //         errorMassage = "This Phone is Already used"
       //     }else if(target === "users_email_key"){
       //         errorMassage = "This Email is Already used"
       //     }
-      //     // console.log(errorMassage)
+      //     //  (errorMassage)
       //     toast.error(errorMassage)
 
       //   }else{

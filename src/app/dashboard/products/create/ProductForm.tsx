@@ -98,7 +98,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
     if (entry?.id) {
       form.setValue("name", entry?.name);
       form.setValue("salesType", entry?.salesType);
@@ -153,7 +153,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
     setMcId(id);
   };
   const handleCategoryId = (id: string) => {
-    console.log(id);
+    id;
     form.setValue("categoryId", id);
     setMcId(id);
   };
@@ -168,7 +168,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
 
   async function onSubmit(data: z.infer<typeof ProductFormSchema>) {
     try {
-      // console.log("product", data);
+      //  ("product", data);
 
       //@ts-ignore
       const product = await saveProduct(id, data);

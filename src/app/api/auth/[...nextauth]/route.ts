@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
             where: { username: credentials.username },
           });
           if (!user?.password) {
-            console.log("user Not Found");
+            ("user Not Found");
             return null;
           }
 
@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
           if (isPasswordCorrect) {
-            console.log(user);
+            user;
             return user;
           }
         } catch (error) {
@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     session: ({ session, token }) => {
-      // console.log('Session Callback', { session, token })
+      //  ('Session Callback', { session, token })
       return {
         ...session,
         user: {
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
       };
     },
     jwt: ({ token, user }) => {
-      // console.log('JWT Callback', { token, user })
+      //  ('JWT Callback', { token, user })
       if (user) {
         //@ts-nocheck
         const u = user as unknown as any;

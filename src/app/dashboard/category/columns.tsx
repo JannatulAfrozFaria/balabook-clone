@@ -28,10 +28,10 @@ export type Category = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Category Delete Successful!`);
+    `Category Delete Successful!`;
     toast.success(`Category Deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
     toast.success(`Category Deleted Field!`);
   }
 };

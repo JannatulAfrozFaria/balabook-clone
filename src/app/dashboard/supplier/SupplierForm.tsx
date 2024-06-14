@@ -57,7 +57,7 @@ function SupplierForm({ entry, setOpen }: SupplierFormEditProps) {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
 
     if (entry?.id) {
       form.setValue("name", entry?.name);

@@ -56,15 +56,15 @@ export function GRNDataTable<TData, TValue>({
 
   const [CSV, setCSV] = useState<any>([]);
 
-    const handelImport = async () => {
-        // console.log("Import", CSV);
-        if (CSV?.length > 0) {
-            const product = await importProduct(CSV);
-            if (product) {
-                toast.success("Product Import Success");
-            }
-        }
-    };
+  const handelImport = async () => {
+    //  ("Import", CSV);
+    if (CSV?.length > 0) {
+      const product = await importProduct(CSV);
+      if (product) {
+        toast.success("Product Import Success");
+      }
+    }
+  };
 
   return (
     <>
@@ -132,9 +132,7 @@ export function GRNDataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-2">
-          
-        </div>
+        <div className="flex items-center justify-end space-x-2 py-2"></div>
       </div>
     </>
   );

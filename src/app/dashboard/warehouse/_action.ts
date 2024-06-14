@@ -7,7 +7,7 @@ import { WireHouseFormSchema } from "./WireHouseFormSchema";
 export type Unit = z.infer<typeof WireHouseFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const unit = await prisma.wareHouse.delete({
       where: {
@@ -15,12 +15,12 @@ export const handleDelete = async (id: string) => {
       },
     });
     if (unit) {
-      console.log(`Deleted successful!`);
+      `Deleted successful!`;
       revalidatePath("/dashboard/warehouse");
       return true;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -28,7 +28,7 @@ export const handleDelete = async (id: string) => {
 export const saveUnit = async (id: string, data: Unit) => {
   try {
     //ts-ignore
-    console.log("action", data);
+    "action", data;
     let { name, company, code, address, type, email, phone, status } = data;
 
     if (!name) return false;
@@ -51,7 +51,7 @@ export const saveUnit = async (id: string, data: Unit) => {
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
+        `${updateUnit.name} Update successful!`;
 
         revalidatePath("/dashboard/unit");
         return updateUnit;
@@ -71,14 +71,14 @@ export const saveUnit = async (id: string, data: Unit) => {
       });
 
       if (createUnit) {
-        console.log(`${createUnit.name} Create successful!`);
+        `${createUnit.name} Create successful!`;
 
         revalidatePath("/dashboard/warehouse");
         return createUnit;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -102,7 +102,7 @@ export const whDw = async () => {
       },
     ];
 
-    // console.log(units);
+    //  (units);
     wareHouses.map(
       (wareHouse) =>
         (dw = [

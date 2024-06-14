@@ -437,6 +437,7 @@ model Adjust {
   grossTotalRound     Int? @default(0)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+  status            DataStatus
 }
 
 model Damage {
@@ -504,6 +505,7 @@ enum Status {
 enum DataStatus {
   Complete
   Pending
+  Ordered
   Delete
 }
 

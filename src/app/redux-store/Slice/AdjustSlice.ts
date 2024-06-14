@@ -21,6 +21,7 @@ interface adjustState {
   totalItem?: number;
   grossTotal?: number;
   grossTotalRound?: number;
+  status?: string;
 }
 
 // Define the initial state using that type
@@ -39,6 +40,7 @@ const initialState: adjustState = {
   totalItem: 0,
   grossTotal: 0,
   grossTotalRound: 0,
+  status: "Complete",
 };
 
 export const adjustSlice = createSlice({

@@ -23,7 +23,7 @@ export default function DatePickerWithRange({
     to: addDays(new Date(), 20),
   });
 
-  console.log("date:", date);
+  "date:", date;
 
   return (
     <div className={cn("grid gap-2 w-full", className)}>

@@ -34,7 +34,7 @@ const RegistrationForm = () => {
   const [division, setDivision] = useState([]);
   const [diviSelect, setDiviSelect] = useState("");
 
-  // console.log("diviSelect",diviSelect)0
+  //  ("diviSelect",diviSelect)0
 
   const getDistict = async (division: String) => {
     let url = "https://bdapis.com/api/v1.1/districts";
@@ -42,16 +42,16 @@ const RegistrationForm = () => {
       url = `https://bdapis.com/api/v1.1/division/${division}`;
     }
 
-    // console.log(url)
+    //  (url)
 
     await axios
       .get(url)
       .then((res) => {
-        // console.log("Dis:",res.data.data)
+        //  ("Dis:",res.data.data)
         setDistrict(res.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        error;
       });
   };
 
@@ -62,7 +62,7 @@ const RegistrationForm = () => {
         setDivision(res.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        error;
       });
   };
 
@@ -106,26 +106,25 @@ const RegistrationForm = () => {
 
   // Handle form submission
   async function onSubmit(data: z.infer<typeof RegistrationFormSchema>) {
-    // console.log(data)
+    //  (data)
     try {
       await axios
         .post("/api/customer", data)
         .then((res) => {
-          console.log(res.data.customer.phone);
+          res.data.customer.phone;
 
-          
           const to = `${res.data.customer.phone}`;
-          const message= `Dear ${res.data.customer.name}, Your registration for the "Event Name" successful,  your Guest ID: ${res.data.customer.customerId}`;
-          
-          const send = sendMessage({message, to});
-          console.log(send)
+          const message = `Dear ${res.data.customer.name}, Your registration for the "Event Name" successful,  your Guest ID: ${res.data.customer.customerId}`;
+
+          const send = sendMessage({ message, to });
+          send;
           // TODO:: SEND SMS WITH USER ID
           toast.success("Registration Success");
-          
-          router.push('/congratulation');
+
+          router.push("/congratulation");
         })
         .catch((error) => {
-          console.log(error);
+          error;
           if (error.response.data.error.code === "P2002") {
             let errorMassage = "Data Validation Error";
             const target = error.response.data.error.meta.target;

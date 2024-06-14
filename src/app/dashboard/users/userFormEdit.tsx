@@ -75,7 +75,7 @@ function UserFormEdit({ user }: { user: any }) {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const id = user.id;
-      console.log("update", data);
+      "update", data;
       //@ts-ignore
       const updateuser = await updateUser(id, data);
       if (!updateuser) {
@@ -86,13 +86,13 @@ function UserFormEdit({ user }: { user: any }) {
       }
       // await axios.put(`/api/user/${user.id}`, data)
       // .then((res)=>{
-      // //  console.log(res)
+      // //   (res)
       //   if(res.status === 200){
       //       toast.success("User Update Success")
       //       revalidatePath('/dashboard/users')
       //   }
       // }).catch(error=>{
-      //     console.log(error)
+      //      (error)
       //       toast.error("User Update Faild")
       // })
       // .finally(()=>{

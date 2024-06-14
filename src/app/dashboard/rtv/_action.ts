@@ -4,32 +4,31 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { RTVFormSchema } from "./create/RTVFormSchema";
 
-
 export type Product = z.infer<typeof RTVFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
 
 export const saveProduct = async (id: string, data: Product) => {
   try {
-    console.log("action", data);
+    "action", data;
     let {
       name,
       articleCode,
@@ -48,7 +47,6 @@ export const saveProduct = async (id: string, data: Product) => {
       grossTotalRound,
       note,
       containerId,
-      
     } = data;
 
     if (!name || !articleCode) return false;
@@ -61,27 +59,27 @@ export const saveProduct = async (id: string, data: Product) => {
         data: {
           //@ts-ignore
           name,
-      articleCode,
-      qty,
-      mrp,
-      tp,
-      total,
-      vat,
-      stock,
-      supplier,
-      tax,
-      hsCode,
-      country,
-      discount,
-      grosTotal,
-      grossTotalRound,
-      note,
-      containerId,
+          articleCode,
+          qty,
+          mrp,
+          tp,
+          total,
+          vat,
+          stock,
+          supplier,
+          tax,
+          hsCode,
+          country,
+          discount,
+          grosTotal,
+          grossTotalRound,
+          note,
+          containerId,
         },
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
+        `${updateUnit.name} Update successful!`;
 
         revalidatePath("/dashboard/unit");
         return updateUnit;
@@ -89,35 +87,35 @@ export const saveProduct = async (id: string, data: Product) => {
     } else {
       const createProduct = await prisma.product.create({
         data: {
-            name,
-            articleCode,
-            qty,
-            mrp,
-            tp,
-            total,
-            vat,
-            stock,
-            supplier,
-            tax,
-            hsCode,
-            country,
-            discount,
-            grosTotal,
-            grossTotalRound,
-            note,
-            containerId,
+          name,
+          articleCode,
+          qty,
+          mrp,
+          tp,
+          total,
+          vat,
+          stock,
+          supplier,
+          tax,
+          hsCode,
+          country,
+          discount,
+          grosTotal,
+          grossTotalRound,
+          note,
+          containerId,
         },
       });
 
       if (createProduct) {
-        console.log(`${createProduct.name} Create successful!`);
+        `${createProduct.name} Create successful!`;
 
         revalidatePath("/dashboard/unit");
         return createProduct;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };

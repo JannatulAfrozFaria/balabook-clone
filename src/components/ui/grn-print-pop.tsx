@@ -54,7 +54,7 @@ export function GrnPrintLog({
     setOpen(false);
   };
   const productsInfo = product?.products;
-  // console.log(productsInfo);
+  //  (productsInfo);
 
   function convertToWords(number: number): string {
     const ones: string[] = [
@@ -183,7 +183,7 @@ export function GrnPrintLog({
     return numStr.trim();
   }
 
-  console.log("convert to word", convertToWords(product.total));
+  "convert to word", convertToWords(product.total);
 
   return (
     <div>

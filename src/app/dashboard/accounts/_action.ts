@@ -7,21 +7,21 @@ import { z } from "zod";
 export type Offer = z.infer<typeof OfferFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const deleteOffer = await prisma.offer.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteOffer) {
-      console.log(`${deleteOffer.name} deleted successful!`);
+      `${deleteOffer.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteOffer;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -29,17 +29,17 @@ export const handleDelete = async (id: string) => {
 export const createOffer = async (data: Offer) => {
   try {
     //@ts-ignore
-    console.log("action", data);
+    "action", data;
     //@ts-ignore
     const createOffer = await prisma.offer.create({ data });
-    console.log(createOffer);
+    createOffer;
     if (createOffer) {
-      console.log(`${createOffer.name} Create successful!`);
+      `${createOffer.name} Create successful!`;
       revalidatePath("/dashboard/offers");
       return createOffer;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -55,14 +55,14 @@ export const updateOffer = async (id: string, data: Offer) => {
       //@ts-ignore
       data: data,
     });
-    console.log(updateOffer);
+    updateOffer;
     if (updateOffer) {
-      console.log(`${updateOffer.name} Update successful!`);
+      `${updateOffer.name} Update successful!`;
       revalidatePath("/dashboard/offers");
       return updateOffer;
     }
   } catch (err) {
-    console.log("err", err);
+    "err", err;
     return err;
   }
 };

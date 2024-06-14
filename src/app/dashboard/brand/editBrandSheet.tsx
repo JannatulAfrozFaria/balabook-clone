@@ -21,7 +21,7 @@ function EditBrandSheet({
   open: boolean;
   setOpen: any;
 }) {
-  // console.log(entry);
+  //  (entry);
   return (
     <div>
       <Sheet open={open} onOpenChange={setOpen}>

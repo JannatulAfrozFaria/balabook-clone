@@ -33,17 +33,17 @@ export type Product = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Offer Delete Successful!`);
+    `Offer Delete Successful!`;
     // toast.success(`${del.name} deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey:"barCode",
-    header:"BC"
+    accessorKey: "barCode",
+    header: "BC",
   },
   {
     accessorKey: "photo",
@@ -53,13 +53,23 @@ export const columns: ColumnDef<Product>[] = [
 
       return (
         <>
-        <div className="w-1/2 ">
+          <div className="w-1/2 ">
             <AspectRatio ratio={16 / 9}>
               {/* <>{offer.photo}</> */}
-              <Image src={offer.photo !== "" ? `/img/${offer.photo}` : "/img/offer-photo.png"} width='300' height="150" alt="Image" className="rounded-md object-cover" />
+              <Image
+                src={
+                  offer.photo !== ""
+                    ? `/img/${offer.photo}`
+                    : "/img/offer-photo.png"
+                }
+                width="300"
+                height="150"
+                alt="Image"
+                className="rounded-md object-cover"
+              />
             </AspectRatio>
-        </div>
-        {/* <Avatar>
+          </div>
+          {/* <Avatar>
           <AvatarImage src={offer.photo !== "" ? `/img/${offer.photo}` : "https://github.com/shadcn.png"} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar> */}
@@ -68,8 +78,8 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey:"articleCode",
-    header:"Article Code"
+    accessorKey: "articleCode",
+    header: "Article Code",
   },
   {
     accessorKey: "name",

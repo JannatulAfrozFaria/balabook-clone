@@ -10,7 +10,7 @@ export default async function OfferPage({
 }) {
   const offer = [];
 
-  // console.log(offer)
+  //  (offer)
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -26,9 +26,7 @@ export default async function OfferPage({
             </div>
           </div>
           <div className="flex justify-center">
-            <div className="w-1/3">
-              {/* {params.id} */}
-            </div>
+            <div className="w-1/3">{/* {params.id} */}</div>
           </div>
         </div>
       </div>

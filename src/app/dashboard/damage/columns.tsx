@@ -19,7 +19,7 @@ import {
   Trash,
 } from "lucide-react";
 import Link from "next/link";
-import { handleDelete } from "./_action";
+import { UpdateDamageStatus, handleDelete } from "./_action";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -31,6 +31,7 @@ import { useState } from "react";
 import { DamagePrint } from "@/components/ui/damage-print-pop";
 import { useDispatch } from "react-redux";
 import { setStatus } from "@/app/redux-store/Slice/DamageSlice";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 export type Product = {
   id: string;
   name: string;
@@ -47,10 +48,10 @@ const handleDeleteTigger = async (id: string) => {
   const del = dispatch(setStatus("Delete"));
 
   if (del) {
-    console.log(`Offer Delete Successful!`);
+    `Offer Delete Successful!`;
     // toast.success(`${del.name} deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 
@@ -84,6 +85,10 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "grossTotal",
     header: "Gross Total",
   },
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
   // {
   //   accessorKey: "total",
   //   header: "Total",
@@ -104,6 +109,28 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const damage = row.original;
       const [activate, setActive] = useState(false);
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateDamageStatus(damage.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
       return (
         <>
           <DropdownMenu>
@@ -134,13 +161,20 @@ export const columns: ColumnDef<Product>[] = [
                 <Pencil size={16} className="mr-2" /> Edit
                 {/* </Link> */}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDeleteTigger(damage.id)}>
+              <DropdownMenuItem onClick={() => handleUpdate("Delete")}>
                 <Trash size={16} className="mr-2" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <DamagePrint open={activate} setOpen={setActive} entry={damage} />
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="Adjust"
+            operation={status}
+          />
         </>
       );
     },

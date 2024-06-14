@@ -24,17 +24,17 @@ export default function SearchProduct({ handleSelect }: { handleSelect: any }) {
   // Function to handle custom selection of an option
   const handleCustomSelect = (option: any) => {
     setSelectedOption(option);
-    console.log(option);
+    option;
     handleSelect(option.value);
   };
 
   // onSearchChange;
 
   const onSearchChange = async (query: any) => {
-    console.log(query);
+    query;
     const productList = await searchProductDw(query);
     setOptions(productList);
-    console.log("prosuctList", productList);
+    "prosuctList", productList;
     // if (productList.length > 0) {
     //   setProducts(productList);
     // }

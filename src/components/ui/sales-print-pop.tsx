@@ -54,7 +54,7 @@ export function PoPrintalog({
     setOpen(false);
   };
   const productsInfo = product?.products;
-  // console.log(productsInfo);
+  //  (productsInfo);
 
   return (
     <div>

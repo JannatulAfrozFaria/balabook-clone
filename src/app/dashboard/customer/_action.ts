@@ -34,21 +34,21 @@ const generateCustomerId = async (prisma: PrismaClient) => {
 };
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const deleteOffer = await prisma.customer.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteOffer) {
-      console.log(`${deleteOffer.name} deleted successful!`);
+      `${deleteOffer.name} deleted successful!`;
       revalidatePath("/dashboard/customer");
       return deleteOffer;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -56,7 +56,7 @@ export const handleDelete = async (id: string) => {
 export const saveCustomer = async (id: string, data: Customer) => {
   try {
     //ts-ignore
-    console.log("action", data);
+    "action", data;
     const {
       name,
       phone,
@@ -120,7 +120,7 @@ export const saveCustomer = async (id: string, data: Customer) => {
       });
 
       if (updateCustomer) {
-        console.log(`${updateCustomer.name} Update successful!`);
+        `${updateCustomer.name} Update successful!`;
 
         revalidatePath("/dashboard/customer");
         return updateCustomer;
@@ -153,14 +153,14 @@ export const saveCustomer = async (id: string, data: Customer) => {
       });
 
       if (createUser) {
-        console.log(`${createUser.name} Create successful!`);
+        `${createUser.name} Create successful!`;
 
         revalidatePath("/dashboard/customer");
         return createUser;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -222,14 +222,14 @@ export const saveCustomer = async (id: string, data: Customer) => {
 //       },
 //     });
 //     //ts-ignore
-//     console.log(customer);
+//      (customer);
 //     if (customer) {
-//       console.log(`${customer.name} Create successful!`);
+//        (`${customer.name} Create successful!`);
 //       revalidatePath("/dashboard/customer");
 //       return customer;
 //     }
 //   } catch (err) {
-//     console.log(err);
+//      (err);
 //     return false;
 //   }
 // };
@@ -273,15 +273,15 @@ export const importCustomer = async (data: any) => {
         data: { name, phone, email, customerId },
       });
 
-      console.log(customer);
+      customer;
     });
 
     // if (customers?.length > 0) {
-    //   console.log(customers);
+    //    (customers);
     // return "Customer Import Successful!";
     // }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   } finally {
     revalidatePath("/dashboard/customer");
@@ -308,7 +308,7 @@ export const CustomerDw = async () => {
       },
     ];
 
-    // console.log(suppliers);
+    //  (suppliers);
     customers.map(
       (customer) =>
         (dw = [
@@ -323,5 +323,29 @@ export const CustomerDw = async () => {
   } catch (error) {
     console.error("Error fetching parent customers:", error);
     throw new Error("Failed to fetch customers");
+  }
+};
+
+export const UpdateCustomerStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.customer.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/customers");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
+    return false;
   }
 };

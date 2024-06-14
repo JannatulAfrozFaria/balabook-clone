@@ -57,7 +57,7 @@ const CustomerForm = ({ entry, setOpen }: { entry: any; setOpen: any }) => {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
     if (entry?.id) {
       // form.setValue("name", entry.name);
       // form.setValue("phone", entry.phone);
@@ -78,7 +78,7 @@ const CustomerForm = ({ entry, setOpen }: { entry: any; setOpen: any }) => {
       setId(entry?.id);
     }
   }, []);
-  console.log("form", entry, form);
+  "form", entry, form;
 
   // Handle form submission
   async function onSubmit(data: z.infer<typeof CustomerFormSchema>) {

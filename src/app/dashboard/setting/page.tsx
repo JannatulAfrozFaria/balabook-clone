@@ -54,7 +54,7 @@ export default function Setting() {
     setEvent_title(setting?.event_title);
   }, [setting]);
 
-  // console.log(setting);
+  //  (setting);
 
   const form = useForm<z.infer<typeof SiteSettigSchema>>({
     resolver: zodResolver(SiteSettigSchema),
@@ -69,17 +69,17 @@ export default function Setting() {
     },
   });
 
-  // console.log(data);
+  //  (data);
 
   const handleSaveSetting = async (data: z.infer<typeof SiteSettigSchema>) => {
-    console.log("Sumbit", data);
+    "Sumbit", data;
     try {
       const save = await saveSiteSetting(id, data);
       if (save) {
         toast.success("Offer Update Success");
       }
     } catch (err) {
-      console.log(err);
+      err;
     }
   };
 

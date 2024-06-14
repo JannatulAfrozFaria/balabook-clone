@@ -84,12 +84,12 @@ function GrnForm({ entry }: ProductFormEditProps) {
   const grnData = useSelector((state: RootState) => state.grn);
   const selectedProductData =
     grnData?.products?.length > 0 ? grnData.products : [];
-  // console.log("selected product", selectedProductTotal.total);
+  //  ("selected product", selectedProductTotal.total);
 
   async function onSubmitGRn(data: GRNFormSchema) {
     try {
       //@ts-ignore
-      // console.log(grnData);
+      //  (grnData);
       const grn = await saveGRN(grnData);
       if (grn) {
         toast.success(grn ? "GRN Creation Success" : "GRN Update Success");

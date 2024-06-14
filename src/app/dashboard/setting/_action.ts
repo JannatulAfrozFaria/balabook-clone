@@ -11,18 +11,18 @@ export type SiteSetting = z.infer<typeof SiteSettigSchema>;
 export const getSetting = async () => {
   try {
     const siteSetting = await prisma.setting.findMany({});
-    // console.log(siteSetting);
+    //  (siteSetting);
     if (siteSetting) {
       return siteSetting[0];
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
 
 export const saveSiteSetting = async (id: string, data: SiteSetting) => {
-  console.log("save");
+  //  ("save");
   try {
     const { site_title, event_title, logo, banner, add1, add2, add3 } = data;
 
@@ -46,14 +46,14 @@ export const saveSiteSetting = async (id: string, data: SiteSetting) => {
       });
     }
     //ts-ignore
-    console.log(customer);
+    //  (customer);
     if (customer) {
-      console.log(`Save successful!`);
+      `Save successful!`;
       revalidatePath("/dashboard/setting");
       return true;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };

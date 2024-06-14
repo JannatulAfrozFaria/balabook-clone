@@ -52,7 +52,7 @@ function UnitForm({ entry, setOpen }: CategoryFormEditProps) {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
     if (entry?.id) {
       form.setValue("name", entry.name);
       form.setValue("description", entry.description);

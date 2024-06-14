@@ -32,7 +32,7 @@ const initialState: damageState = {
   totalItem: 0,
   grossTotal: 0,
   grossTotalRound: 0,
-  status: "Pending",
+  status: "Complete",
 };
 
 export const damageSlice = createSlice({

@@ -63,36 +63,36 @@ function CategoryFormEdit({ entry, setOpen }: CategoryFormEditProps) {
       setId(entry?.id);
       setMcId(entry?.parentId);
 
-      console.log("entry", entry);
+      "entry", entry;
     }
   }, [entry]);
 
   // useEffect(() => {
-  //   console.log("parent", parent);
+  //    ("parent", parent);
   //   form.setValue("parentId", parent);
   // }, [parent]);
 
   const handleCategoryId = (id: string) => {
-    console.log("handleCategoryId", id);
+    "handleCategoryId", id;
     form.setValue("parentId", id);
-    console.log("hello", id, "type:", typeof id);
+    "hello", id, "type:", typeof id;
     setMcId(id);
   };
-  //  console.log("category saved", id, data);
+  //   ("category saved", id, data);
   // async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
   //   // try {
   //   //   const category = await updateCategory(entry.id, data);
-  //   //   console.log("category", category);
+  //   //    ("category", category);
   //   // } catch (err) {
-  //   //   console.log(err);
+  //   //    (err);
   //   // }
   // }
   async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
-    console.log(data);
+    data;
     try {
       //@ts-ignore
       const newCategory = await saveCategory(entry.id, data);
-      console.log("brand", newCategory);
+      "brand", newCategory;
 
       if (newCategory) {
         form.reset();
@@ -105,8 +105,8 @@ function CategoryFormEdit({ entry, setOpen }: CategoryFormEditProps) {
       console.error(error);
     }
   }
-  // console.log("from11", entry);
-  // console.log("hello");
+  //  ("from11", entry);
+  //  ("hello");
   return (
     <div>
       <Form {...form}>

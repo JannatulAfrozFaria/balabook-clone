@@ -12,20 +12,27 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   ArrowUpDown,
+  Check,
   MoreHorizontal,
   Pencil,
   Printer,
   Trash,
+  Undo2,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { SalePrintLog } from "@/components/ui/sell-print-pop";
 import { TaxInvoicePrint } from "@/components/ui/govt-format-invoice-sale";
+
+import { UpdateSaleStatus } from "./_action";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Order = {
   id: string;
   customerID: string;
-  status: "pending" | "processing" | "success" | "failed";
+  status: "Complete" | "Pending" | "Ordered" | "Delete";
   userID: string;
   offerID: string;
   Offer: string;
@@ -82,45 +89,90 @@ export const columns: ColumnDef<Order>[] = [
       const sales = row.original;
       const [activate, setActive] = useState(false);
       const [taxInvActive, setTaxInvActive] = useState(false);
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateSaleStatus(sales.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
+
       return (
         <>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
-            >
-              View Details
-            </DropdownMenuItem> */}
-              <DropdownMenuSeparator />
+              {sales.status !== "Complete" && (
+                <>
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleUpdate("Complete")}
+                  >
+                    <Check size={16} className="mr-2" />
+                    Complete
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Undo2 size={16} className="mr-2" />
+                    Return
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => setActive(true)}
               >
-                <>
-                  <Printer size={16} className="mr-2" /> Invoice
-                </>
+                <Printer size={16} className="mr-2" /> Invoice
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => setTaxInvActive(true)}
               >
-                <>
-                  <Printer size={16} className="mr-2" />
-                  Tax Invoice
-                </>
+                <Printer size={16} className="mr-2" />
+                Tax Invoice
               </DropdownMenuItem>
-              {/* <DropdownMenuItem>
-                <Pencil size={16} className="mr-2" /> Edit
-              </DropdownMenuItem> */}
+              {sales.status !== "Complete" && (
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => handleUpdate("Delete")}
+                >
+                  <X size={16} className="mr-2" />
+                  Cancel
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="Sales"
+            operation={status}
+          />
           <SalePrintLog open={activate} setOpen={setActive} entry={sales} />
           <TaxInvoicePrint
             open={taxInvActive}

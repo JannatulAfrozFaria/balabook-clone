@@ -34,7 +34,7 @@ import { TrashIcon } from "@radix-ui/react-icons";
 function Sidebar() {
   const { data: session } = useSession();
   // const { user } = session;
-  // console.log("sidebar", session?.user)
+  //  ("sidebar", session?.user)
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navCllaps = () => {

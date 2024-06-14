@@ -87,7 +87,7 @@ function RTVForm({ entry }: ProductFormEditProps) {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
     if (entry?.id) {
       // form.setValue("name", entry.name);
       // form.setValue("articleCode", entry.articleCode);
@@ -138,13 +138,13 @@ function RTVForm({ entry }: ProductFormEditProps) {
   //     setMcId(id);
   //   };
   const handleSelectedProduct = (product: any) => {
-    console.log(product);
+    product;
   };
 
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
       if (product) {
@@ -155,7 +155,7 @@ function RTVForm({ entry }: ProductFormEditProps) {
 
   async function onSubmit(data: z.infer<typeof RTVFormSchema>) {
     try {
-      console.log("product", data);
+      "product", data;
       //@ts-ignore
       const product = await saveProduct(id, data);
 

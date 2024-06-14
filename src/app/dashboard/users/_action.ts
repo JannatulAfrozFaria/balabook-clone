@@ -8,21 +8,21 @@ import { UserFormSchema } from "./UserFormSchema";
 export type User = z.infer<typeof UserFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const user = await prisma.user.delete({
       where: {
         id: id,
       },
     });
-    // console.log(user);
+    //  (user);
     if (user) {
-      console.log(`${user.name} deleted successful!`);
+      `${user.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return user;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -30,7 +30,7 @@ export const handleDelete = async (id: string) => {
 export const createUser = async (data: User) => {
   try {
     //ts-ignore
-    console.log("action", data);
+    "action", data;
     let { name, phone, email, username, password, type, status } = data;
 
     if (!name || !phone || !username || !password) return false;
@@ -42,12 +42,12 @@ export const createUser = async (data: User) => {
       data: { name, phone, email, username, password, type, status },
     });
     if (createUser) {
-      console.log(`${createUser.name} Create successful!`);
+      `${createUser.name} Create successful!`;
       revalidatePath("/dashboard/offers");
       return createUser;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -76,14 +76,14 @@ export const updateUser = async (id: string, data: User) => {
       //ts-ignore
       data: userData,
     });
-    console.log(updateUser);
+    updateUser;
     if (updateUser) {
-      console.log(`${updateUser.name} Update successful!`);
+      `${updateUser.name} Update successful!`;
       revalidatePath("/dashboard/users");
       return updateUser;
     }
   } catch (err) {
-    console.log("err", err);
+    "err", err;
     return err;
   }
 };
@@ -109,12 +109,12 @@ export const createUserLogs = async (
     });
 
     if (createUserLog) {
-      console.log(`User log created successfully!`, createUserLog);
+      `User log created successfully!`, createUserLog;
       // revalidatePath("/dashboard/user-logs"); // Adjust the path as needed
       return createUserLog;
     }
   } catch (err) {
-    console.log("Error creating user log:", err);
+    "Error creating user log:", err;
     return false;
   }
 };

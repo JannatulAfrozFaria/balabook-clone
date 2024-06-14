@@ -50,7 +50,7 @@ function BrandForm() {
     try {
       //@ts-ignore
       const newBrand = await createBrand(data);
-      console.log("brand", newBrand);
+      "brand", newBrand;
 
       if (newBrand) {
         form.reset();

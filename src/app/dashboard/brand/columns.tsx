@@ -34,10 +34,10 @@ export type Brand = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Brand Delete Successful!`);
+    `Brand Delete Successful!`;
     toast.success(`Deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 

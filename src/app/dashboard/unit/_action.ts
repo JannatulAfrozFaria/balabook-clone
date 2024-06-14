@@ -7,7 +7,7 @@ import { UnitFormSchema } from "./UnitFormSchema";
 export type Unit = z.infer<typeof UnitFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const unit = await prisma.unit.delete({
       where: {
@@ -15,12 +15,12 @@ export const handleDelete = async (id: string) => {
       },
     });
     if (unit) {
-      console.log(`Deleted successful!`);
+      `Deleted successful!`;
       revalidatePath("/dashboard/unit");
       return true;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -28,7 +28,7 @@ export const handleDelete = async (id: string) => {
 export const saveUnit = async (id: string, data: Unit) => {
   try {
     //ts-ignore
-    console.log("action", data);
+    "action", data;
     let { name, code, symbol, description, status } = data;
 
     if (!name || !symbol) return false;
@@ -49,7 +49,7 @@ export const saveUnit = async (id: string, data: Unit) => {
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.name} Update successful!`);
+        `${updateUnit.name} Update successful!`;
 
         revalidatePath("/dashboard/unit");
         return updateUnit;
@@ -67,14 +67,14 @@ export const saveUnit = async (id: string, data: Unit) => {
       });
 
       if (createUnit) {
-        console.log(`${createUnit.name} Create successful!`);
+        `${createUnit.name} Create successful!`;
 
         revalidatePath("/dashboard/unit");
         return createUnit;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -98,7 +98,7 @@ export const unitDw = async () => {
       },
     ];
 
-    // console.log(units);
+    //  (units);
     units.map(
       (unit) =>
         (dw = [

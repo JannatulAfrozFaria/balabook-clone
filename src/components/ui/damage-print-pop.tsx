@@ -53,7 +53,7 @@ export function DamagePrint({
     setOpen(false);
   };
   const productsInfo = product?.products;
-  // console.log(productsInfo);
+  //  (productsInfo);
 
   function convertToWords(number: number): string {
     const ones: string[] = [
@@ -182,8 +182,8 @@ export function DamagePrint({
     return numStr.trim();
   }
 
-  console.log("convert to word", convertToWords(product.total));
-  console.log("product", product);
+  "convert to word", convertToWords(product.total);
+  "product", product;
   return (
     <div>
       <style jsx global>{`

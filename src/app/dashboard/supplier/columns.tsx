@@ -15,10 +15,11 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
-import { handleDelete } from "./_action";
+import { UpdateSupplierStatus, handleDelete } from "./_action";
 import { useState } from "react";
 import EditSupplierSheet from "./editSupplierSheet";
 import { Toaster } from "@/components/ui/toaster";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 export type Supplier = {
   id: string;
   name: string;
@@ -34,10 +35,10 @@ export type Supplier = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Supplier Delete Successful!`);
+    `Supplier Delete Successful!`;
     toast.success(`Deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 
@@ -74,6 +75,28 @@ export const columns: ColumnDef<Supplier>[] = [
       const supplier = row.original;
       const [open, setOpen] = useState(false);
       const handleEdit = () => setOpen(true);
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateSupplierStatus(supplier.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
       return (
         <>
           <DropdownMenu>
@@ -87,13 +110,20 @@ export const columns: ColumnDef<Supplier>[] = [
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDeleteTigger(supplier.id)}>
-                Delete
+              <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
+                Inactive
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <EditSupplierSheet open={open} entry={supplier} setOpen={setOpen} />
           <Toaster />
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="Supplier"
+            operation={status}
+          />
         </>
       );
     },

@@ -62,14 +62,14 @@ function OfferForm({ offer }: { offer: any }) {
   }, [photoName]);
 
   async function onSubmit(data: z.infer<typeof OfferFormSchema>) {
-    // console.log("id", offer);
+    //  ("id", offer);
     try {
       if (offer === undefined) {
         // CREATE OFFER
-        // console.log("new Offer", data);
+        //  ("new Offer", data);
         //@ts-ignore
         const newOffer = await createOffer(data);
-        console.log("newOffer", newOffer);
+        "newOffer", newOffer;
 
         if (newOffer) {
           toast.success("Offer Creation Success");
@@ -82,7 +82,7 @@ function OfferForm({ offer }: { offer: any }) {
       } else {
         // UPDATE OFFER
         const id = offer.id;
-        console.log("update", data);
+        "update", data;
         //@ts-ignore
         const updateoffer = await updateOffer(id, data);
         if (!updateoffer) {
@@ -94,7 +94,7 @@ function OfferForm({ offer }: { offer: any }) {
         }
       }
     } catch (err) {
-      console.log(err);
+      err;
     }
   }
 

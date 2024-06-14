@@ -57,7 +57,7 @@ export function CreateOrderDataTable<TData, TValue>({
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
       if (product) {

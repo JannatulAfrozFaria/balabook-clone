@@ -1,5 +1,5 @@
 "use client";
-import  {useState}  from "react";
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -13,9 +13,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
-import { handleDelete } from "./_action";
+import { UpdateCustomerStatus, handleDelete } from "./_action";
 import EditCustomerSheet from "./editCustomerSheet";
 import { Toaster } from "sonner";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -23,10 +24,10 @@ const handleDeleteAction = async (id: string) => {
   const del = handleDelete(id);
   //@ts-ignore
   if (del) {
-    console.log(`Customer Delete Successful!`);
+    `Customer Delete Successful!`;
     // toast.success(`${del.name} deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 
@@ -87,6 +88,28 @@ export const columns: ColumnDef<Customer>[] = [
       const customer = row.original;
       const [open, setOpen] = useState(false);
       const handleEdit = () => setOpen(true);
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateCustomerStatus(customer.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
       return (
         <>
           <DropdownMenu>
@@ -102,13 +125,20 @@ export const columns: ColumnDef<Customer>[] = [
               <DropdownMenuItem onClick={() => handleEdit()}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDeleteAction(customer.id)}>
+              <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <EditCustomerSheet entry={customer} open={open} setOpen={setOpen} />
           <Toaster />
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="Customer"
+            operation={status}
+          />
         </>
       );
     },

@@ -39,7 +39,7 @@ interface BrandFormEditProps {
 
 function BrandFormEdit({ entry, setOpen }: BrandFormEditProps) {
   const router = useRouter();
-  console.log(entry);
+  entry;
 
   const form = useForm<z.infer<typeof BrandFormSchema>>({
     resolver: zodResolver(BrandFormSchema),
@@ -53,7 +53,7 @@ function BrandFormEdit({ entry, setOpen }: BrandFormEditProps) {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
     if (entry?.id) {
       form.setValue("name", entry.name);
       form.setValue("description", entry.description);
@@ -67,7 +67,7 @@ function BrandFormEdit({ entry, setOpen }: BrandFormEditProps) {
     try {
       //@ts-ignore
       const newBrand = await updateBrand(entry.id, data);
-      console.log("brand", newBrand);
+      "brand", newBrand;
 
       if (newBrand) {
         form.reset();

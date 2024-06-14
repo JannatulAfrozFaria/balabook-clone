@@ -32,7 +32,7 @@ export default function SelectCustomer({
     fetchCustomer();
   }, []);
 
-  // console.log(options);
+  //  (options);
   return (
     <div className="App">
       <Select

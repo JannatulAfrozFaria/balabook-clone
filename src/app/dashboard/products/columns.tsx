@@ -17,7 +17,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import Link from "next/link";
-import { handleDelete } from "./_action";
+import { UpdateProductStatus, handleDelete } from "./_action";
 import { toast } from "sonner";
 import { Toast } from "@/components/ui/toast";
 // This type is used to define the shape of our data.
@@ -27,6 +27,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import { useState } from "react";
 import { BarCodeAlertDialog } from "@/components/ui/barcode-print-pop";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 export type Product = {
   id: string;
   name: string;
@@ -40,10 +41,10 @@ export type Product = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Offer Delete Successful!`);
+    `Offer Delete Successful!`;
     // toast.success(`${del.name} deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 
@@ -130,31 +131,61 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
 
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateProductStatus(product.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}
-            >
-              View Details
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/products/${product.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(product.id)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(product.id)}
+              >
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`/dashboard/products/${product.id}`}>Edit</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="Product"
+            operation={status}
+          />
+        </>
       );
     },
   },

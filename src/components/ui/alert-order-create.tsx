@@ -33,8 +33,8 @@
 //   const router = useRouter();
 //   const { data: session } = useSession();
 //   const { offer } = entry;
-//   // console.log("Offers:", offer)
-//   // console.log("User:", session)
+//   //  ("Offers:", offer)
+//   //  ("User:", session)
 //   const [cId, setCId] = useState("");
 //   const [customer, setCustomer] = useState<any>({});
 //   const [isFound, setIsFound] = useState(false);
@@ -62,7 +62,7 @@
 //     })
 //   }, [customer])
 
-//   // console.log(order)
+//   //  (order)
 
 //   const getCustomer = async () => {
 //     const url = `/api/customer/customerid/${cId}`;
@@ -71,11 +71,11 @@
 //       await axios.get(url).then((res) => {
 //         if (res.data?.id) {
 //           // toast.success("Guest Found");
-//           // console.log(res.data);
+//           //  (res.data);
 //           if (!res.data.id) {
 //           } else {
 //             if(!res?.data?.id){
-//               console.log("No User")
+//                ("No User")
 //               setIsFound(false);
 //             }else{
 //               setIsFound(true);
@@ -90,7 +90,7 @@
 //       });
 //       //@ts-ignore
 //     } catch (err) {
-//       console.log(err);
+//        (err);
 //     }
 //   };
 
@@ -98,12 +98,12 @@
 //     try{
 //       await axios.post('/api/order', order)
 //       .then((res)=>{
-//         console.log(res.data)
+//          (res.data)
 //         if(res.data?.id){
-//           console.log(res.data)
+//            (res.data)
 //           toast.success("Order Create Successful")
 //         }else{
-//           // console.log(res)
+//           //  (res)
 //           toast.error("Order Creation Faild")
 //         }
 //       })
@@ -112,7 +112,7 @@
 //         setOpen(false);
 //       })
 //     }catch(err){
-//       console.log(err)
+//        (err)
 //     }
 //   }
 //   const handleCloseDialog = () => {

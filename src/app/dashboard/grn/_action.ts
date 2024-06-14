@@ -4,25 +4,24 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { generateId } from "@/lib/idGenerator";
 import { GRNFormSchema } from "./create/GRNFormSchema";
-
+//@ts-ignore
 export type Product = z.infer<typeof GRNFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -30,7 +29,6 @@ export const handleDelete = async (id: string) => {
 export const saveGRN = async (data: Product) => {
   const newGrnNo = await generateId("grn");
   try {
-    console.log("action", data);
     let {
       id,
       grnNo,
@@ -52,7 +50,7 @@ export const saveGRN = async (data: Product) => {
       return false;
     }
 
-    console.log(data);
+    data;
 
     if (id === "") {
       const createGrn = await prisma.grn.create({
@@ -74,7 +72,7 @@ export const saveGRN = async (data: Product) => {
       });
 
       if (createGrn) {
-        console.log(`${createGrn.grnNo} created successfully!`);
+        `${createGrn.grnNo} created successfully!`;
         revalidatePath("/dashboard/po");
         return createGrn;
       }
@@ -95,13 +93,37 @@ export const saveGRN = async (data: Product) => {
       //     },
       //   });
       //   if (updateGrn) {
-      //     console.log(`${updateGrn.grnNo} created successfully!`);
+      //      (`${updateGrn.grnNo} created successfully!`);
       //     revalidatePath("/dashboard/po");
       //     return updateGrn;
       //   }
     }
   } catch (err) {
-    console.log(err);
+    err;
+    return false;
+  }
+};
+
+export const UpdateGRNStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.grn.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/sales");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
     return false;
   }
 };

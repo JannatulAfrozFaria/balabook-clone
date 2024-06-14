@@ -8,30 +8,27 @@ import { generateId } from "@/lib/idGenerator";
 export type Adjust = z.infer<typeof AdjustFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
 
 export const saveAdjust = async (data: Adjust) => {
   const newAdjustNo = await generateId("adj");
-  console.log("AdjustNo", newAdjustNo);
   try {
-    console.log("action", data);
     let {
       id,
       userId,
@@ -47,6 +44,7 @@ export const saveAdjust = async (data: Adjust) => {
       totalItem,
       grossTotal,
       grossTotalRound,
+      status,
     } = data;
 
     // if (!id || !articleCode) return false;
@@ -71,11 +69,12 @@ export const saveAdjust = async (data: Adjust) => {
           totalItem,
           grossTotal,
           grossTotalRound,
+          status,
         },
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.id} Update successful!`);
+        `${updateUnit.id} Update successful!`;
 
         revalidatePath("/dashboard/adjust");
         return updateUnit;
@@ -96,17 +95,42 @@ export const saveAdjust = async (data: Adjust) => {
           totalItem,
           grossTotal,
           grossTotalRound,
+          status,
         },
       });
 
       if (createAdjust) {
-        console.log(`${createAdjust.id} Create successful!`);
+        `${createAdjust.id} Create successful!`;
         revalidatePath("/dashboard/adjust");
         return createAdjust;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
+    return false;
+  }
+};
+
+export const UpdateAdjustStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.adjust.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/adjust");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
     return false;
   }
 };

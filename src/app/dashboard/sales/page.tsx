@@ -5,7 +5,7 @@ import { Order, columns } from "./columns";
 import CreateOrderSheet from "./createOrderSheet";
 import prisma from "../../../../prisma";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Undo2 } from "lucide-react";
 import { CreateOrderSchema } from "./create-order/CreateOrderSchema";
 
 export default async function OrderPage() {
@@ -26,7 +26,7 @@ export default async function OrderPage() {
     },
   });
 
-  // console.log("sales data");
+  //  ("sales data");
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -37,8 +37,9 @@ export default async function OrderPage() {
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               {/* <CreateOrderSheet /> */}
+
               <Link href="/dashboard/sales/create-order">
-                <Button>
+                <Button className="mr-2">
                   <Plus className="mr-2 h-4 w-4" /> Create Order
                 </Button>
               </Link>

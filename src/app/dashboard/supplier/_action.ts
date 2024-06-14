@@ -7,7 +7,7 @@ import { SupplierFormSchema } from "./SupplierFormSchema";
 export type Supplier = z.infer<typeof SupplierFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const supplier = await prisma.supplier.delete({
       where: {
@@ -15,12 +15,12 @@ export const handleDelete = async (id: string) => {
       },
     });
     if (supplier) {
-      console.log(`Deleted successful!`);
+      `Deleted successful!`;
       revalidatePath("/dashboard/supplier");
       return true;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -28,7 +28,7 @@ export const handleDelete = async (id: string) => {
 export const saveSupplier = async (id: string, data: Supplier) => {
   try {
     //ts-ignore
-    console.log("action", data);
+    "action", data;
     let {
       name,
       phone,
@@ -63,7 +63,7 @@ export const saveSupplier = async (id: string, data: Supplier) => {
       });
 
       if (updateSupplier) {
-        console.log(`${updateSupplier.name} Update successful!`);
+        `${updateSupplier.name} Update successful!`;
 
         revalidatePath("/dashboard/supplier");
         return updateSupplier;
@@ -85,14 +85,14 @@ export const saveSupplier = async (id: string, data: Supplier) => {
       });
 
       if (createSupplier) {
-        console.log(`${createSupplier.name} Create successful!`);
+        `${createSupplier.name} Create successful!`;
 
         revalidatePath("/dashboard/supplier");
         return createSupplier;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -116,7 +116,7 @@ export const SupplierDw = async () => {
       },
     ];
 
-    // console.log(suppliers);
+    //  (suppliers);
     suppliers.map(
       (supplier) =>
         (dw = [
@@ -131,5 +131,29 @@ export const SupplierDw = async () => {
   } catch (error) {
     console.error("Error fetching parent suppliers:", error);
     throw new Error("Failed to fetch suppliers");
+  }
+};
+
+export const UpdateSupplierStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.supplier.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/supplier");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
+    return false;
   }
 };

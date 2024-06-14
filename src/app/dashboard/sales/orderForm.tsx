@@ -58,13 +58,13 @@ function OrderForm() {
 
   const getOffer = async () => {
     await axios.get("/api/offer").then((res) => {
-      // console.log(res.data)
+      //  (res.data)
       setOffers(res.data);
     });
   };
   const getCustomer = async () => {
     await axios.get("/api/customer").then((res) => {
-      // console.log(res.data);
+      //  (res.data);
       setCustomers(res.data.customer);
     });
   };
@@ -89,7 +89,7 @@ function OrderForm() {
   async function onSubmit(data: z.infer<typeof OrderFormSchema>) {
     try {
       //  await addOrder(data)
-      console.log(data);
+      data;
     } catch (error) {
       console.error(error);
     }

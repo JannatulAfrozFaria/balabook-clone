@@ -16,7 +16,7 @@ export default function SelectSupplier({
   ]);
 
   const handleCustomSelect = (option: any) => {
-    console.log(option);
+    option;
     setSelectedOption(option);
     handleSelect(option.value);
   };
@@ -34,7 +34,7 @@ export default function SelectSupplier({
     fetchCategories();
   }, []);
 
-  // console.log(options);
+  //  (options);
   return (
     <div className="App">
       <Select

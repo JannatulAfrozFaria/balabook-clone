@@ -11,7 +11,7 @@ export default async function OfferPage({
 }) {
   // const offer = await prisma.offer.findFirst({ where: { id: params.id } });
 
-  // console.log(offer)
+  //  (offer)
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

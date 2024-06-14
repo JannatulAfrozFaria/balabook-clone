@@ -50,13 +50,13 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
   const form = useForm();
 
   const handleCustomerId = (id: string) => {
-    console.log("customer id", id);
+    "customer id", id;
     //@ts-ignore
     dispatch(setCustomerId(id));
   };
 
   const onSearchChange = (query: any) => {
-    console.log(query);
+    query;
   };
 
   const salesData = useSelector((state: RootState) => state.sales);

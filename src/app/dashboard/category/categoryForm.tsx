@@ -66,22 +66,22 @@ function CategoryForm({ entry, setOpen }: CategoryFormEditProps) {
   }, [entry]);
 
   // useEffect(() => {
-  //   console.log("parent", parent);
+  //    ("parent", parent);
   //   form.setValue("parentId", parent);
   // }, [parent]);
 
   const handleCategoryId = (id: string) => {
-    console.log("handleCategoryId", id);
+    "handleCategoryId", id;
     form.setValue("parentId", id);
     setMcId(id);
   };
-  //  console.log("category saved", id, data);
+  //   ("category saved", id, data);
   async function onSubmit(data: z.infer<typeof CategoryFormSchema>) {
     try {
       const category = await updateCategory(entry.id, data);
-      console.log("category", category);
+      "category", category;
     } catch (err) {
-      console.log(err);
+      err;
     }
   }
 

@@ -86,7 +86,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
   });
 
   useEffect(() => {
-    // console.log(data);
+    //  (data);
     if (entry?.id) {
       form.setValue("name", entry.name);
       form.setValue("articleCode", entry.articleCode);
@@ -137,17 +137,17 @@ function TPNForm({ entry }: ProductFormEditProps) {
   //     setMcId(id);
   //   };
   const onSearchChange = (query: any) => {
-    console.log(query);
+    query;
   };
   // handleSelectedProduct;
   // handleSelectedProduct;
   const handleSelectedProduct = (product: any) => {
-    console.log(product);
+    product;
   };
 
   // async function onSubmit(data: z.infer<typeof POFormSchema>) {
   //   try {
-  //     console.log("product", data);
+  //      ("product", data);
   //     //@ts-ignore
   //     const product = await saveProduct(id, data);
 
@@ -166,7 +166,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
       if (product) {
@@ -177,7 +177,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
 
   async function onSubmit(data: z.infer<typeof TPNFormSchema>) {
     try {
-      console.log("product", data);
+      "product", data;
       //@ts-ignore
       const product = await saveProduct(id, data);
 

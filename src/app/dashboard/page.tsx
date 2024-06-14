@@ -60,22 +60,22 @@ export default async function Dashboard() {
   //   },
   // });
 
-  // console.log(recentOrder);
+  //  (recentOrder);
   // const session = await getServerSession(authOptions)
-  // console.log("session",session)
+  //  ("session",session)
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
       <div className=" flex-col flex w-full">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex-cols md:flex items-center justify-between space-y-2">
             <PageTitle title="Dashboard" />
-            
+
             <div className="flex-row md:flex items-center justify-center md:space-x-2">
               <CalenderDateRangePicker className="w-full " />
               <div className="flex justify-between mt-3 md:mt-0 gap-2">
-                <Button variant="default" >Last 7 days</Button>
-                <Button variant="default" >Last 30 days</Button>
-                <Button variant="default" >Last 1 year</Button>
+                <Button variant="default">Last 7 days</Button>
+                <Button variant="default">Last 30 days</Button>
+                <Button variant="default">Last 1 year</Button>
               </div>
             </div>
           </div>
@@ -106,9 +106,7 @@ export default async function Dashboard() {
                   })}{" "} */}
                   ৳
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  From 0 Orders
-                </p>
+                <p className="text-xs text-muted-foreground">From 0 Orders</p>
               </CardContent>
             </Card>
             <Card>
@@ -184,9 +182,7 @@ export default async function Dashboard() {
                 </svg>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  0
-                  </div>
+                <div className="text-2xl font-bold">0</div>
                 <p className="text-xs text-muted-foreground">Since last hour</p>
               </CardContent>
             </Card>
@@ -205,9 +201,7 @@ export default async function Dashboard() {
                 <CardTitle>
                   <Link href="/dashboard/orders">Recent Sales</Link>
                 </CardTitle>
-                <CardDescription>
-                  You made 0 sales this Event.
-                </CardDescription>
+                <CardDescription>You made 0 sales this Event.</CardDescription>
               </CardHeader>
               <CardContent>
                 <RecentSales />

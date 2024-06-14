@@ -8,7 +8,7 @@ import { BrandFormSchema } from "./BrandFormSchema";
 export type Brand = z.infer<typeof BrandFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
+  "Tigger Action", id;
   try {
     const user = await prisma.brand.delete({
       where: {
@@ -16,12 +16,12 @@ export const handleDelete = async (id: string) => {
       },
     });
     if (user) {
-      console.log(`Deleted successful!`);
+      `Deleted successful!`;
       revalidatePath("/dashboard/brnad");
       return user;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -29,7 +29,7 @@ export const handleDelete = async (id: string) => {
 export const createBrand = async (data: Brand) => {
   try {
     //ts-ignore
-    console.log("action", data);
+    "action", data;
     let { name, code, logo, description, status } = data;
 
     if (!name || !code) return false;
@@ -39,13 +39,13 @@ export const createBrand = async (data: Brand) => {
       data: { name, code, description, logo, status },
     });
     if (createBrand) {
-      console.log(`${createBrand.name} Create successful!`);
+      `${createBrand.name} Create successful!`;
 
       revalidatePath("/dashboard/brand");
       return createBrand;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -67,14 +67,14 @@ export const updateBrand = async (id: string, data: Brand) => {
       //@ts-ignore
       data: { name, code, logo, description, status },
     });
-    console.log(updateUser);
+    updateUser;
     if (updateUser) {
-      console.log(`${updateUser.name} Update successful!`);
+      `${updateUser.name} Update successful!`;
       revalidatePath("/dashboard/users");
       return updateUser;
     }
   } catch (err) {
-    console.log("err", err);
+    "err", err;
     return err;
   }
 };
@@ -98,7 +98,7 @@ export const brandDw = async () => {
       },
     ];
 
-    // console.log(brands);
+    //  (brands);
     brands.map(
       (brand) =>
         (dw = [

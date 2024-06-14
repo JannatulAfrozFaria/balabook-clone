@@ -8,30 +8,27 @@ import { DamageFormSchema } from "./create/DamageFromSchema";
 export type Damage = z.infer<typeof DamageFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  console.log("Tigger Action", id);
   try {
     const deleteProduct = await prisma.product.delete({
       where: {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.name} deleted successful!`);
+      `${deleteProduct.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
 
 export const saveDamage = async (data: Damage) => {
   const newDamageNo = await generateId("adj");
-  console.log("AdjustNo", newDamageNo);
   try {
-    console.log("action", data);
     let {
       id,
       userId,
@@ -44,6 +41,7 @@ export const saveDamage = async (data: Damage) => {
       totalItem,
       grossTotal,
       grossTotalRound,
+      status,
     } = data;
 
     // if (!id || !articleCode) return false;
@@ -65,17 +63,19 @@ export const saveDamage = async (data: Damage) => {
           totalItem,
           grossTotal,
           grossTotalRound,
+          status,
         },
       });
 
       if (updateUnit) {
-        console.log(`${updateUnit.id} Update successful!`);
+        `${updateUnit.id} Update successful!`;
 
         revalidatePath("/dashboard/adjust");
         return updateUnit;
       }
     } else {
       const createDamage = await prisma.damage.create({
+        //@ts-ignore
         data: {
           user: { connect: { id: userId } },
           damageNo: newDamageNo,
@@ -86,17 +86,42 @@ export const saveDamage = async (data: Damage) => {
           totalItem,
           grossTotal,
           grossTotalRound,
+          status,
         },
       });
 
       if (createDamage) {
-        console.log(`${createDamage.id} Create successful!`);
+        `${createDamage.id} Create successful!`;
         revalidatePath("/dashboard/adjust");
         return createDamage;
       }
     }
   } catch (err) {
-    console.log(err);
+    err;
+    return false;
+  }
+};
+
+export const UpdateDamageStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.damage.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/damage");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
     return false;
   }
 };

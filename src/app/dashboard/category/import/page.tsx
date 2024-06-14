@@ -87,18 +87,18 @@ export default function CustomerImportPage() {
       setSubCategories(CSV);
     }
   }, [CSV]);
-  console.log("printing", subCategories, isParent);
+  "printing", subCategories, isParent;
 
-  // console.log("csv", isParent);
+  //  ("csv", isParent);
 
   const handelImportSubCategory = async () => {
-    console.log("import", subCategories, categories, isParent);
+    "import", subCategories, categories, isParent;
 
     if (isParent) {
       const category = await importCategory(categories, isParent);
     } else {
       const subCategory = await importCategory(subCategories, isParent);
-      console.log(subCategory);
+      subCategory;
     }
   };
 

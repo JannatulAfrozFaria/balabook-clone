@@ -53,10 +53,10 @@ export type Product = {
 const handleDeleteTigger = async (id: string) => {
   const del = await handleDelete(id);
   if (del) {
-    console.log(`Offer Delete Successful!`);
+    `Offer Delete Successful!`;
     // toast.success(`${del.name} deleted successful!`);
   } else {
-    console.log(`Deleted Faild!`);
+    `Deleted Faild!`;
   }
 };
 
@@ -148,7 +148,7 @@ export const columns: ColumnDef<Product>[] = [
       const product = row.original;
       const dispatch = useDispatch();
       const adjustData = useSelector((state: RootState) => state.adjust);
-      console.log("adjustData", adjustData);
+      "adjustData", adjustData;
       const handleSelectChange = (value: string) => {
         const exist = adjustData.products.find(
           (adjustProduct: any) => adjustProduct.id === product.id

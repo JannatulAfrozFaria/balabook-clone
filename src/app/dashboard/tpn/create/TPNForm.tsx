@@ -81,7 +81,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
   const sessionUserId = session?.user?.id;
 
   const handleWhFrom = (id: string) => {
-    console.log("handleWhFrom", id);
+    "handleWhFrom", id;
     dispatch(selectWhFrom(id));
   };
   const handleWhTo = (id: string) => {
@@ -97,13 +97,13 @@ function TPNForm({ entry }: ProductFormEditProps) {
   };
 
   const onSearchChange = (query: any) => {
-    console.log(query);
+    query;
   };
 
   const handleSelectedProduct = async (productId: string) => {
     try {
       // Check if exist
-      console.log("productidtpn", tpnData);
+      "productidtpn", tpnData;
       const exist = tpnData.products.find(
         (poProduct: any) => poProduct.id === productId
       );
@@ -126,7 +126,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
       } else {
         // add new
         const product = await searchProductById(productId);
-        // console.log("hello", product);
+        //  ("hello", product);
         newProduct = {
           id: product?.id,
           name: product?.name,
@@ -154,7 +154,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
   const [CSV, setCSV] = useState<any>([]);
 
   const handelImport = async () => {
-    // console.log("Import", CSV);
+    //  ("Import", CSV);
     if (CSV?.length > 0) {
       const product = await importProduct(CSV);
       if (product) {

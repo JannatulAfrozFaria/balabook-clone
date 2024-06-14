@@ -39,7 +39,7 @@ export function BarCodeAlertDialog({
     setOpen(false);
   };
   const componentRef = useRef<HTMLDivElement>(null);
-  // console.log(product);
+  //  (product);
 
   // Output: One Hundred
 

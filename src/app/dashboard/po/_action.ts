@@ -15,14 +15,14 @@ export const handleDelete = async (id: string) => {
         id: id,
       },
     });
-    // console.log(deleteOffer);
+    //  (deleteOffer);
     if (deleteProduct) {
-      console.log(`${deleteProduct.poNo} deleted successful!`);
+      `${deleteProduct.poNo} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
   } catch (err) {
-    console.log(err);
+    err;
     return false;
   }
 };
@@ -33,8 +33,8 @@ export const savePo = async (data: PoSchema) => {
     // const validatedData = POFormSchema.parse(data);
 
     const newPoNo = await generateId("po");
-    console.log("newPoNo:", newPoNo);
-    console.log("data:", data);
+    "newPoNo:", newPoNo;
+    "data:", data;
 
     let {
       id,
@@ -86,7 +86,7 @@ export const savePo = async (data: PoSchema) => {
       });
 
       if (createPO) {
-        console.log(`${createPO.poNo} updated successfully!`);
+        `${createPO.poNo} updated successfully!`;
         revalidatePath("/dashboard/po");
         return createPO;
       }
@@ -112,7 +112,7 @@ export const savePo = async (data: PoSchema) => {
       });
 
       if (updatePo) {
-        console.log(`${updatePo.poNo} created successfully!`);
+        `${updatePo.poNo} created successfully!`;
         revalidatePath("/dashboard/po");
         return updatePo;
       }
@@ -180,7 +180,7 @@ export const poDw = async () => {
       },
     ];
 
-    // console.log(po);
+    //  (po);
     purchaseOrder.map(
       (po) =>
         (dw = [
@@ -195,5 +195,29 @@ export const poDw = async () => {
   } catch (error) {
     console.error("Error fetching parent PO:", error);
     throw new Error("Failed to fetch PO");
+  }
+};
+
+export const UpdatePOStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.purchaseOrder.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/po");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
+    return false;
   }
 };
