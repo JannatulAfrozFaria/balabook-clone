@@ -8,7 +8,6 @@ import { UserFormSchema } from "./UserFormSchema";
 export type User = z.infer<typeof UserFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  "Tigger Action", id;
   try {
     const user = await prisma.user.delete({
       where: {
@@ -30,7 +29,6 @@ export const handleDelete = async (id: string) => {
 export const createUser = async (data: User) => {
   try {
     //ts-ignore
-    "action", data;
     let { name, phone, email, username, password, type, status } = data;
 
     if (!name || !phone || !username || !password) return false;
@@ -83,7 +81,6 @@ export const updateUser = async (id: string, data: User) => {
       return updateUser;
     }
   } catch (err) {
-    "err", err;
     return err;
   }
 };
@@ -109,12 +106,34 @@ export const createUserLogs = async (
     });
 
     if (createUserLog) {
-      `User log created successfully!`, createUserLog;
       // revalidatePath("/dashboard/user-logs"); // Adjust the path as needed
       return createUserLog;
     }
   } catch (err) {
-    "Error creating user log:", err;
+    return false;
+  }
+};
+
+export const UpdateUserStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/user");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
     return false;
   }
 };

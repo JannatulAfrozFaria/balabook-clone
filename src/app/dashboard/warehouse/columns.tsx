@@ -12,10 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
-import { handleDelete } from "./_action";
+import { UpdateWarehouseStatus, handleDelete } from "./_action";
 import { useState } from "react";
 import EditUnitSheet from "./editUnitSheet";
 import { Toaster } from "@/components/ui/sonner";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 
 export type Offer = {
   id: string;
@@ -68,6 +69,10 @@ export const columns: ColumnDef<Offer>[] = [
     header: "Phone",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+  },
+  {
     accessorKey: "action",
     header: () => <div className="">Action</div>,
     id: "actions",
@@ -75,6 +80,28 @@ export const columns: ColumnDef<Offer>[] = [
       const unit = row.original;
       const [open, setOpen] = useState(false);
       const handleEdit = () => setOpen(true);
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+
+      // Button Function
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
+
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateWarehouseStatus(unit.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
 
       return (
         <>
@@ -91,13 +118,27 @@ export const columns: ColumnDef<Offer>[] = [
               <DropdownMenuItem onClick={() => handleEdit()}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDeleteTigger(unit.id)}>
-                Delete
-              </DropdownMenuItem>
+              {unit.status === "Active" ? (
+                <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
+                  Inactive
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => handleUpdate("Active")}>
+                  Active
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <EditUnitSheet entry={unit} open={open} setOpen={setOpen} />
           <Toaster />
+
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="Supplier"
+            operation={status}
+          />
         </>
       );
     },

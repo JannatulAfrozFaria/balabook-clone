@@ -23,7 +23,9 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import axios from "axios";
-import { handleDelete } from "./_action";
+import { UpdateUserStatus, handleDelete } from "./_action";
+import { useState } from "react";
+import StatusUpdatePop from "@/components/StatusUpdatePop";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type User = {
@@ -31,7 +33,7 @@ export type User = {
   name: string;
   username: string;
   phone: string;
-  status: "AActive" | "Deactive";
+  status: "Active" | "Inactive";
   email: string;
   type: string;
 };
@@ -117,31 +119,65 @@ export const columns: ColumnDef<User>[] = [
     id: "actions",
     cell: ({ row }) => {
       const user = row.original;
+      const [alertOpen, setAlertOpen] = useState(false);
+      const [status, setStatus] = useState("");
+      const handleUpdate = (operation: string) => {
+        setStatus(operation);
+        setAlertOpen(true);
+      };
 
+      // Alert Function
+      const updateStatus = async () => {
+        setAlertOpen(false);
+        const updateStatus = await UpdateUserStatus(user.id, status);
+        //@ts-ignore
+        if (updateStatus) {
+          // tosst successfully updated
+          console.log("success");
+        } else {
+          // toast successfully failed
+          console.log("failed");
+        }
+      };
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {/* <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(user.id)}
             >
               View Details
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/users/${user.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDeleteTigger(user.id)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`/dashboard/users/${user.id}`}>Edit</Link>
+              </DropdownMenuItem>
+              {user.status === "Active" ? (
+                <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
+                  Inactive
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => handleUpdate("Active")}>
+                  Active
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <StatusUpdatePop
+            alertOpen={alertOpen}
+            setAlertOpen={setAlertOpen}
+            updateStatus={updateStatus}
+            model="User"
+            operation={status}
+          />
+        </>
       );
     },
   },

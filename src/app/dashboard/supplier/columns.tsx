@@ -29,7 +29,7 @@ export type Supplier = {
   company: string;
   designation: string;
   description: string;
-  status: "active" | "deactive";
+  status: "Active" | "Inactive";
 };
 
 const handleDeleteTigger = async (id: string) => {
@@ -110,9 +110,16 @@ export const columns: ColumnDef<Supplier>[] = [
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
-                Inactive
-              </DropdownMenuItem>
+
+              {supplier.status === "Active" ? (
+                <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
+                  Inactive
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => handleUpdate("Active")}>
+                  Active
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <EditSupplierSheet open={open} entry={supplier} setOpen={setOpen} />

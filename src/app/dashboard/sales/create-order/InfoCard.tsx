@@ -60,7 +60,7 @@ export function InfoCard() {
   const dispatch = useDispatch();
   const [activate, setActive] = useState(false);
   const [savedData, setSavedData] = useState();
-
+  const [alertOpen, setAlertOpen] = useState(false);
   const posData = useSelector((state: RootState) => state.sales);
 
   const totalRecievable = posData?.total;
@@ -94,23 +94,28 @@ export function InfoCard() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      "product", posData;
       //@ts-ignore
       // const order = await saveOrder(posData);
       const order = await createOrder(posData);
       if (order) {
-        "order", order;
         createUserLogs(order?.userId, order?.id, "Sale", "Create");
         setActive(true);
+        //@ts-ignore
         setSavedData(order);
         // Dispatch the reset action to clear the poSlice
         dispatch(reset());
 
         // Clear relevant local storage items
         localStorage.removeItem("sales_cart");
+        setAlertOpen(false);
         toast.success("Order Creation Success :)");
       } else {
-        toast.success("Order Creation Failed :(");
+        // console.log("posData", posData?.userId === "");
+        if (posData.userId.length < 1) {
+          toast.success("Please Select Customer");
+        } else {
+          toast.success("Order Creation Failed :(");
+        }
       }
       //  ("order", order);
     } catch (error) {
@@ -242,7 +247,7 @@ export function InfoCard() {
       </div>
       <Separator orientation="horizontal" className="mt-2" />
       <div className="w-full flex justify-center gap-4  mt-8">
-        <AlertDialog>
+        <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
           <Button>
             <RotateCcw size={18} className="mr-2" /> Reset
           </Button>

@@ -173,9 +173,15 @@ export const columns: ColumnDef<Product>[] = [
               <DropdownMenuItem>
                 <Link href={`/dashboard/products/${product.id}`}>Edit</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
-                Delete
-              </DropdownMenuItem>
+              {product.status === "Active" ? (
+                <DropdownMenuItem onClick={() => handleUpdate("Inactive")}>
+                  Inactive
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => handleUpdate("Active")}>
+                  Active
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <StatusUpdatePop

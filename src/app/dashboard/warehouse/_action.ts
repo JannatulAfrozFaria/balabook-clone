@@ -7,7 +7,6 @@ import { WireHouseFormSchema } from "./WireHouseFormSchema";
 export type Unit = z.infer<typeof WireHouseFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  "Tigger Action", id;
   try {
     const unit = await prisma.wareHouse.delete({
       where: {
@@ -28,7 +27,6 @@ export const handleDelete = async (id: string) => {
 export const saveUnit = async (id: string, data: Unit) => {
   try {
     //ts-ignore
-    "action", data;
     let { name, company, code, address, type, email, phone, status } = data;
 
     if (!name) return false;
@@ -43,6 +41,7 @@ export const saveUnit = async (id: string, data: Unit) => {
           company,
           code,
           address,
+          //@ts-ignore
           type,
           email,
           phone,
@@ -63,6 +62,7 @@ export const saveUnit = async (id: string, data: Unit) => {
           company,
           code,
           address,
+          //@ts-ignore
           type,
           email,
           phone,
@@ -117,5 +117,29 @@ export const whDw = async () => {
   } catch (error) {
     console.error("Error fetching parent unit:", error);
     throw new Error("Failed to fetch unit");
+  }
+};
+
+export const UpdateWarehouseStatus = async (id: string, status: string) => {
+  // console.log("Triggered update", id, status);
+  try {
+    const update = await prisma.wareHouse.update({
+      where: {
+        id: id,
+      },
+      //@ts-ignore
+      data: { status: status },
+    });
+
+    if (update) {
+      console.log("update successful");
+      revalidatePath("/dashboard/supplier");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("sales update error", error);
+    return false;
   }
 };

@@ -62,10 +62,58 @@ const addToDb = (product: Product): boolean => {
     ];
   }
 
-  "stored Cart:", storedCart;
-  "sales cart:", salesCart;
-
   localStorage.setItem("sales_cart", JSON.stringify(salesCart));
+  return true;
+};
+
+const addToReturnDb = (product: Product): boolean => {
+  let returnCart: Cart = [];
+
+  // Process the cart item data
+  const item: Product = {
+    id: product?.id,
+    name: product?.name,
+    articleCode: product?.articleCode,
+    //@ts-ignore
+    mrp: product?.mrp | 0,
+    tp: product.tp,
+    hsCode: product.hsCode,
+    openingQty: product.openingQty,
+    closingQty: product.closingQty,
+    qty: 1,
+    total: product.tp,
+    order: returnCart.length > 1 ? returnCart.length + 1 : 1,
+  };
+
+  // check cart data
+  // get the shopping cart from local storage
+  const storedCart = getStoredCart();
+  if (storedCart) {
+    storedCart;
+    const selectedItem = storedCart.find(
+      (p) => p.articleCode === item.articleCode
+    );
+    if (selectedItem) {
+      return false;
+    } else {
+      returnCart = [
+        ...storedCart,
+        {
+          ...item,
+          order: storedCart.length > 0 ? storedCart.length + 1 : 1,
+        },
+      ];
+    }
+  } else {
+    returnCart = [
+      {
+        ...item,
+        order: 1,
+      },
+    ];
+  }
+
+  localStorage.setItem("return_cart", JSON.stringify(returnCart));
   return true;
 };
 
@@ -110,22 +158,6 @@ const removeQuantity = (id: string): boolean => {
   return false;
 };
 
-const addQuantity = (id: string): boolean => {
-  const storedCart = localStorage.getItem("sales_cart");
-  if (storedCart) {
-    const salesCart: Cart = JSON.parse(storedCart);
-    const item = salesCart.find((item) => item.articleCode === id);
-    if (item) {
-      item.qty = (item.qty || 0) + 1;
-      const restItems = salesCart.filter((item) => item.articleCode !== id);
-      restItems.push(item);
-      localStorage.setItem("sales_cart", JSON.stringify(restItems));
-      return true;
-    }
-  }
-  return false;
-};
-
 const customQuantity = (id: string, value: number): boolean => {
   const storedCart = localStorage.getItem("sales_cart");
   if (storedCart) {
@@ -148,6 +180,7 @@ const customTP = (id: string, value: number): boolean => {
     const salesCart: Cart = JSON.parse(storedCart);
     const item = salesCart.find((item) => item.articleCode === id);
     if (item) {
+      //@ts-ignore
       item.unit = value.toString(); // Assuming unit is a string, if not adjust accordingly
       const restItems = salesCart.filter((item) => item.articleCode !== id);
       restItems.push(item);
@@ -167,7 +200,7 @@ const deletepurchaseCart = (): boolean => {
 
 export {
   addToDb,
-  addQuantity,
+  addToReturnDb,
   removeQuantity,
   getStoredCart,
   removeFromDb,

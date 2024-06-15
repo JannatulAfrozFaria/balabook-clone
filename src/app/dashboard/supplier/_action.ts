@@ -7,7 +7,6 @@ import { SupplierFormSchema } from "./SupplierFormSchema";
 export type Supplier = z.infer<typeof SupplierFormSchema>;
 
 export const handleDelete = async (id: string) => {
-  "Tigger Action", id;
   try {
     const supplier = await prisma.supplier.delete({
       where: {
@@ -28,7 +27,6 @@ export const handleDelete = async (id: string) => {
 export const saveSupplier = async (id: string, data: Supplier) => {
   try {
     //ts-ignore
-    "action", data;
     let {
       name,
       phone,

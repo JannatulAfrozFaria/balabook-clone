@@ -47,7 +47,10 @@ export default async function OrderPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-            <UserDataTable columns={columns} data={data} />
+            {
+              //@ts-ignore
+              <UserDataTable columns={columns} data={data} />
+            }
           </div>
         </div>
       </div>

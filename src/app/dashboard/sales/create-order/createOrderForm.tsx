@@ -1,13 +1,10 @@
 "use client";
 import { Input } from "@/components/ui/input";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Plus, SendHorizonal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,26 +28,32 @@ import { RootState } from "@/app/redux-store/store";
 import {
   setCustomerId,
   setProducts,
+  setReturnProducts,
   setUserId,
   setWarehouseId,
 } from "@/app/redux-store/Slice/SalesSlice";
-import { addToDb } from "@/lib/salesDb";
+import { addToDb, addToReturnDb } from "@/lib/salesDb";
 import SelectCustomer from "@/components/ui/SelectCustomer";
 import { useSession } from "next-auth/react";
+import { log } from "console";
 
 interface ProductFormEditProps {
   entry: any;
 }
+
 const data: any = [];
+
 function CreateOrderForm({ entry }: ProductFormEditProps) {
   const dispatch = useDispatch();
   const { data: session } = useSession();
   const [id, setId] = useState<string>("");
   const [mcId, setMcId] = useState<string>("");
+  const [returnActivate, setReturnActivate] = useState();
   const form = useForm();
 
+  console.log("returnActivate", returnActivate);
+
   const handleCustomerId = (id: string) => {
-    "customer id", id;
     //@ts-ignore
     dispatch(setCustomerId(id));
   };
@@ -74,48 +77,111 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
   //product selection function
   const handleSelectedProduct = async (productId: string) => {
     try {
-      // Check if exist
-      const exist = salesData.products.find(
-        (poProduct: any) => poProduct.id === productId
-      );
-      const rest = salesData.products.filter(
-        (poProduct: any) => poProduct.id !== productId
-      );
-      let newProduct;
-      if (exist) {
-        // inrease qty
+      // TODO:: check if Return
+      if (salesData.returnActive) {
+        // TODO: IF RETURN
+        // Check if exist
+        const exist = salesData.returnProducts.find(
+          (poProduct: any) => poProduct.id === productId
+        );
+        const rest = salesData.returnProducts.filter(
+          (poProduct: any) => poProduct.id !== productId
+        );
+        console.log(salesData.returnProducts, rest, exist);
+        let newProduct;
+        if (exist) {
+          // increase qty
+          newProduct = {
+            ...exist,
+            qty: exist.qty + 1,
+            total: (exist.qty + 1) * exist.tp,
+          };
+          addToReturnDb(newProduct);
+          dispatch(setReturnProducts([...rest, newProduct]));
+        } else {
+          // add new
+          const product = await searchProductById(productId);
 
-        newProduct = {
-          ...exist,
-          qty: exist.qty + 1,
-          total: (exist.qty + 1) * exist.tp,
-        };
-        dispatch(setProducts(rest));
-        addToDb(newProduct);
-        dispatch(setProducts([...rest, newProduct]));
+          newProduct = {
+            id: product?.id,
+            name: product?.name,
+            articleCode: product?.articleCode,
+            //@ts-ignore
+            mrp: product?.mrp !== null ? product.mrp : 0,
+            tp: product?.tp !== null ? product.tp : 0,
+            hsCode: product.hsCode,
+            openingQty: product.openingQty,
+            cogs: product.cogs,
+            closingQty: product.closingQty,
+            qty: 1,
+            // @ts-ignore
+            total: 1 * product?.tp,
+          };
+        }
+
+        if (salesData.returnActive) {
+          addToReturnDb(newProduct);
+          const product = [...rest, newProduct];
+          console.log("return product", product);
+          console.log("return product", product);
+          dispatch(setReturnProducts([...rest, newProduct]));
+        } else {
+          addToDb(newProduct);
+          dispatch(setProducts([...rest, newProduct]));
+        }
       } else {
-        // add new
-        const product = await searchProductById(productId);
+        // TODO: Not Return
+        // Check if exist
+        const exist = salesData.products.find(
+          (poProduct: any) => poProduct.id === productId
+        );
+        const rest = salesData.products.filter(
+          (poProduct: any) => poProduct.id !== productId
+        );
+        console.log(salesData.products, rest, exist);
+        let newProduct;
+        if (exist) {
+          // increase qty
+          newProduct = {
+            ...exist,
+            qty: exist.qty + 1,
+            total: (exist.qty + 1) * exist.tp,
+          };
+          dispatch(setProducts(rest));
+          addToDb(newProduct);
+          dispatch(setProducts([...rest, newProduct]));
+        } else {
+          // add new
+          const product = await searchProductById(productId);
 
-        newProduct = {
-          id: product?.id,
-          name: product?.name,
-          articleCode: product?.articleCode,
-          //@ts-ignore
-          mrp: product?.mrp !== null ? product.mrp : 0,
-          tp: product?.tp !== null ? product.tp : 0,
-          hsCode: product.hsCode,
-          openingQty: product.openingQty,
-          cogs: product.cogs,
-          closingQty: product.closingQty,
-          qty: 1,
-          // @ts-ignore
-          total: 1 * product?.tp,
-        };
+          newProduct = {
+            id: product?.id,
+            name: product?.name,
+            articleCode: product?.articleCode,
+            //@ts-ignore
+            mrp: product?.mrp !== null ? product.mrp : 0,
+            tp: product?.tp !== null ? product.tp : 0,
+            hsCode: product.hsCode,
+            openingQty: product.openingQty,
+            cogs: product.cogs,
+            closingQty: product.closingQty,
+            qty: 1,
+            // @ts-ignore
+            total: 1 * product?.tp,
+          };
+        }
+
+        if (salesData.returnActive) {
+          addToReturnDb(newProduct);
+          const product = [...rest, newProduct];
+          console.log("return product", product);
+          console.log("return product", product);
+          dispatch(setReturnProducts([...rest, newProduct]));
+        } else {
+          addToDb(newProduct);
+          dispatch(setProducts([...rest, newProduct]));
+        }
       }
-
-      addToDb(newProduct);
-      dispatch(setProducts([...rest, newProduct]));
     } catch (error) {
       console.error("Error fetching product by id:", error);
     }
@@ -181,17 +247,14 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
 
             {/* invoice form */}
             <div className="w-1/3 mx-4">
-              <InfoCard salesData={salesData} />
+              {
+                //@ts-ignore
+                <InfoCard salesData={salesData} />
+              }
+              {/* {returnActive && <div>Return is Active</div>} */}
             </div>
           </div>
-
-          {/* <div className="w-full flex justify-end">
-            <Button type="submit" className="mr-4">
-              Submit <SendHorizonal className="ml-2 h-4 w-4" />{" "}
-            </Button>
-          </div> */}
         </form>
-        {/* <DevTool control={form.control} /> */}
       </Form>
       <Toaster />
     </div>

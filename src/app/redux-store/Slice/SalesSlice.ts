@@ -30,6 +30,8 @@ const initialState: OrderFormSchema = {
     mfs: { name: "bkash", amount: 0 },
   },
   status: "Ordered",
+  returnActive: false,
+  billActive: false,
 };
 
 export const salesSlice = createSlice({
@@ -122,6 +124,26 @@ export const salesSlice = createSlice({
         totalItem: products.length,
       };
     },
+    setReturnProducts: (state, action) => {
+      const products = action.payload;
+      // const totalItem = products.length;
+      // //@ts-ignore
+      const total = products.reduce((acc, product) => acc + product.total, 0);
+      const grossTotal = products.reduce(
+        (acc, product) => acc + product.total,
+        0
+      );
+      // const grossTotal = total - state.tax - state.discount;
+      // const grossTotalRound = ceil(grossTotal);
+      return {
+        ...state,
+        returnProducts: products,
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: products.length,
+      };
+    },
     setCash: (state, action) => {
       return {
         ...state,
@@ -185,6 +207,18 @@ export const salesSlice = createSlice({
         totalRecieved: action.payload,
       };
     },
+    setReturnActive: (state, action) => {
+      return {
+        ...state,
+        returnActive: action.payload,
+      };
+    },
+    setBillActive: (state, action) => {
+      return {
+        ...state,
+        billActive: action.payload,
+      };
+    },
     reset: (state) => (state = initialState),
     // Add more reducers as needed
   },
@@ -196,6 +230,7 @@ export const {
   setAmount,
   setPaidAmount,
   setPaymentMethod,
+  setReturnProducts,
   setNote,
   reset,
   setProducts,
@@ -209,6 +244,8 @@ export const {
   setDiscount,
   setWarehouseId,
   setStatus,
+  setReturnActive,
+  setBillActive,
 } = salesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

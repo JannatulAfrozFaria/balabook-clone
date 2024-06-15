@@ -73,6 +73,7 @@ function AdjustForm({ entry }: ProductFormEditProps) {
   const dispatch = useDispatch();
   const form = useForm();
   const { data: session } = useSession();
+  //@ts-ignore
   const sessionUserId = session?.user?.id;
 
   useEffect(() => {
@@ -87,7 +88,6 @@ function AdjustForm({ entry }: ProductFormEditProps) {
 
   const adjustData = useSelector((state: RootState) => state.adjust);
   const handleSelectedProduct = async (productId: string) => {
-    "handleSelectedProduct", productId;
     try {
       // Check if exist
       const exist = adjustData?.products.find(
@@ -137,7 +137,6 @@ function AdjustForm({ entry }: ProductFormEditProps) {
   };
 
   const handleWarehouse = (id: string) => {
-    "warehouseID", id;
     // form.setValue("warehouseId", id);
     dispatch(setWareHouseId(id));
   };
@@ -155,7 +154,6 @@ function AdjustForm({ entry }: ProductFormEditProps) {
 
   async function onSubmit() {
     try {
-      "product", adjustData;
       //@ts-ignore
       const product = await saveAdjust(adjustData);
       if (product) {
@@ -170,8 +168,6 @@ function AdjustForm({ entry }: ProductFormEditProps) {
       console.error(error);
     }
   }
-
-  "adjustProduct", adjustData;
 
   return (
     <div className="flex pt-8">
