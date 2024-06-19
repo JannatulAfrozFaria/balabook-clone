@@ -1,8 +1,9 @@
 "use client";
 //@ts-ignore
 import { OrderFormSchema } from "@/app/dashboard/orders/OrderFormSchema";
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { Product } from "@prisma/client";
 
 // Define the initial state using that type
 const initialState: OrderFormSchema = {
@@ -13,8 +14,9 @@ const initialState: OrderFormSchema = {
   userId: "",
   customerId: "",
   products: [],
+  orderCalculation: [],
   returnProducts: [],
-  returnCalculation: 0,
+  returnCalculation: [],
   totalItem: 0,
   total: 0,
   discount: 0,
@@ -38,6 +40,7 @@ export const salesSlice = createSlice({
   name: "salesSlice",
   initialState,
   reducers: {
+    // individual Data
     setUserId: (state, action) => {
       return {
         ...state,
@@ -102,46 +105,6 @@ export const salesSlice = createSlice({
       return {
         ...state,
         status: action.payload,
-      };
-    },
-    setProducts: (state, action) => {
-      const products = action.payload;
-      // const totalItem = products.length;
-      // //@ts-ignore
-      const total = products.reduce((acc, product) => acc + product.total, 0);
-      const grossTotal = products.reduce(
-        (acc, product) => acc + product.total,
-        0
-      );
-      // const grossTotal = total - state.tax - state.discount;
-      // const grossTotalRound = ceil(grossTotal);
-      return {
-        ...state,
-        products: products,
-        total: total,
-        grossTotal: grossTotal,
-        grossTotalRound: Math.round(grossTotal),
-        totalItem: products.length,
-      };
-    },
-    setReturnProducts: (state, action) => {
-      const products = action.payload;
-      // const totalItem = products.length;
-      // //@ts-ignore
-      const total = products.reduce((acc, product) => acc + product.total, 0);
-      const grossTotal = products.reduce(
-        (acc, product) => acc + product.total,
-        0
-      );
-      // const grossTotal = total - state.tax - state.discount;
-      // const grossTotalRound = ceil(grossTotal);
-      return {
-        ...state,
-        returnProducts: products,
-        total: total,
-        grossTotal: grossTotal,
-        grossTotalRound: Math.round(grossTotal),
-        totalItem: products.length,
       };
     },
     setCash: (state, action) => {
@@ -219,6 +182,113 @@ export const salesSlice = createSlice({
         billActive: action.payload,
       };
     },
+
+    //array type data
+    setProducts: (state, action: PayloadAction<Product[]>) => {
+      state.products = action.payload;
+      salesSlice.caseReducers.setOrderCalculation(state);
+    },
+    setOrderCalculation: (state) => {
+      const products = state.products;
+      const total = products.reduce((acc, product) => acc + product.total, 0);
+      const grossTotal = products.reduce(
+        (acc, product) => acc + product.total,
+        0
+      );
+
+      state.orderCalculation = {
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: products.length,
+      };
+    },
+    setReturnProducts: (state, action: PayloadAction<Product[]>) => {
+      state.returnProducts = action.payload;
+      salesSlice.caseReducers.setReturnCalculation(state);
+    },
+
+    //calculations
+    setReturnCalculation: (state) => {
+      const returnProducts = state.returnProducts;
+      const total = returnProducts.reduce(
+        (acc, product) => acc + product.total,
+        0
+      );
+      const grossTotal = returnProducts.reduce(
+        (acc, product) => acc + product.total,
+        0
+      );
+
+      state.returnCalculation = {
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: returnProducts.length,
+      };
+    },
+    moveProductToReturn: (state, action) => {
+      const productId = action.payload;
+      const productIndex = state.products.findIndex(
+        (product: any) => product.id === productId
+      );
+
+      if (productIndex !== -1) {
+        const product = state.products[productIndex];
+        state.products.splice(productIndex, 1);
+        state.returnProducts.push(product);
+
+        // Recalculate totals
+        state.total = state.products.reduce(
+          (acc: any, product: any) => acc + product.total,
+          0
+        );
+        state.grossTotal = state.products.reduce(
+          (acc: any, product: any) => acc + product.total,
+          0
+        );
+        state.grossTotalRound = Math.round(state.grossTotal);
+        state.totalItem = state.products.length;
+
+        // Recalculate return product totals
+        state.returnCalculation = state.returnProducts.reduce(
+          (acc: any, product: any) => acc + product.total,
+          0
+        );
+      }
+    },
+    removeProductFromReturn: (state, action) => {
+      const productId = action.payload;
+      const productIndex = state.returnProducts.findIndex(
+        (product: any) => product.id === productId
+      );
+
+      if (productIndex !== -1) {
+        const product = state.returnProducts[productIndex];
+        state.returnProducts.splice(productIndex, 1);
+        state.products.push(product);
+
+        // Recalculate totals
+        state.total = state.products.reduce(
+          (acc: any, product: any) => acc + product.total,
+          0
+        );
+        state.grossTotal = state.products.reduce(
+          (acc: any, product: any) => acc + product.total,
+          0
+        );
+        state.grossTotalRound = Math.round(state.grossTotal);
+        state.totalItem = state.products.length;
+
+        // Recalculate return product totals
+        state.returnCalculation = state.returnProducts.reduce(
+          (acc: any, product: any) => acc + product.total,
+          0
+        );
+      }
+    },
+
+    //reset
     reset: (state) => (state = initialState),
     // Add more reducers as needed
   },
@@ -245,10 +315,14 @@ export const {
   setWarehouseId,
   setStatus,
   setReturnActive,
+  setReturnCalculation,
   setBillActive,
+  moveProductToReturn,
+  removeProductFromReturn,
+  setOrderCalculation,
 } = salesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCount = (state: RootState) => state.purchaseOrder;
+export const selectCount = (state: RootState) => state.sales;
 
 export default salesSlice.reducer;

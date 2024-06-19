@@ -98,7 +98,9 @@ export const columns: ColumnDef<Offer>[] = [
 
           newProduct = {
             ...exist,
+            //@ts-ignore
             qty: e.target.value,
+            //@ts-ignore
             total: parseInt(e.target.value) * exist.tp,
           };
           dispatch(setProducts(rest));
@@ -115,6 +117,7 @@ export const columns: ColumnDef<Offer>[] = [
         <input
           type="number"
           value={product.qty}
+          //@ts-ignore
           onChange={handleQtyChange}
           className="w-full border rounded p-1"
         />

@@ -78,7 +78,7 @@ export default function ProductsPage() {
                     ) : (
                       <Square size={18} />
                     )}
-                    Return
+                    VOID Return
                   </label>
                 </div>
               </div>

@@ -82,7 +82,9 @@ function GrnForm({ entry }: ProductFormEditProps) {
   const [poId, setPoId] = useState(false);
 
   const grnData = useSelector((state: RootState) => state.grn);
+
   const selectedProductData =
+    //@ts-ignore
     grnData?.products?.length > 0 ? grnData.products : [];
   //  ("selected product", selectedProductTotal.total);
 
@@ -228,6 +230,7 @@ function GrnForm({ entry }: ProductFormEditProps) {
                 <div className="grid grid-cols-1 md:grid-cols-1 mb-0 mt-2">
                   <GRNSingleProductDataTable
                     columns={grnColumns}
+                    //@ts-ignore
                     data={selectedProductData}
                   />
                   {/* <FormItem className="">

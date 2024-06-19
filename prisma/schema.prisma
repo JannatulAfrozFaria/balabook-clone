@@ -398,11 +398,16 @@ model Sales {
   userId            String    @db.ObjectId // MongoDB ObjectId reference to User
   customer          Customer  @relation(fields: [customerId], references: [id])
   customerId        String    @db.ObjectId // MongoDB ObjectId reference to User\
+
   products          Json[]
+  orderCalculation Json? //totalItem, total, vat, grossTotal, grossTotalRound
+
   returnProducts    Json[]
+  returnCalculation Json? ////totalItem, total, vat, grossTotal, grossTotalRound
+
   soldProducts    Json[]
-  returnCalculation Json?
-  soldCalculation Json?
+  soldCalculation Json? ////totalItem, total, vat, grossTotal, grossTotalRound
+
   totalItem         Int
   total             Int
   discount          Int
@@ -410,12 +415,14 @@ model Sales {
   grossTotal        Int
   grossTotalRound   Int
   totalRecievable   Int
-  totalRecieved     Int
   changeAmount      Int
   paidAmount        Json?
+  totalRecieved     Int
+
   status            DataStatus
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+  @@map("invoiceId")
 }
 
 model Adjust {

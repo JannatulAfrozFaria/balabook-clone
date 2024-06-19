@@ -146,6 +146,10 @@ export function InfoCard() {
         <p>{posData?.total} BDT</p>
       </div>
       <div className="w-full flex justify-between mt-4">
+        <p className="font-medium">Return Product Total:</p>
+        <p>{posData?.returnCalculation?.total} BDT</p>
+      </div>
+      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Vat/Tax Amount:</p>
         <p>{posData?.vat} BDT</p>
       </div>

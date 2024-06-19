@@ -36,6 +36,7 @@ import { addToDb, addToReturnDb } from "@/lib/salesDb";
 import SelectCustomer from "@/components/ui/SelectCustomer";
 import { useSession } from "next-auth/react";
 import { log } from "console";
+import { ReturnDataTable } from "./return-data-table";
 
 interface ProductFormEditProps {
   entry: any;
@@ -187,6 +188,7 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
     }
   };
 
+  console.log("salesData", salesData);
   return (
     <div className="flex">
       <Form {...form}>
@@ -230,18 +232,34 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
               </div>
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
-                <CreateOrderDataTable
-                  columns={columns}
-                  // @ts-ignore
-                  data={
-                    salesData?.products?.length > 0
-                      ? salesData?.products
-                          ?.slice()
-                          // @ts-ignore
-                          .sort((a, b) => a.order - b.order)
-                      : []
-                  }
-                />
+                {salesData?.returnActive ? (
+                  <div className="">
+                    <ReturnDataTable
+                      columns={columns}
+                      data={
+                        salesData?.returnProducts?.length > 0
+                          ? salesData?.returnProducts
+                              ?.slice()
+                              // @ts-ignore
+                              .sort((a, b) => a.order - b.order)
+                          : []
+                      }
+                    />
+                  </div>
+                ) : (
+                  <CreateOrderDataTable
+                    columns={columns}
+                    // @ts-ignore
+                    data={
+                      salesData?.products?.length > 0
+                        ? salesData?.products
+                            ?.slice()
+                            // @ts-ignore
+                            .sort((a, b) => a.order - b.order)
+                        : []
+                    }
+                  />
+                )}
               </div>
             </div>
 

@@ -175,7 +175,6 @@ function ProductForm({ entry }: ProductFormEditProps) {
   };
 
   const products = poData ? poData.products : null;
-  "product", poData;
 
   async function onSubmit(data: PoSchema) {
     try {
@@ -215,10 +214,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                       <FormLabel>Supplier</FormLabel>
 
                       <FormControl>
-                        <SelectSupplier
-                          handleSelect={handleSupplierId}
-                          handleSelect
-                        />
+                        <SelectSupplier handleSelect={handleSupplierId} />
                       </FormControl>
 
                       <FormMessage />
@@ -274,6 +270,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
                       <FormLabel>Country</FormLabel>
                       <Select
                         onValueChange={field.onChange}
+                        //@ts-ignore
                         defaultValue={
                           poData?.country ? poData.country : "China"
                         }
