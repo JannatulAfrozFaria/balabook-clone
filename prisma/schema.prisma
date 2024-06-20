@@ -42,7 +42,7 @@ model Customer {
   name       String
   phone      String       @unique
   email      String?
-  address    Address[]
+  address    Json[] //{street, city, state, zip, country}
   photo      String?
   username   String?
   password   String?
@@ -71,21 +71,6 @@ model Customer {
   @@map("customers")
 }
 
-// Define the Address model
-model Address {
-  id       String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
-  street   String
-  city     String
-  district String
-  division String
-  country  String
-  zip      String
-  type     AddressType // Assuming type is a string, you may adjust according to your needs
-
-  // Define the relationship to Customer
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId String   @db.ObjectId // MongoDB ObjectId reference to Customer
-}
 
 // Define your supplier model
 model Supplier {
@@ -229,7 +214,7 @@ model Unit {
   symbol      String
 
   // Define the relationship for products
-  products Product[]
+  products Product[] 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -251,7 +236,7 @@ model PurchaseOrder {
   supplier        Supplier? @relation(fields: [supplierId], references: [id])
   supplierId      String    @db.ObjectId // MongoDB ObjectId reference to Supplier
   containerId     String?
-  products        Json[] // Array of products in the purchase order
+  products        Json[] // {articleCode, name, quantity, order, mrp,tp,supplier}
   grn             Grn[]
   lcNo            String?
   piNo            String?

@@ -113,6 +113,7 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
             hsCode: product.hsCode,
             openingQty: product.openingQty,
             cogs: product.cogs,
+            order: salesData.returnProducts.length + 1,
             closingQty: product.closingQty,
             qty: 1,
             // @ts-ignore
@@ -166,6 +167,7 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
             openingQty: product.openingQty,
             cogs: product.cogs,
             closingQty: product.closingQty,
+            order: salesData.products.length + 1,
             qty: 1,
             // @ts-ignore
             total: 1 * product?.tp,

@@ -14,7 +14,8 @@ export const handleDelete = async (id: string) => {
     });
     //  (deleteOffer);
     if (deleteProduct) {
-      `${deleteProduct.name} deleted successful!`;
+      //@ts-ignore
+      `${deleteProduct?.name} deleted successful!`;
       revalidatePath("/dashboard/offers");
       return deleteProduct;
     }
@@ -51,7 +52,6 @@ export const createOrder = async (data: CreateOrderSchema) => {
 
   try {
     if (id === "") {
-      ("create");
       const createOrder = await prisma.sales.create({
         data: {
           invoiceId: newInvoiceNo,

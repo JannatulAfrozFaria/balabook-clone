@@ -106,7 +106,7 @@ function WareHouseForm({ entry, setOpen }: CategoryFormEditProps) {
                 <FormItem className="w-full">
                   <FormLabel>Warehouse Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Unit Name" {...field} />
+                    <Input placeholder="Warehouse Name" {...field} />
                   </FormControl>
                   {/* <FormDescription>
                                 This is your public display name.

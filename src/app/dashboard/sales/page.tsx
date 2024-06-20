@@ -26,7 +26,7 @@ export default async function OrderPage() {
     },
   });
 
-  //  ("sales data");
+  console.log("sales data", data.length);
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">

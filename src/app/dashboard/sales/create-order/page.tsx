@@ -8,6 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetProducts,
+  resetReturnProducts,
   setBillActive,
   setReturnActive,
   setStatus,
@@ -21,6 +23,13 @@ export default function ProductsPage() {
   // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setReturnActive(e.target.checked);
   // };
+  const handleReturnActive = () => {
+    dispatch(setReturnActive(!saleData.returnActive));
+    dispatch(resetProducts());
+    if (saleData.returnActive === false) {
+      dispatch(resetReturnProducts());
+    }
+  };
   return (
     <main className="flex min-h-screen flex-col gap-0 w-full">
       <div className="flex-col flex w-full">
@@ -65,9 +74,7 @@ export default function ProductsPage() {
                 /> */}
                 <div
                   className="grid gap-1.5 leading-none"
-                  onClick={() =>
-                    dispatch(setReturnActive(!saleData.returnActive))
-                  }
+                  onClick={handleReturnActive}
                 >
                   <label
                     htmlFor="return"

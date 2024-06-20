@@ -4,19 +4,41 @@ import { OrderFormSchema } from "@/app/dashboard/orders/OrderFormSchema";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Product } from "@prisma/client";
+import { totalmem } from "os";
 
 // Define the initial state using that type
 const initialState: OrderFormSchema = {
   id: "",
   invoiceId: "",
-  source: "TCM",
+  source: "POS",
   warehouseId: "",
   userId: "",
   customerId: "",
   products: [],
-  orderCalculation: [],
+  orderCalculation: {
+    totalmem: 0,
+    total: 0,
+    vat: 0,
+    grossTotal: 0,
+    grossTotalRound: 0,
+  },
   returnProducts: [],
-  returnCalculation: [],
+  returnCalculation: {
+    totalmem: 0,
+    total: 0,
+    vat: 0,
+    grossTotal: 0,
+    grossTotalRound: 0,
+  },
+  soldProducts: [],
+  soldCalculation: {
+    totalmem: 0,
+    total: 0,
+    vat: 0,
+    grossTotal: 0,
+    grossTotalRound: 0,
+  },
+
   totalItem: 0,
   total: 0,
   discount: 0,
@@ -24,13 +46,15 @@ const initialState: OrderFormSchema = {
   grossTotal: 0,
   grossTotalRound: 0,
   totalRecievable: 0,
-  totalRecieved: 0,
-  changeAmount: 0,
+
   paidAmount: {
     cash: 0,
     card: { name: "visa", amount: 0 },
     mfs: { name: "bkash", amount: 0 },
   },
+  totalRecieved: 0,
+  changeAmount: 0,
+
   status: "Ordered",
   returnActive: false,
   billActive: false,
@@ -158,7 +182,7 @@ export const salesSlice = createSlice({
         paidAmount: {
           ...state.paidAmount,
           mfs: {
-            name: state.paidAmount.mfs.name,
+            name: state.paidAmount.mfs,
             amount: action.payload,
           },
         },
@@ -187,11 +211,14 @@ export const salesSlice = createSlice({
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
       salesSlice.caseReducers.setOrderCalculation(state);
+      salesSlice.caseReducers.setSoldCalculation(state);
     },
     setOrderCalculation: (state) => {
       const products = state.products;
+      //@ts-ignore
       const total = products.reduce((acc, product) => acc + product.total, 0);
       const grossTotal = products.reduce(
+        //@ts-ignore
         (acc, product) => acc + product.total,
         0
       );
@@ -202,7 +229,26 @@ export const salesSlice = createSlice({
         grossTotalRound: Math.round(grossTotal),
         totalItem: products.length,
       };
+      salesSlice.caseReducers.updateMainTotal(state);
     },
+    setSoldCalculation: (state) => {
+      const products = state.products;
+      //@ts-ignore
+      const total = products.reduce((acc, product) => acc + product.total, 0);
+      const grossTotal = products.reduce(
+        //@ts-ignore
+        (acc, product) => acc + product.total,
+        0
+      );
+
+      state.soldCalculation = {
+        total: total,
+        grossTotal: grossTotal,
+        grossTotalRound: Math.round(grossTotal),
+        totalItem: products.length,
+      };
+    },
+
     setReturnProducts: (state, action: PayloadAction<Product[]>) => {
       state.returnProducts = action.payload;
       salesSlice.caseReducers.setReturnCalculation(state);
@@ -212,10 +258,12 @@ export const salesSlice = createSlice({
     setReturnCalculation: (state) => {
       const returnProducts = state.returnProducts;
       const total = returnProducts.reduce(
+        //@ts-ignore
         (acc, product) => acc + product.total,
         0
       );
       const grossTotal = returnProducts.reduce(
+        //@ts-ignore
         (acc, product) => acc + product.total,
         0
       );
@@ -226,7 +274,9 @@ export const salesSlice = createSlice({
         grossTotalRound: Math.round(grossTotal),
         totalItem: returnProducts.length,
       };
+      salesSlice.caseReducers.updateMainTotal(state);
     },
+
     moveProductToReturn: (state, action) => {
       const productId = action.payload;
       const productIndex = state.products.findIndex(
@@ -287,7 +337,18 @@ export const salesSlice = createSlice({
         );
       }
     },
-
+    updateMainTotal: (state) => {
+      state.total =
+        state.orderCalculation.total || 0 - state.returnCalculation.total || 0;
+    },
+    resetProducts: (state) => {
+      state.products = initialState.products;
+      salesSlice.caseReducers.setOrderCalculation(state);
+    },
+    resetReturnProducts: (state) => {
+      state.returnProducts = initialState.returnProducts;
+      salesSlice.caseReducers.setReturnCalculation(state);
+    },
     //reset
     reset: (state) => (state = initialState),
     // Add more reducers as needed
@@ -296,6 +357,7 @@ export const salesSlice = createSlice({
 export const {
   setUserId,
   setCustomerId,
+  resetProducts,
   setTotalRecievable,
   setAmount,
   setPaidAmount,
@@ -319,7 +381,10 @@ export const {
   setBillActive,
   moveProductToReturn,
   removeProductFromReturn,
+  updateMainTotal,
   setOrderCalculation,
+  setSoldCalculation,
+  resetReturnProducts,
 } = salesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

@@ -42,6 +42,7 @@ import {
   setMfsAmount,
   setMfsName,
   setReceivedAmount,
+  setStatus,
   setTotalRecievable,
 } from "@/app/redux-store/Slice/SalesSlice";
 import { RootState } from "@/app/redux-store/store";
@@ -85,6 +86,7 @@ export function InfoCard() {
 
     dispatch(setReceivedAmount(totalReceived));
     dispatch(setChangeAmount(changeAmount));
+    dispatch(setStatus("Complete"));
   }, [posData.paidAmount]);
 
   const confirmOrder = () => {};
@@ -142,13 +144,14 @@ export function InfoCard() {
         <p>{posData?.totalItem}</p>
       </div>
       <div className="w-full flex justify-between mt-4">
-        <p className="font-medium">Total:</p>
-        <p>{posData?.total} BDT</p>
-      </div>
-      <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Return Product Total:</p>
         <p>{posData?.returnCalculation?.total} BDT</p>
       </div>
+      <div className="w-full flex justify-between mt-4">
+        <p className="font-medium">Total:</p>
+        <p>{posData?.total} BDT</p>
+      </div>
+
       <div className="w-full flex justify-between mt-4">
         <p className="font-medium">Vat/Tax Amount:</p>
         <p>{posData?.vat} BDT</p>

@@ -19,6 +19,7 @@ export const UserFormSchema = z
       .string()
       .min(1, "password confirmation is required")
       .min(6, "minimum 6 digit"),
+    warehouseId: z.string(),
     type: z.string(),
     status: z.string(),
   })
