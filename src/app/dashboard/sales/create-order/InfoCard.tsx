@@ -50,6 +50,7 @@ import { CreateOrderSchema } from "./CreateOrderSchema";
 import { createOrder } from "./../_action";
 import { SalePrintLog } from "@/components/ui/sell-print-pop";
 import { createUserLogs } from "../../users/_action";
+import { SaleReturnPrint } from "@/components/ui/sell-return-print";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -125,6 +126,7 @@ export function InfoCard() {
     }
   };
 
+  console.log("pos-Data", posData);
   return (
     <>
       <div className="w-full flex justify-between border-b pb-4 font-bold">
@@ -281,7 +283,15 @@ export function InfoCard() {
           </AlertDialogContent>
         </AlertDialog>
         <Toaster />
-        <SalePrintLog open={activate} setOpen={setActive} entry={savedData} />
+        {posData?.returnActive == true ? (
+          <SaleReturnPrint
+            open={activate}
+            setOpen={setActive}
+            entry={posData}
+          />
+        ) : (
+          <SalePrintLog open={activate} setOpen={setActive} entry={savedData} />
+        )}
       </div>
     </>
   );

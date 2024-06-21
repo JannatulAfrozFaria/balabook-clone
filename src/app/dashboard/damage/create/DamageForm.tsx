@@ -74,6 +74,7 @@ function DamageForm({ entry }: ProductFormEditProps) {
   const [mcId, setMcId] = useState<string>("");
   const dispatch = useDispatch();
   const { data: session } = useSession();
+  //@ts-ignore
   const sessionUserId = session?.user?.id;
   const form = useForm();
 
@@ -92,14 +93,12 @@ function DamageForm({ entry }: ProductFormEditProps) {
   };
 
   const handleWarehouse = (id: string) => {
-    "warehouseID", id;
     // form.setValue("warehouseId", id);
     dispatch(setWareHouseId(id));
   };
 
   const damageData = useSelector((state: RootState) => state.damage);
   const handleSelectedProduct = async (productId: string) => {
-    "handleSelectedProduct", productId;
     try {
       // Check if exist
       const exist = damageData?.products.find(

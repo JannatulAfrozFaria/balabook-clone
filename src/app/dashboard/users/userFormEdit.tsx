@@ -48,6 +48,7 @@ const FormSchema = z
       .string()
       .min(1, "password confirmation is required")
       .min(6, "minimum 6 digit"),
+    warehouseId: z.string(),
     type: z.string(),
     status: z.string(),
   })
@@ -75,7 +76,6 @@ function UserFormEdit({ user }: { user: any }) {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const id = user.id;
-      "update", data;
       //@ts-ignore
       const updateuser = await updateUser(id, data);
       if (!updateuser) {
