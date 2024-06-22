@@ -1,7 +1,6 @@
 "use server";
 import prisma from "@/index";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { CreateOrderSchema } from "./create-order/CreateOrderSchema";
 import { generateId } from "@/lib/idGenerator";
 
@@ -20,7 +19,6 @@ export const handleDelete = async (id: string) => {
       return deleteProduct;
     }
   } catch (err) {
-    err;
     return false;
   }
 };
@@ -32,12 +30,17 @@ export const createOrder = async (data: CreateOrderSchema) => {
     invoiceId,
     source,
     warehouseId,
+    soldProducts,
+    soldCalculation,
     userId,
     customerId,
     products,
+    orderCalculation,
     returnProducts,
     returnCalculation,
     totalItem,
+    returnActive,
+
     total,
     discount,
     vat,
@@ -60,7 +63,11 @@ export const createOrder = async (data: CreateOrderSchema) => {
           userId,
           customerId,
           products,
+          orderCalculation,
+          soldProducts,
+          soldCalculation,
           returnProducts,
+          returnActive,
           returnCalculation,
           totalItem,
           total,
@@ -82,13 +89,13 @@ export const createOrder = async (data: CreateOrderSchema) => {
       }
     }
   } catch (error) {
-    error;
+    console.log(error);
   }
 };
 
 export const salesById = async (id: string) => {
   try {
-    const sales = await prisma.sales.findUnique({
+    const sales = await prisma.sales.findFirst({
       where: {
         id: id,
       },
@@ -108,19 +115,18 @@ export const salesById = async (id: string) => {
             email: true,
           },
         },
-        warehouse: {
-          select: {
-            name: true,
-            phone: true,
-            email: true,
-          },
-        },
+        // warehouse: {
+        //   select: {
+        //     name: true,
+        //     phone: true,
+        //     email: true,
+        //   },
+        // },
       },
     });
-    sales;
     return sales;
   } catch (error) {
-    error;
+    console.log(error);
   }
 };
 export const UpdateSaleStatus = async (id: string, status: string) => {

@@ -354,7 +354,7 @@ export function SalePrintLog({
                                     {product.tp ? product.tp : "0"}
                                   </TableCell>
                                   <TableCell className="text-right border-r py-[2px]">
-                                    {product.mrp}
+                                    {product.total}
                                   </TableCell>
                                 </TableRow>
                               )

@@ -369,7 +369,7 @@ model UserLogs {
   otType     String?
   otInvoice  String?
   module     String?
-  userAgent  String?
+  userAgent  Json[]
   userStatus String?
 }
 
@@ -386,7 +386,7 @@ model Sales {
 
   products          Json[]
   orderCalculation Json? //totalItem, total, vat, grossTotal, grossTotalRound
-
+  returnActive      Boolean?
   returnProducts    Json[]
   returnCalculation Json? ////totalItem, total, vat, grossTotal, grossTotalRound
 
@@ -407,7 +407,7 @@ model Sales {
   status            DataStatus
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-  @@map("invoiceId")
+
 }
 
 model Adjust {

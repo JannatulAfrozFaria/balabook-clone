@@ -51,6 +51,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { columns } from "./columns";
+import { createUserLogs } from "../../users/_action";
 
 interface PoCart {
   id: string;
@@ -181,6 +182,7 @@ function ProductForm({ entry }: ProductFormEditProps) {
       //@ts-ignore
       const PO = await savePo(poData);
       if (PO) {
+        createUserLogs(PO?.userId, PO?.id, "PO", "Create");
         toast.success(PO ? "PO Creation Success" : "PO Update Success");
         dispatch(reset());
         router.push("/dashboard/po");

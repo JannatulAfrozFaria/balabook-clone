@@ -18,6 +18,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
+import { orderColumn } from "./soldProductColumn";
 import { CreateOrderDataTable } from "./data-table";
 import SearchProduct from "@/components/ui/searchProduct";
 import { searchProductById } from "../../products/_action";
@@ -37,6 +38,7 @@ import SelectCustomer from "@/components/ui/SelectCustomer";
 import { useSession } from "next-auth/react";
 import { log } from "console";
 import { ReturnDataTable } from "./return-data-table";
+// import { OnlyReturnTable } from "./return-order-data-table";
 
 interface ProductFormEditProps {
   entry: any;
@@ -44,15 +46,12 @@ interface ProductFormEditProps {
 
 const data: any = [];
 
-function CreateOrderForm({ entry }: ProductFormEditProps) {
+function CreateOrderForm({}) {
   const dispatch = useDispatch();
   const { data: session } = useSession();
-  const [id, setId] = useState<string>("");
-  const [mcId, setMcId] = useState<string>("");
-  const [returnActivate, setReturnActivate] = useState();
   const form = useForm();
 
-  console.log("returnActivate", returnActivate);
+  // console.log("returnActivate", returnActivate);
 
   const handleCustomerId = (id: string) => {
     //@ts-ignore
@@ -234,6 +233,9 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
               </div>
               {/* table, search, import */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-0">
+                {salesData.id !== "" ? (
+                  <p className="text-sm font-bold mb-[-10px]">Sold Product</p>
+                ) : null}
                 {salesData?.returnActive ? (
                   <div className="">
                     <ReturnDataTable
@@ -250,10 +252,12 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
                   </div>
                 ) : (
                   <CreateOrderDataTable
-                    columns={columns}
+                    columns={salesData.id != "" ? orderColumn : columns}
                     // @ts-ignore
                     data={
-                      salesData?.products?.length > 0
+                      salesData.id != ""
+                        ? salesData.soldProducts
+                        : salesData?.products?.length > 0
                         ? salesData?.products
                             ?.slice()
                             // @ts-ignore
@@ -263,13 +267,22 @@ function CreateOrderForm({ entry }: ProductFormEditProps) {
                   />
                 )}
               </div>
+
+              <div>
+                {salesData ? (
+                  <p className="text-sm font-bold mb-2">Return Product</p>
+                ) : null}
+                {salesData ? (
+                  <ReturnDataTable columns={columns} data={salesData} />
+                ) : null}
+              </div>
             </div>
 
             {/* invoice form */}
             <div className="w-1/3 mx-4">
               {
                 //@ts-ignore
-                <InfoCard salesData={salesData} />
+                <InfoCard salesData={salesData ? salesData : salesData} />
               }
               {/* {returnActive && <div>Return is Active</div>} */}
             </div>

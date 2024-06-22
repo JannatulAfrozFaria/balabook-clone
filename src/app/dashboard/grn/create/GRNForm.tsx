@@ -51,6 +51,7 @@ import { grnColumns } from "./columns";
 import { poColumns } from "./poColumns";
 import { revalidatePath } from "next/cache";
 import { redirect, useRouter } from "next/navigation";
+import { createUserLogs } from "../../users/_action";
 
 interface ProductFormEditProps {
   entry: any;
@@ -94,6 +95,7 @@ function GrnForm({ entry }: ProductFormEditProps) {
       //  (grnData);
       const grn = await saveGRN(grnData);
       if (grn) {
+        createUserLogs(grn?.userId, grn?.id, "GRN", "Create");
         toast.success(grn ? "GRN Creation Success" : "GRN Update Success");
         dispatch(reset());
         setPoData({});

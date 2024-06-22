@@ -58,6 +58,7 @@ export function SaleReturnPrint({
     setOpen(false);
   };
   const productsInfo = product?.returnProducts;
+
   //  (productsInfo);
 
   function convertToWords(number: number): string {
@@ -201,7 +202,7 @@ export function SaleReturnPrint({
   orderData;
   //  ("convert to word", convertToWords(product.total));
 
-  console.log("orderDataReturn", entry);
+  console.log("orderDataReturn", product);
 
   return (
     <div>
@@ -275,6 +276,7 @@ export function SaleReturnPrint({
                           {/*@ts-ignore  */}
                           <h2>{orderData?.customer?.phone}</h2>
                         </div>
+
                         <div className="text-black">
                           <h1 className="font-bold">Warehouse Info</h1>
                           {/*@ts-ignore  */}
@@ -284,8 +286,10 @@ export function SaleReturnPrint({
                           {/*@ts-ignore  */}
                           <h2>{orderData?.warehouse?.phone}</h2>
                         </div>
+
+                        
                         <div className=" flex flex-col items-end text-black">
-                          <h1 className=" font-bold  ">Selling Details</h1>
+                          <h1 className=" font-bold  ">VOID Return Details</h1>
                           <h2 className="font-bold text-sm">
                             Invoice No:{" "}
                             <span className="font-normal">
@@ -335,7 +339,7 @@ export function SaleReturnPrint({
                                 Qty
                               </TableHead>
                               <TableHead className="text-right text-black font-bold">
-                                TP
+                                MRP
                               </TableHead>
                               <TableHead className="text-right text-black font-bold">
                                 Amount
@@ -362,10 +366,10 @@ export function SaleReturnPrint({
                                     {product.qty}
                                   </TableCell>
                                   <TableCell className="border-r py-[2px]">
-                                    {product.tp ? product.tp : "0"}
+                                    {product.mrp ? product.mrp : "0"}
                                   </TableCell>
                                   <TableCell className="text-right border-r py-[2px]">
-                                    {product.mrp}
+                                    {product.total}
                                   </TableCell>
                                 </TableRow>
                               )
@@ -374,7 +378,6 @@ export function SaleReturnPrint({
                         </Table>
                         <div className="w-full flex  justify-end mt-2 text-black font-bold">
                           <div className="flex">
-                            <p className="mr-2">Total:</p>
                             <p className="mr-4">{product?.total}</p>
                           </div>
                           <div className="flex">

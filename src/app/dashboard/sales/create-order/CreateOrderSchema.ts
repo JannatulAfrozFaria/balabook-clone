@@ -6,8 +6,12 @@ export interface CreateOrderSchema {
   warehouseId?: string;
   userId?: string;
   products?: any;
+  orderCalculation?: any;
+  soldProducts?: any;
+  soldCalculation?: any;
   returnProducts?: any;
   returnCalculation?: number;
+  returnActive?: boolean;
   totalItem?: number;
   total?: number;
   discount?: number;

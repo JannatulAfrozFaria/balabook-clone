@@ -26,15 +26,13 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { importProduct } from "../../products/_action";
 import CsvUpload from "@/components/CsvUpload";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux-store/store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function ReturnDataTable<TData, TValue>({
+export function ReturnOrderDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -68,14 +66,12 @@ export function ReturnDataTable<TData, TValue>({
     }
   };
 
-  const salesData = useSelector((state: RootState) => state.sales);
-
   return (
     <>
       <div>
         {/* Search */}
 
-        <div className="rounded-md border min-h-80">
+        <div className="rounded-md border min-h-56">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

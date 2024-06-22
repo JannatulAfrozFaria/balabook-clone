@@ -3,18 +3,20 @@ import PageTitle from "@/components/ui/PageTitle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Square, X, CheckSquare, CheckSquare2 } from "lucide-react";
-import CreateOrderForm from "./createOrderForm";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetProducts,
   resetReturnProducts,
   setBillActive,
   setReturnActive,
+  setSalesForUpdate,
   setStatus,
 } from "./../../../redux-store/Slice/SalesSlice";
 import { RootState } from "@/app/redux-store/store";
+import CreateOrderForm from "../create-order/createOrderForm";
+import { salesById } from "../_action";
 
 export default function ProductsPage() {
   const saleData = useSelector((state: any) => state.sales);
@@ -31,7 +33,27 @@ export default function ProductsPage() {
       dispatch(resetReturnProducts());
     }
   };
-  console.log("sales", saleData);
+  const currentSaleId = window.location.pathname;
+  const routeParts = currentSaleId.split("/");
+  const id = routeParts[routeParts.length - 1];
+
+  // console.log("Current Route:", saleData);
+  // const [salesData, setSalesData] = useState(null);
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        const data = await salesById(id);
+        console.log("sale", data);
+        dispatch(setSalesForUpdate(data));
+      } catch (error) {
+        console.error("Error fetching sales data:", error);
+      }
+    };
+
+    fetchSalesData();
+  }, [id]);
+
+  // console.log("Sales:", salesData);
 
   return (
     <main className="flex min-h-screen flex-col gap-0 w-full">
@@ -44,7 +66,7 @@ export default function ProductsPage() {
                   <ArrowLeft />
                 </Button>
               </Link>
-              <PageTitle title="Create New Order" />
+              <PageTitle title="Update Order" />
             </div>
 
             <div className="flex items-center space-x-2">
@@ -103,7 +125,7 @@ export default function ProductsPage() {
         </div>
       </div>
       <div className="grid gap-0 md:grid-cols-1 lg:grid-cols-1">
-        <CreateOrderForm entry={""} />
+        <CreateOrderForm />
       </div>
     </main>
   );

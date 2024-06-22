@@ -42,6 +42,7 @@ import {
   setMfsAmount,
   setMfsName,
   setReceivedAmount,
+  setSoldProduct,
   setStatus,
   setTotalRecievable,
 } from "@/app/redux-store/Slice/SalesSlice";
@@ -51,6 +52,8 @@ import { createOrder } from "./../_action";
 import { SalePrintLog } from "@/components/ui/sell-print-pop";
 import { createUserLogs } from "../../users/_action";
 import { SaleReturnPrint } from "@/components/ui/sell-return-print";
+import { getBrowserInfo, getDeviceType } from "@/lib/deviceDetect";
+import { useRouter } from "next/router";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -87,7 +90,6 @@ export function InfoCard() {
 
     dispatch(setReceivedAmount(totalReceived));
     dispatch(setChangeAmount(changeAmount));
-    dispatch(setStatus("Complete"));
   }, [posData.paidAmount]);
 
   const confirmOrder = () => {};
@@ -101,9 +103,9 @@ export function InfoCard() {
       // const order = await saveOrder(posData);
       const order = await createOrder(posData);
       if (order) {
-        createUserLogs(order?.userId, order?.id, "Sale", "Create");
+        // dispatch(setSoldProduct(posData.products));
         setActive(true);
-        //@ts-ignore
+        // //@ts-ignore
         setSavedData(order);
         // Dispatch the reset action to clear the poSlice
         dispatch(reset());
@@ -126,7 +128,23 @@ export function InfoCard() {
     }
   };
 
-  console.log("pos-Data", posData);
+  // const [infoArray, setInfoArray] = useState<
+  //   { label: string; value: string }[]
+  // >([]);
+  // // const router = useRouter(); // Initialize useRouter
+
+  // useEffect(() => {
+  //   const deviceInfo = getDeviceType();
+  //   const browserInfo = getBrowserInfo();
+  //   const currentRoute = window.location.pathname;
+
+  //   setInfoArray([
+  //     { label: "Device", value: deviceInfo },
+  //     { label: "Browser", value: browserInfo },
+  //     { label: "Route", value: currentRoute },
+  //   ]);
+  // }, []);
+
   return (
     <>
       <div className="w-full flex justify-between border-b pb-4 font-bold">
@@ -283,11 +301,12 @@ export function InfoCard() {
           </AlertDialogContent>
         </AlertDialog>
         <Toaster />
-        {posData?.returnActive == true ? (
+        {/*@ts-ignore */}
+        {savedData?.returnActive ? (
           <SaleReturnPrint
             open={activate}
             setOpen={setActive}
-            entry={posData}
+            entry={savedData}
           />
         ) : (
           <SalePrintLog open={activate} setOpen={setActive} entry={savedData} />

@@ -210,7 +210,12 @@ export const salesSlice = createSlice({
     //array type data
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
+      state.soldProducts = action.payload;
       salesSlice.caseReducers.setOrderCalculation(state);
+      salesSlice.caseReducers.setSoldCalculation(state);
+    },
+    setSoldProduct: (state, action: PayloadAction<Product[]>) => {
+      state.soldProducts = action.payload;
       salesSlice.caseReducers.setSoldCalculation(state);
     },
     setOrderCalculation: (state) => {
@@ -259,12 +264,12 @@ export const salesSlice = createSlice({
       const returnProducts = state.returnProducts;
       const total = returnProducts.reduce(
         //@ts-ignore
-        (acc, product) => acc + product.total,
+        (acc, product) => acc + product?.total,
         0
       );
       const grossTotal = returnProducts.reduce(
         //@ts-ignore
-        (acc, product) => acc + product.total,
+        (acc, product) => acc + product?.total,
         0
       );
 
@@ -277,66 +282,6 @@ export const salesSlice = createSlice({
       salesSlice.caseReducers.updateMainTotal(state);
     },
 
-    moveProductToReturn: (state, action) => {
-      const productId = action.payload;
-      const productIndex = state.products.findIndex(
-        (product: any) => product.id === productId
-      );
-
-      if (productIndex !== -1) {
-        const product = state.products[productIndex];
-        state.products.splice(productIndex, 1);
-        state.returnProducts.push(product);
-
-        // Recalculate totals
-        state.total = state.products.reduce(
-          (acc: any, product: any) => acc + product.total,
-          0
-        );
-        state.grossTotal = state.products.reduce(
-          (acc: any, product: any) => acc + product.total,
-          0
-        );
-        state.grossTotalRound = Math.round(state.grossTotal);
-        state.totalItem = state.products.length;
-
-        // Recalculate return product totals
-        state.returnCalculation = state.returnProducts.reduce(
-          (acc: any, product: any) => acc + product.total,
-          0
-        );
-      }
-    },
-    removeProductFromReturn: (state, action) => {
-      const productId = action.payload;
-      const productIndex = state.returnProducts.findIndex(
-        (product: any) => product.id === productId
-      );
-
-      if (productIndex !== -1) {
-        const product = state.returnProducts[productIndex];
-        state.returnProducts.splice(productIndex, 1);
-        state.products.push(product);
-
-        // Recalculate totals
-        state.total = state.products.reduce(
-          (acc: any, product: any) => acc + product.total,
-          0
-        );
-        state.grossTotal = state.products.reduce(
-          (acc: any, product: any) => acc + product.total,
-          0
-        );
-        state.grossTotalRound = Math.round(state.grossTotal);
-        state.totalItem = state.products.length;
-
-        // Recalculate return product totals
-        state.returnCalculation = state.returnProducts.reduce(
-          (acc: any, product: any) => acc + product.total,
-          0
-        );
-      }
-    },
     updateMainTotal: (state) => {
       state.total =
         state.orderCalculation.total || 0 - state.returnCalculation.total || 0;
@@ -351,6 +296,12 @@ export const salesSlice = createSlice({
     },
     //reset
     reset: (state) => (state = initialState),
+
+    setSalesForUpdate: (state, action) => {
+      console.log("state", state);
+      const saleData = action.payload;
+      return (state = { saleData });
+    },
     // Add more reducers as needed
   },
 });
@@ -379,12 +330,12 @@ export const {
   setReturnActive,
   setReturnCalculation,
   setBillActive,
-  moveProductToReturn,
-  removeProductFromReturn,
   updateMainTotal,
   setOrderCalculation,
   setSoldCalculation,
   resetReturnProducts,
+  setSalesForUpdate,
+  setSoldProduct,
 } = salesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

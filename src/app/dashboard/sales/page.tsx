@@ -7,6 +7,7 @@ import prisma from "../../../../prisma";
 import Link from "next/link";
 import { Plus, Undo2 } from "lucide-react";
 import { CreateOrderSchema } from "./create-order/CreateOrderSchema";
+import { getDeviceType } from "@/lib/deviceDetect";
 
 export default async function OrderPage() {
   const data = await prisma.sales.findMany({
@@ -18,6 +19,7 @@ export default async function OrderPage() {
           company: true, // Select only the name field from the supplier model
         },
       },
+
       user: {
         select: {
           name: true, // Select only the name field from the user model

@@ -66,6 +66,7 @@ import { addToDb } from "@/lib/tpnDb";
 import { saveTpn } from "../_action";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { createUserLogs } from "../../users/_action";
 
 interface ProductFormEditProps {
   entry: any;
@@ -78,10 +79,10 @@ function TPNForm({ entry }: ProductFormEditProps) {
   const dispatch = useDispatch();
   const { data: session } = useSession();
   const tpnData = useSelector((state: RootState) => state.tpn);
+  //@ts-ignore
   const sessionUserId = session?.user?.id;
 
   const handleWhFrom = (id: string) => {
-    "handleWhFrom", id;
     dispatch(selectWhFrom(id));
   };
   const handleWhTo = (id: string) => {
@@ -103,7 +104,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
   const handleSelectedProduct = async (productId: string) => {
     try {
       // Check if exist
-      "productidtpn", tpnData;
+
       const exist = tpnData.products.find(
         (poProduct: any) => poProduct.id === productId
       );
@@ -168,6 +169,7 @@ function TPNForm({ entry }: ProductFormEditProps) {
       //@ts-ignore
       const TPN = await saveTpn(tpnData);
       if (TPN) {
+        createUserLogs(TPN?.userId, TPN?.id, "TPN", "Create");
         toast.success(TPN ? "TPN  Creation Success" : "TPN Update Success");
         // dispatch(reset());
         // router.push("/dashboard/po");

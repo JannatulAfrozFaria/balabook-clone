@@ -1,15 +1,15 @@
 import PageTitle from "@/components/ui/PageTitle";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
 import { Link } from "lucide-react";
 import { UserDataTable } from "../customer/data-table";
 import { UserLogsDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "@/index";
+import { getBrowserInfo, getDeviceType } from "@/lib/deviceDetect";
 
 export default async function UserLogsPage() {
   const data: any = await prisma.userLogs.findMany({});
-  "usrdata", data;
 
   return (
     <main className="flex min-h-screen flex-col gap-6 w-full">
@@ -18,6 +18,7 @@ export default async function UserLogsPage() {
           <div className="flex items-center justify-between space-y-2">
             <PageTitle title="User logs" />
             <div className="flex items-center space-x-2">
+              {/* @ts-ignore */}
               <CalenderDateRangePicker />
               {/* <Link href="/dashboard/po/create">
                 <Button>

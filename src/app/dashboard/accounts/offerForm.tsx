@@ -69,7 +69,6 @@ function OfferForm({ offer }: { offer: any }) {
         //  ("new Offer", data);
         //@ts-ignore
         const newOffer = await createOffer(data);
-        "newOffer", newOffer;
 
         if (newOffer) {
           toast.success("Offer Creation Success");
@@ -82,7 +81,6 @@ function OfferForm({ offer }: { offer: any }) {
       } else {
         // UPDATE OFFER
         const id = offer.id;
-        "update", data;
         //@ts-ignore
         const updateoffer = await updateOffer(id, data);
         if (!updateoffer) {

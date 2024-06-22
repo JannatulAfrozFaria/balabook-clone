@@ -24,15 +24,19 @@ import { useState } from "react";
 import { SalePrintLog } from "@/components/ui/sell-print-pop";
 import { TaxInvoicePrint } from "@/components/ui/govt-format-invoice-sale";
 
-import { UpdateSaleStatus } from "./_action";
+import { UpdateSaleStatus, salesById } from "./_action";
 import StatusUpdatePop from "@/components/StatusUpdatePop";
+import { useDispatch } from "react-redux";
+import { setSalesForUpdate } from "@/app/redux-store/Slice/SalesSlice";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Order = {
   id: string;
   customerID: string;
-  status: "Complete" | "Pending" | "Ordered" | "Delete";
+  status: "Complete" | "Ordered" | "Delete";
   userID: string;
   offerID: string;
   Offer: string;
@@ -65,6 +69,7 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: `"customer.name"`,
     header: "Customer",
     cell: ({ row }) => {
+      //@ts-ignore
       const customer = row?.original?.customer;
       return customer.company !== null ? customer.company : customer?.name;
     },
@@ -87,6 +92,8 @@ export const columns: ColumnDef<Order>[] = [
     id: "actions",
     cell: ({ row }) => {
       const sales = row.original;
+      const dispatch = useDispatch();
+      const router = useRouter();
       const [activate, setActive] = useState(false);
       const [taxInvActive, setTaxInvActive] = useState(false);
       const [alertOpen, setAlertOpen] = useState(false);
@@ -109,6 +116,18 @@ export const columns: ColumnDef<Order>[] = [
         } else {
           // toast successfully failed
           console.log("failed");
+        }
+      };
+
+      const returnSale = async () => {
+        console.log("Return");
+        try {
+          const saleData = await salesById(sales.id);
+          console.log(saleData);
+          dispatch(setSalesForUpdate(saleData));
+          router.push("/dashboard/sales/create-order");
+        } catch (error) {
+          console.log(error);
         }
       };
 
@@ -136,10 +155,15 @@ export const columns: ColumnDef<Order>[] = [
                     Complete
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Undo2 size={16} className="mr-2" />
-                    Return
-                  </DropdownMenuItem>
+                  <Link href={`/dashboard/sales/${sales.id}`}>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      // onClick={returnSale}
+                    >
+                      <Undo2 size={16} className="mr-2" />
+                      Return
+                    </DropdownMenuItem>
+                  </Link>
                 </>
               )}
               <DropdownMenuItem

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import { UserFormSchema } from "./UserFormSchema";
+import { getBrowserInfo, getDeviceType } from "@/lib/deviceDetect";
 
 export type User = z.infer<typeof UserFormSchema>;
 
@@ -89,9 +90,13 @@ export const createUserLogs = async (
   userId: string,
   oInvoice: string,
   module: string,
-  otype: string
+  otype: string,
+  route: string
 ) => {
   try {
+    //GET USER AGENT
+    const deviceInfo = getDeviceType();
+    const browserInfo = getBrowserInfo();
     const createUserLog = await prisma.userLogs.create({
       data: {
         userId: userId,
@@ -99,6 +104,12 @@ export const createUserLogs = async (
         module: module,
         otType: otype,
         date: new Date(), // Automatically use the current date
+        userAgent: {
+          //@ts-ignore
+          deviceInfo: deviceInfo,
+          browserInfo: browserInfo,
+          routeInfo: route,
+        },
       },
       include: {
         user: true, // Include related user information

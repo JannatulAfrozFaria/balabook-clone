@@ -21,8 +21,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { getBrowserInfo, getDeviceType } from "@/lib/deviceDetect";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -52,7 +53,13 @@ export function UserLogsDataTable<TData, TValue>({
     },
   });
 
-  "userLogsData", data;
+  const [deviceInfo, setDeviceInfo] = useState<string>("");
+  const [browserInfo, setBrowserInfo] = useState<string>("");
+  useEffect(() => {
+    setDeviceInfo(getDeviceType());
+    setBrowserInfo(getBrowserInfo());
+  }, []);
+  console.log("logsData", browserInfo, deviceInfo);
 
   return (
     <>
