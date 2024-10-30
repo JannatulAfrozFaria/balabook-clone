@@ -1,3 +1,4 @@
+"use client"
 import PageTitle from "@/components/ui/PageTitle";
 import Image from "next/image";
 import {
@@ -17,196 +18,100 @@ import { redirect, useRouter } from "next/navigation";
 import prisma from "../../../prisma";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Home } from "lucide-react"; // Importing the Home icon
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import MyBarChart from "@/components/Barchart";
+
+
+const data = [
+  { name: 'January', Invoice: 4000, Expense: 2400 },
+  { name: 'February', Invoice: 3000, Expense: 1398 },
+  { name: 'March', Invoice: 2000, Expense: 9800 },
+  { name: 'April', Invoice: 2780, Expense: 3908 },
+  { name: 'May', Invoice: 1890, Expense: 4800 },
+  { name: 'June', Invoice: 2390, Expense: 3800 },
+  { name: 'July', Invoice: 3490, Expense: 4300 },
+];
 
 export default async function Dashboard() {
-  // Get the current date
-  const currentDate = new Date();
-
-  // Calculate the start date of the last month
-  const lastMonthStartDate = new Date(currentDate);
-  lastMonthStartDate.setMonth(lastMonthStartDate.getMonth() - 1);
-  lastMonthStartDate.setDate(1);
-
-  // Calculate the end date of the last month
-  const lastMonthEndDate = new Date(currentDate);
-  lastMonthEndDate.setDate(0);
-
-  // Offer
-  // const offerCount = await prisma.offer.count();
-  // Customers
-  const customerAttendCount = await prisma.customer.count({
-    where: {
-      status: "Active",
-    },
-  });
-  const customerCount = await prisma.customer.count();
-  const newCustomersLastMonth = await prisma.customer.count({
-    where: {
-      createdAt: {
-        gte: lastMonthStartDate,
-        lte: lastMonthEndDate,
-      },
-    },
-  });
-
-  //Orders
-  // const totalOrder = await prisma.order.count();
-
-  // const totalSale = await prisma.order.aggregate({
-  //   _sum: {
-  //     amount: true,
-  //   },
-  // });
-
-  //  (recentOrder);
-  // const session = await getServerSession(authOptions)
-  //  ("session",session)
   return (
-    <main className="flex min-h-screen flex-col gap-6 w-full">
-      <div className=" flex-col flex w-full">
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex-cols md:flex items-center justify-between space-y-2">
-            <PageTitle title="Dashboard" />
+    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
+      <div className="w-full pt-8">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/" className="flex items-center gap-1 text-[16px]">
+                  <Home className="h-4 w-4" /> {/* Home icon with custom size */}
+                  Home
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/dashboard" className="text-[16px] text-[#7D67FF] font-normal">
+                  Dashboard
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
-            <div className="flex-row md:flex items-center justify-center md:space-x-2">
-              <CalenderDateRangePicker className="w-full " />
-              <div className="flex justify-between mt-3 md:mt-0 gap-2">
-                <Button variant="default">Last 7 days</Button>
-                <Button variant="default">Last 30 days</Button>
-                <Button variant="default">Last 1 year</Button>
-              </div>
+      <div className="flex justify-between items-end w-full">
+        <h1 className="text-[48px] font-bold">Nicolas IP's Dashboard</h1>
+        <div>
+          <Select>
+            <SelectTrigger className="w-[140px] h-[50px] border-2 border-black rounded-full text-[16px] px-4 py-2 hover:bg-black hover:text-white">
+              <SelectValue placeholder="Quick Add" />
+            </SelectTrigger>
+            <SelectContent className="border-2 border-black rounded-xl">
+              <SelectGroup>
+                <SelectItem value="apple" className="text-[16px]">Invoice</SelectItem>
+                <SelectItem value="banana" className="text-[16px]">Expense</SelectItem>
+                <SelectItem value="d" className="text-[16px]">Bill</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className=" w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
+        <div className="flex">
+          <h2 className="text-[24px] font-semibold">Invoices & Expenses</h2>
+          <h4 className="text-[14px] ml-10 font-bold mt-2 text-[#9C9C9C]">This fiscal year</h4>
+        </div>
+      
+        <div className="h-[400px] w-full mt-4">
+          <MyBarChart/>
+          <div className="w-full h-[100px] flex items-center justify-center">
+            <div className="flex items-center">
+              <div className="h-[30px] w-[30px] rounded-full bg-[#FFED37]"></div>
+              <p className="text-[16px] text-semibold ml-2">Income</p>
             </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Revenue
-                </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {/* {totalSale?._sum?.amount?.toLocaleString("en-IN", {
-                    maximumFractionDigits: 0,
-                  })}{" "} */}
-                  ৳
-                </div>
-                <p className="text-xs text-muted-foreground">From 0 Orders</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Subscriptions
-                </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+{customerCount}</div>
-                <p className="text-xs text-muted-foreground">
-                  {(newCustomersLastMonth / customerCount).toFixed(2)}% from
-                  last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Attend Guest
-                </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <rect width="20" height="14" x="2" y="5" rx="2" />
-                  <path d="M2 10h20" />
-                </svg>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{customerAttendCount} </div>
-                <p className="text-xs text-muted-foreground">
-                  Outof {customerCount} Customers
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Order
-                </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                </svg>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">0</div>
-                <p className="text-xs text-muted-foreground">Since last hour</p>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="md:col-span-4 col-span-2">
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <Overview />
-              </CardContent>
-            </Card>
-            <Card className="md:col-span-3 col-span-2">
-              <CardHeader>
-                <CardTitle>
-                  <Link href="/dashboard/orders">Recent Sales</Link>
-                </CardTitle>
-                <CardDescription>You made 0 sales this Event.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RecentSales />
-              </CardContent>
-            </Card>
+            <div className="flex items-center ml-12">
+              <div className="h-[30px] w-[30px] rounded-full bg-[#7D67FF]"></div>
+              <p className="text-[16px] text-semibold ml-2">Expense</p>
+            </div>
           </div>
         </div>
       </div>

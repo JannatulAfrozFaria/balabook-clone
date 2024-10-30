@@ -38,7 +38,7 @@ import SelectCustomer from "@/components/ui/SelectCustomer";
 import { useSession } from "next-auth/react";
 import { log } from "console";
 import { ReturnDataTable } from "./return-data-table";
-// import { OnlyReturnTable } from "./return-order-data-table";
+
 
 interface ProductFormEditProps {
   entry: any;
@@ -268,14 +268,14 @@ function CreateOrderForm({}) {
                 )}
               </div>
 
-              <div>
+              {/* <div>
                 {salesData ? (
                   <p className="text-sm font-bold mb-2">Return Product</p>
                 ) : null}
                 {salesData ? (
                   <ReturnDataTable columns={columns} data={salesData} />
                 ) : null}
-              </div>
+              </div> */}
             </div>
 
             {/* invoice form */}

@@ -21,9 +21,9 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession();
   //  (session?.user)
-  if (!session || !session.user) {
-    redirect("/login");
-  }
+  // if (!session || !session.user) {
+  //   redirect("/login");
+  // }
   return (
     <div className="flex w-full">
       <div className="">

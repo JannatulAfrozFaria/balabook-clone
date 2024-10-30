@@ -10,8 +10,9 @@ export interface CreateOrderSchema {
   soldProducts?: any;
   soldCalculation?: any;
   returnProducts?: any;
-  returnCalculation?: number;
+  returnCalculation?: any;
   returnActive?: boolean;
+  billActive?: boolean;
   totalItem?: number;
   total?: number;
   discount?: number;
@@ -21,6 +22,6 @@ export interface CreateOrderSchema {
   totalRecievable?: number;
   totalRecieved?: number;
   changeAmount?: number;
-  paidAmount?: number;
+  paidAmount?: any;
   status?: string;
 }

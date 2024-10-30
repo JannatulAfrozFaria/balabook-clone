@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/card";
 
 export default async function Home() {
-  const data = await getServerSession(authOptions);
+  // const data = await getServerSession(authOptions);
   return (
     <main className="flex min-h-screen h-screen flex-col">
       {/* Session:{JSON.stringify(data)} */}
@@ -37,7 +37,7 @@ export default async function Home() {
           <Image alt="Logo" src={logo} height={60} width={60} />
           <span className="ml-2 font-semibold">Import Management System</span>
         </div>
-        <div className="flex justify-center items-center hover:text-[#f15f23]">
+        {/* <div className="flex justify-center items-center hover:text-[#f15f23]">
           {!data?.user ? (
             <div className="flex justify-center items-center">
               <LogIn className="h-4 w-4 duration-300" />
@@ -59,7 +59,17 @@ export default async function Home() {
               </Link>
             </div>
           )}
-        </div>
+        </div> */}
+
+        <div className="flex justify-center items-center">
+              <LayoutDashboard className="h-4 w-4 duration-300" />
+              <Link
+                href="/dashboard"
+                className="px-2 py-2 rounded-full font-semibold duration-300"
+              >
+                Dashboard
+              </Link>
+            </div>
       </header>
       {/* Hero Section */}
       <section className="flex-1">
