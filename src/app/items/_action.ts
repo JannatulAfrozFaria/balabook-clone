@@ -4,6 +4,19 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 
+export async function fetchItems(limit: number = 20, offset: number = 0) {
+  try {
+    const items = await prisma.item.findMany({
+      take: limit,       // Limit the number of items fetched
+      skip: offset,      // Used for pagination if needed
+    });
+    return items;
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    throw new Error("Failed to fetch items");
+  }
+}
+
 export const createItem = async (data: any) => {
   try {
     const { description, account, price, discount, vat, type } = data;

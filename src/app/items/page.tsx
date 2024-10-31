@@ -28,6 +28,7 @@ import ItemList from "./ItemList";
 import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import prisma from "@/index";
+import { fetchItems } from "./_action";
 
 // Import Prisma client
 
@@ -43,10 +44,12 @@ export default async function Items() {
   //   price: item.price,
   // }));
 
-  const data: any = await prisma.item.findMany({
+  // const data: any = await prisma.item.findMany({
    
-  });
+  // });
 
+
+  const data = await fetchItems(); // Fetches 20 items by default
   return (
     <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
       <div className="w-full pt-8">
