@@ -70,7 +70,7 @@ export default async function Items() {
 
       <div className="flex justify-between items-end w-full">
         <h1 className="text-[48px] font-bold">Items</h1>
-        <Link href="/dashboard/items/new">
+        <Link href="/items/new">
           <Button className="p-6 rounded-full bg-[#FFED37] text-[16px] text-normal text-black">Add New Item</Button>
         </Link>
       </div>

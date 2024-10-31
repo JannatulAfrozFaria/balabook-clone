@@ -58,7 +58,7 @@ function Sidebar() {
                 title: "Items",
                 label: "",
                 variant: "",
-                href: "/dashboard/items",
+                href: "/items",
               },
             ].filter(Boolean)}
           />
