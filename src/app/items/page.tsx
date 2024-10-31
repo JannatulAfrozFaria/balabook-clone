@@ -35,13 +35,15 @@ import prisma from "@/index";
 
 export default async function Items() {
   // Fetch item data from the Prisma database
-  const items = await prisma.item.findMany(); // Adjust the model name as needed
-  const data = items.map(item => ({
-    id: item.id, // Ensure you have a unique identifier
-    description: item.description,
-    type: item.type,
-    price: item.price,
-  }));
+  // const items = await prisma.item.findMany(); // Adjust the model name as needed
+  // const data = items.map(item => ({
+  //   id: item.id, // Ensure you have a unique identifier
+  //   description: item.description,
+  //   type: item.type,
+  //   price: item.price,
+  // }));
+
+  const data = [];
 
   return (
     <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
