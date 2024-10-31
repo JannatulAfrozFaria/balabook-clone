@@ -27,12 +27,11 @@ import { Input } from "@/components/ui/input";
 import ItemList from "./ItemList";
 import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
+import prisma from "@/index";
 
 // Import Prisma client
-import { PrismaClient } from "@prisma/client";
 
 // Initialize Prisma client
-const prisma = new PrismaClient();
 
 export default async function Items() {
   // Fetch item data from the Prisma database
