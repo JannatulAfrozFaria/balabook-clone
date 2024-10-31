@@ -43,7 +43,9 @@ export default async function Items() {
   //   price: item.price,
   // }));
 
-  const data = [];
+  const data: any = await prisma.item.findMany({
+   
+  });
 
   return (
     <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
