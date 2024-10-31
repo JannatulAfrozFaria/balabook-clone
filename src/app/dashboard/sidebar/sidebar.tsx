@@ -28,7 +28,7 @@ function Sidebar() {
   return (
     <TooltipProvider>
       <div
-        className={`relative border-r px-3 pb-20 pt-[14px] h-screen transition-all duration-300 ${
+        className={`relative  px-3 pb-20 pt-[14px] h-screen transition-all duration-300 ${
           isCollapsed ? "min-w-[80px] max-w-[80px]" : "min-w-[260px] max-w-[260px]"
         }`}
       >
@@ -36,8 +36,12 @@ function Sidebar() {
           <img
             src="https://my.balabook.com/assets/balabook_logomark_main_rgb-3cd81c5087139c4d4724f0fd9dcceadba6dedc42d835079a40db432e7d2a867c.svg"
             alt="Logo"
-            className="max-h-[70px] max-w-[70px]"
+            className="max-h-[90px] max-w-[90px]"
           />
+        </div>
+
+        <div className="h-[40px] w-[40px] border-4 border-[#6366F1] flex items-center justify-center rounded-full bg-gray mt-10">
+          <h1 className="text-bold text-[16px] text-[#6366F1]">NI</h1>
         </div>
 
         <div className="pt-12 md:pt-4">

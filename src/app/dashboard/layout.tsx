@@ -26,8 +26,8 @@ export default async function RootLayout({
   // }
   return (
     <div className="flex w-full">
-      <div className="">
-        <Sidebar />
+      <div className=" lg:block md:block sm:hidden">
+        <Sidebar  />
       </div>
       <div className="flex-grow">{children}</div>
     </div>

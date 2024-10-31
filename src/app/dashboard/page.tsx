@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MyBarChart from "@/components/Barchart";
+import MyDoughnutChart from "@/components/DonutChart";
 
 
 const data = [
@@ -61,7 +62,7 @@ export default async function Dashboard() {
               <BreadcrumbLink asChild>
                 <Link href="/" className="flex items-center gap-1 text-[16px]">
                   <Home className="h-4 w-4" /> {/* Home icon with custom size */}
-                  Home
+                  
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -105,15 +106,92 @@ export default async function Dashboard() {
           <MyBarChart/>
           <div className="w-full h-[100px] flex items-center justify-center">
             <div className="flex items-center">
-              <div className="h-[30px] w-[30px] rounded-full bg-[#FFED37]"></div>
+              <div className="h-[25px] w-[25px] rounded-full bg-[#FFED37]"></div>
               <p className="text-[16px] text-semibold ml-2">Income</p>
             </div>
             <div className="flex items-center ml-12">
-              <div className="h-[30px] w-[30px] rounded-full bg-[#7D67FF]"></div>
+              <div className="h-[25px] w-[25px] rounded-full bg-[#7D67FF]"></div>
               <p className="text-[16px] text-semibold ml-2">Expense</p>
             </div>
           </div>
         </div>
+      </div>
+
+
+        <div className=" w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
+        <h2 className="text-[24px] font-semibold">Money Coming In</h2>
+        <div className="w-full flex gap-4 mt-6 ">
+            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-white">
+              <p className="text-[16px] text-[#999999] font-bold">Coming Due (1-30 days) </p>
+              <h1 className="text-[26px] font-semibold mt-2">€ 0.00</h1>
+            </div>
+            <div className="w-1/3  px-4 py-4 rounded-2xl flex flex-col bg-[#999999]">
+              <p className="text-[16px] text-white font-bold">Coming Due (31-60 days)  </p>
+              <h1 className="text-[26px] font-bold text-white mt-2">€ 0.00</h1>
+            </div>
+            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-[#FABEBA]">
+              <p className="text-[16px] text-[#F56258] font-bold">Overdue </p>
+              <h1 className="text-[26px] font-semibold text-[#F56258] mt-2">€ 0.00</h1>
+            </div>
+        </div>
+
+      </div>
+
+
+      <div className=" w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
+        <h2 className="text-[24px] font-semibold">Money Coming Out</h2>
+        <div className="w-full flex gap-4 mt-6 ">
+            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-white">
+              <p className="text-[16px] text-[#999999] font-bold">Coming Due (1-30 days) </p>
+              <h1 className="text-[26px] font-semibold mt-2">€ 0.00</h1>
+            </div>
+            <div className="w-1/3  px-4 py-4 rounded-2xl flex flex-col bg-[#999999]">
+              <p className="text-[16px] text-white font-bold">Coming Due (31-60 days)  </p>
+              <h1 className="text-[26px] font-bold text-white mt-2">€ 0.00</h1>
+            </div>
+            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-[#FABEBA]">
+              <p className="text-[16px] text-[#F56258] font-bold">Overdue </p>
+              <h1 className="text-[26px] font-semibold text-[#F56258] mt-2">€ 0.00</h1>
+            </div>
+        </div>
+
+      </div>
+
+      <div className=" w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
+        <div className="flex w-full">
+          <h2 className="text-[24px] font-semibold">Invoices & Expenses</h2>
+          <h4 className="text-[14px] ml-10 font-bold mt-2 text-[#9C9C9C]">This fiscal year</h4>
+        </div>
+        <div className="w-full p-4 bg-white rounded-2xl flex justify-evenly gap-4">
+          <div className="w-1/2">
+            <MyDoughnutChart/>
+          </div>
+          <div className="w-1/2 flex flex-col justify-center">
+          <div className="flex items-center mt-4  ">
+              <div className="h-[25px] w-[25px] rounded-full bg-[#FFED37]"></div>
+              <p className="text-[16px] text-bold ml-2">Telephone & Internet</p>
+            </div>
+            <div className="flex items-center mt-4  ">
+              <div className="h-[25px] w-[25px] rounded-full bg-[#D6C72E]"></div>
+              <p className="text-[16px] text-bold ml-2">Wages and Salaries</p>
+            </div>
+            <div className="flex items-center mt-4  ">
+              <div className="h-[25px] w-[25px] rounded-full bg-[#999999]"></div>
+              <p className="text-[16px] text-bold ml-2">
+              Travelling Expenses</p>
+            </div>
+            <div className="flex items-center mt-4  ">
+              <div className="h-[25px] w-[25px] rounded-full bg-[#7D67FF]"></div>
+              <p className="text-[16px] text-bold ml-2">Utilities</p>
+            </div>
+            <div className="flex items-center mt-4  ">
+              <div className="h-[25px] w-[25px] rounded-full bg-[#6957D6]"></div>
+              <p className="text-[16px] text-bold ml-2">Repairs and Maintenance</p>
+            </div>
+           
+          </div>
+        </div>
+      
       </div>
     </main>
   );
