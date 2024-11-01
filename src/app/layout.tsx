@@ -7,7 +7,7 @@ import StoreProvider from "./StoreProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Import Management System",
+  title: "Balabook Clone",
   description: "Powerd by techsoul",
   icons: {
     icon: [

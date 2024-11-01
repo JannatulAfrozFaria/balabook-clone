@@ -76,3 +76,21 @@ export const deleteItem = async (id: string) => {
     return false;
   }
 };
+
+export const getItemById = async (id: string) => {
+  try {
+    const item = await prisma.item.findUnique({
+      where: { id },
+    });
+
+    if (!item) {
+      console.error(`Item with ID ${id} not found`);
+      return null; // or throw an error, depending on your needs
+    }
+
+    return item;
+  } catch (error) {
+    console.error("Error fetching item by ID:", error);
+    return null; // or throw an error, depending on your needs
+  }
+};

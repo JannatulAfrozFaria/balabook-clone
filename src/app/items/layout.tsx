@@ -10,7 +10,7 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Online Registration",
+  title: "Balabook - Clone",
   description: "App for RASA",
 };
 

@@ -140,16 +140,16 @@ export default async function Dashboard() {
 
       <div className=" w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
         <h2 className="text-[24px] font-semibold">Money Coming Out</h2>
-        <div className="w-full flex gap-4 mt-6 ">
-            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-white">
+        <div className="w-full flex flex-col md:flex-row gap-4 mt-6 ">
+            <div className="w-full md:w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-white">
               <p className="text-[16px] text-[#999999] font-bold">Coming Due (1-30 days) </p>
               <h1 className="text-[26px] font-semibold mt-2">€ 0.00</h1>
             </div>
-            <div className="w-1/3  px-4 py-4 rounded-2xl flex flex-col bg-[#999999]">
+            <div className="w-full md:w-1/3  px-4 py-4 rounded-2xl flex flex-col bg-[#999999]">
               <p className="text-[16px] text-white font-bold">Coming Due (31-60 days)  </p>
               <h1 className="text-[26px] font-bold text-white mt-2">€ 0.00</h1>
             </div>
-            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-[#FABEBA]">
+            <div className="w-full md:w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-[#FABEBA]">
               <p className="text-[16px] text-[#F56258] font-bold">Overdue </p>
               <h1 className="text-[26px] font-semibold text-[#F56258] mt-2">€ 0.00</h1>
             </div>
