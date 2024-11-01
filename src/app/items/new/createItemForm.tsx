@@ -59,7 +59,7 @@ function ItemForm() {
       price: 0,
       discount: 0,
       vat: undefined,
-      type:""
+      type: ""
     },
   });
 
@@ -81,14 +81,14 @@ function ItemForm() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex justify-between items-end w-full mb-6">
-        <h1 className="text-[48px] font-bold">Add New Item</h1>
-        <div className="flex gap-6">
-          <Button className="p-6 rounded-full bg-white border-2 border-black text-[16px] text-normal text-black">
+      <div className="flex flex-col md:flex-row justify-between items-start md:item-center w-full mb-6 pl-4 md:pl-0">
+        <h1 className="text-[24px] md:text-[48px] font-bold">Add New Item</h1>
+        <div className="flex gap-6 mt-4 md:mt-0">
+          <Button className="p-2 md:p-6 rounded-full bg-white border-2 border-black text-[16px] text-normal text-black">
             Cancel
           </Button>
           <Button
-            className="p-6 rounded-full bg-[#FFED37] text-[16px] text-normal text-black"
+            className="p-2 md:p-6 rounded-full bg-[#FFED37] text-[16px] text-normal text-black"
             type="submit"
             onClick={form.handleSubmit(onSubmit)}
           >
@@ -96,17 +96,16 @@ function ItemForm() {
           </Button>
         </div>
       </div>
-      <div className="w-full bg-[#F2F2F2] rounded-[30px] p-[30px] ">
-        <h2 className="text-[30px] font-semibold mb-4">General Information</h2>
+      <div className="w-full bg-[#F2F2F2] rounded-[0px] md:rounded-[30px] p-[10px] md:p-[30px]">
+        <h2 className="text-[18px] md:text-[30px] font-semibold mb-4">General Information</h2>
         <Form {...form} >
           <div className="bg-white p-6 rounded-2xl">
-            <div className="flex gap-6">
+            <div className="flex flex-col md:flex-row gap-6 w-full">
               <FormField
                 control={form.control}
-
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="w-1/2">
+                  <FormItem className="w-full md:w-1/2"> {/* Full width on mobile, half width on desktop */}
                     <FormLabel>Description <span>*</span></FormLabel>
                     <FormControl>
                       <Input
@@ -123,7 +122,7 @@ function ItemForm() {
                 control={form.control}
                 name="account"
                 render={({ field }) => (
-                  <FormItem className="w-1/2">
+                  <FormItem className="w-full md:w-1/2"> {/* Full width on mobile, half width on desktop */}
                     <FormLabel>Account Type</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
@@ -145,12 +144,13 @@ function ItemForm() {
                 )}
               />
             </div>
-            <div className="flex gap-6 mt-6">
+
+            <div className="flex flex-col md:flex-row gap-6 mt-6 w-full">
               <FormField
                 control={form.control}
                 name="price"
                 render={({ field }) => (
-                  <FormItem className="w-1/4">
+                  <FormItem className="w-full md:w-1/4"> {/* Full width on mobile, 1/4 on desktop */}
                     <FormLabel>Price <span>*</span></FormLabel>
                     <FormControl>
                       <Input
@@ -169,7 +169,7 @@ function ItemForm() {
                 control={form.control}
                 name="discount"
                 render={({ field }) => (
-                  <FormItem className="w-1/4">
+                  <FormItem className="w-full md:w-1/4"> {/* Full width on mobile, 1/4 on desktop */}
                     <FormLabel>Discount (%)</FormLabel>
                     <FormControl>
                       <Input
@@ -188,7 +188,7 @@ function ItemForm() {
                 control={form.control}
                 name="vat"
                 render={({ field }) => (
-                  <FormItem className="w-1/4">
+                  <FormItem className="w-full md:w-1/4"> {/* Full width on mobile, 1/4 on desktop */}
                     <FormLabel>VAT Type</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
@@ -210,14 +210,12 @@ function ItemForm() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="type" // Update the name to match the type you're adding to the item module
                 render={({ field }) => (
-                  <FormItem className="w-1/4">
+                  <FormItem className="w-full md:w-1/4"> {/* Full width on mobile, 1/4 on desktop */}
                     <FormLabel>Type of Item</FormLabel>
-
                     <div className="flex gap-6 pt-6">
                       <div className="flex items-center">
                         <input
@@ -251,13 +249,12 @@ function ItemForm() {
                         <label htmlFor="good" className="ml-2 cursor-pointer">Good</label>
                       </div>
                     </div>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
             </div>
+
             <Button type="submit" className="hidden" />
           </div>
         </Form>

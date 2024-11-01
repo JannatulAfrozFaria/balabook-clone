@@ -37,10 +37,13 @@ export function UserDataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Adjust based on your preference
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredData, setFilteredData] = useState(data); // Add filtered data state
+
+  const itemsPerPage = 5; // Adjust based on your preference
 
   const table = useReactTable({
-    data,
+    data: filteredData, // Use filtered data here
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -53,15 +56,59 @@ export function UserDataTable<TData, TValue>({
     },
   });
 
-  const paginatedData = table.getRowModel().rows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedData = table.getRowModel().rows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleSearch = () => {
+    // Filter data based on search input
+    const filtered = data.filter((item) =>
+      JSON.stringify(item).toLowerCase().includes(searchInput.toLowerCase())
+    );
+    setFilteredData(filtered);
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  const handleClear = () => {
+    setSearchInput(""); // Clear search input
+    setFilteredData(data); // Reset filtered data to the original data
+    setCurrentPage(1); // Reset to the first page
+  };
 
   return (
     <div className="w-full overflow-x-auto bg-white rounded-lg p-4  ">
+       <div className="mb-10">
+        <h2 className="text-[14px] font-semibold">Search</h2>
+        <div className="w-full flex items-center">
+          <Input
+            className="h-[60px] bg-white mt-4 w-[85%]"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)} // Update search input
+          />
+          <Button
+            onClick={handleSearch} // Run search on click
+            className="p-6 rounded-full bg-[#FFED37] text-[16px] text-normal text-black mt-4 ml-4"
+          >
+            Search
+          </Button>
+          <h1
+            onClick={handleClear} // Clear search input and data on click
+            className="text-[16px] mt-4 ml-4 cursor-pointer"
+          >
+            Clear
+          </h1>
+        </div>
+      </div>
       <table className="w-full">
         <thead>
           <tr className="border-b">
             {columns.map((column) => (
-              <th key={column.id} className="py-2 px-4 border-b font-semibold text-left text-[24px]">
+              <th
+                key={column.id}
+                className="py-2 px-4 border-b font-semibold text-left text-[24px]"
+              >
                 {flexRender(column.header, {})}
               </th>
             ))}
@@ -76,12 +123,16 @@ export function UserDataTable<TData, TValue>({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
-            
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length + 1} className="h-24 text-center">No results.</td>
+              <td
+                colSpan={columns.length + 1}
+                className="h-24 text-center"
+              >
+                No results.
+              </td>
             </tr>
           )}
         </tbody>

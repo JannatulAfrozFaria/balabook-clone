@@ -35,7 +35,7 @@ export default async function Items() {
 
   // const data = await fetchItems(); // Fetches 20 items by default
   return (
-    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
+    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen px-4">
       <div className="w-full pt-8">
         <Breadcrumb>
           <BreadcrumbList>
@@ -66,14 +66,7 @@ export default async function Items() {
       </div>
 
       <div className="w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
-        <div className="">
-          <h2 className="text-[14px] font-semibold">Search</h2>
-          <div className="w-full flex items-center">
-            <Input className="h-[60px] bg-white mt-4 w-[85%]" placeholder="Search" />
-            <Button className="p-6 rounded-full bg-[#FFED37] text-[16px] text-normal text-black mt-4 ml-4">Search</Button>
-            <h1 className="text-[16px] mt-4 ml-4 cursor-pointer">Clear</h1>
-          </div>
-        </div>
+       
       
         <div className="w-full mt-4 -400">
           <UserDataTable columns={columns} data={data} />

@@ -54,7 +54,7 @@ const data = [
 
 export default async function Dashboard() {
   return (
-    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen px-4">
+<main className="flex flex-col gap-6 w-full max-w-full md:max-w-[1440px] mx-auto min-h-screen px-4 ">
       <div className="w-full pt-8">
         <Breadcrumb>
           <BreadcrumbList>
@@ -78,11 +78,11 @@ export default async function Dashboard() {
         </Breadcrumb>
       </div>
 
-      <div className="flex justify-between items-end w-full">
-        <h1 className="text-[48px] font-bold">Nicolas IP's Dashboard</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:item-start w-full">
+        <h1 className="text-[24px] md:text-[48px] font-bold mb-4 md:mb-0">Nicolas IP's Dashboard</h1>
         <div>
           <Select>
-            <SelectTrigger className="w-[140px] h-[50px] border-2 border-black rounded-full text-[16px] px-4 py-2 hover:bg-black hover:text-white">
+            <SelectTrigger className=" w-[120px] md:w-[140px]  h-[30px] md:h-[50px] border-2 border-black rounded-full text-[12px] md:text-[16px] px-4 py-2 hover:bg-black hover:text-white">
               <SelectValue placeholder="Quick Add" />
             </SelectTrigger>
             <SelectContent className="border-2 border-black rounded-xl">
@@ -120,16 +120,16 @@ export default async function Dashboard() {
 
         <div className=" w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
         <h2 className="text-[24px] font-semibold">Money Coming In</h2>
-        <div className="w-full flex gap-4 mt-6 ">
-            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-white">
+        <div className="w-full flex flex-col md:flex-row gap-4 mt-6 ">
+            <div className="w-full md:w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-white">
               <p className="text-[16px] text-[#999999] font-bold">Coming Due (1-30 days) </p>
               <h1 className="text-[26px] font-semibold mt-2">€ 0.00</h1>
             </div>
-            <div className="w-1/3  px-4 py-4 rounded-2xl flex flex-col bg-[#999999]">
+            <div className="w-full md:w-1/3  px-4 py-4 rounded-2xl flex flex-col bg-[#999999]">
               <p className="text-[16px] text-white font-bold">Coming Due (31-60 days)  </p>
               <h1 className="text-[26px] font-bold text-white mt-2">€ 0.00</h1>
             </div>
-            <div className="w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-[#FABEBA]">
+            <div className="w-full md:w-1/3 px-4 py-4 rounded-2xl flex flex-col bg-[#FABEBA]">
               <p className="text-[16px] text-[#F56258] font-bold">Overdue </p>
               <h1 className="text-[26px] font-semibold text-[#F56258] mt-2">€ 0.00</h1>
             </div>
@@ -162,11 +162,11 @@ export default async function Dashboard() {
           <h2 className="text-[24px] font-semibold">Invoices & Expenses</h2>
           <h4 className="text-[14px] ml-10 font-bold mt-2 text-[#9C9C9C]">This fiscal year</h4>
         </div>
-        <div className="w-full p-4 bg-white rounded-2xl flex justify-evenly gap-4">
+        <div className="w-full p-4 bg-white rounded-2xl flex justify-evenly flex-col md:flex-row gap-4">
           <div className="w-1/2">
             <MyDoughnutChart/>
           </div>
-          <div className="w-1/2 flex flex-col justify-center">
+          <div className="w-full md:w-1/2 flex flex-col md:flex-row justify-center ">
           <div className="flex items-center mt-4  ">
               <div className="h-[25px] w-[25px] rounded-full bg-[#FFED37]"></div>
               <p className="text-[16px] text-bold ml-2">Telephone & Internet</p>
