@@ -92,7 +92,7 @@ export default async function Items() {
         </div>
       
         <div className="w-full mt-4 -400">
-          <UserDataTable columns={columns} data={data && data} />
+          <UserDataTable columns={columns} data={data} />
         </div>
       </div>
     </main>
