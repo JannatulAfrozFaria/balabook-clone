@@ -70,7 +70,7 @@ function ItemForm() {
       if (newItem) {
         toast.success("Item created successfully!");
         form.reset();
-        router.push('/dashboard/items')
+        router.push('/items')
       } else {
         toast.error("Item creation failed!");
       }

@@ -17,9 +17,6 @@ import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
 import { fetchItems } from "./_action";
 import prisma from "../../../prisma";
-// Import Prisma client
-
-// Initialize Prisma client
 
 export default async function Items() {
   // Fetch item data from the Prisma database
@@ -52,8 +49,8 @@ export default async function Items() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/dashboard" className="text-[16px] text-[#7D67FF] font-normal">
-                  Dashboard
+                <Link href="/items" className="text-[16px] text-[#7D67FF] font-normal">
+                  Items
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>

@@ -54,7 +54,7 @@ const data = [
 
 export default async function Dashboard() {
   return (
-    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
+    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen px-4">
       <div className="w-full pt-8">
         <Breadcrumb>
           <BreadcrumbList>
