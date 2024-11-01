@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import CalenderDateRangePicker from "@/components/ui/CalenderDateRangePicker";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -11,25 +9,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Home } from "lucide-react"; // Importing the Home icon
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import MyBarChart from "@/components/Barchart";
-import MyDoughnutChart from "@/components/DonutChart";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ItemList from "./ItemList";
+
 import { UserDataTable } from "./data-table";
 import { columns } from "./columns";
-import prisma from "@/index";
 import { fetchItems } from "./_action";
-
+import prisma from "../../../prisma";
 // Import Prisma client
 
 // Initialize Prisma client
@@ -44,12 +31,12 @@ export default async function Items() {
   //   price: item.price,
   // }));
 
-  // const data: any = await prisma.item.findMany({
+  const data: any = await prisma.item.findMany({
    
-  // });
+  });
 
 
-  const data = await fetchItems(); // Fetches 20 items by default
+  // const data = await fetchItems(); // Fetches 20 items by default
   return (
     <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen">
       <div className="w-full pt-8">
