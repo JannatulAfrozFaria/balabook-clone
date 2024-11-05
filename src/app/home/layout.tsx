@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { getServerSession } from "next-auth";
-import HomeNav from "@/components/HomeNav";
+import { redirect } from "next/navigation";
+import StoreProvider from "../StoreProvider";
+import Sidebar from "../dashboard/sidebar/sidebar";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +29,14 @@ export default async function RootLayout({
   return (
     <div className="flex w-full sm:flex-row">
       {/* Sidebar for larger screens */}
-      <HomeNav/>
+      {/* <div className="hidden lg:block">
+        <Sidebar />
+      </div> */}
+      {/* Navbar for mobile and tablet devices */}
+      <div className="lg:hidden block mt-10">
+        <Navbar/>
+      </div>
+      {/* Main content */}
       <div className="flex-grow mt-10">{children}</div>
     </div>
   );
