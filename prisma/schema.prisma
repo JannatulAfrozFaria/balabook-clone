@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// user model
+model Item {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  account     AccountType
+  price       Float
+  discount    Float?
+  vat        VatType?
+  type       String?
+  @@map("item")
+}
+
+// Define the enums for action and VAT
+enum AccountType {
+  INTEREST_INCOME
+  OTHER_REVENUE
+  REALISED_GAIN_ON_FOREIGN_EXCHANGE
+  SALES
+}
+
+enum VatType {
+  VAT_19
+  VAT_9
+  VAT_5
+  REVERSE_CHARGE
+  TAX_EXEMPT
+  ZERO_TAX
+  CUSTOM_VAT
+}
+
