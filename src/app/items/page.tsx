@@ -35,7 +35,7 @@ export default async function Items() {
 
   // const data = await fetchItems(); // Fetches 20 items by default
   return (
-    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen p-6 bg-[#F2F2F2] ">
+    <main className="flex flex-col gap-6 w-full  mx-auto min-h-screen p-6 bg-[#F2F2F2] ">
       <div className="w-1/6 bg-white p-3 rounded-md">
         <Breadcrumb>
           <BreadcrumbList>
