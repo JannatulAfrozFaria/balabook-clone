@@ -59,7 +59,7 @@ export default async function Items() {
       </div>
 
       <div className="flex justify-between items-end w-full">
-        <h1 className="text-[48px] font-bold">Items</h1>
+        <h1 className="text-[48px] font-semibold">Items</h1>
         <Link href="/items/new">
           <Button className="p-6 rounded-md bg-[#9ECE39] text-[16px] text-normal text-white">Add Items</Button>
         </Link>
