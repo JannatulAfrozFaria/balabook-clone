@@ -35,21 +35,21 @@ export default async function Items() {
 
   // const data = await fetchItems(); // Fetches 20 items by default
   return (
-    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen px-4">
-      <div className="w-full pt-8">
+    <main className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto min-h-screen p-6 bg-[#F2F2F2] ">
+      <div className="w-1/6 bg-white p-3 rounded-md">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link href="/" className="flex items-center gap-1 text-[16px]">
-                  <Home className="h-4 w-4" /> {/* Home icon with custom size */}
+                  <span>Dashboard</span>
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/items" className="text-[16px] text-[#7D67FF] font-normal">
+                <Link href="/items" className="text-[16px] text-[#9ECE39] font-medium">
                   Items
                 </Link>
               </BreadcrumbLink>
@@ -61,11 +61,11 @@ export default async function Items() {
       <div className="flex justify-between items-end w-full">
         <h1 className="text-[48px] font-bold">Items</h1>
         <Link href="/items/new">
-          <Button className="p-6 rounded-full bg-[#FFED37] text-[16px] text-normal text-black">Add New Item</Button>
+          <Button className="p-6 rounded-md bg-[#9ECE39] text-[16px] text-normal text-white">Add Items</Button>
         </Link>
       </div>
 
-      <div className="w-full bg-[#F2F2F2] rounded-[30px] p-[30px]">
+      <div className="w-full ">
        
       
         <div className="w-full mt-4 -400">

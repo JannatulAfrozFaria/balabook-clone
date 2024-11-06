@@ -4,7 +4,7 @@ import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 // Sample data
 const data = [
-  { name: "Telephone & Internet", value: 24000, color: "#FFED37" },
+  { name: "Telephone & Internet", value: 24000, color: "#9ECE39" },
   { name: "Wages and Salaries", value: 15000, color: "#D6C72E" },
   { name: "Travelling Expenses", value: 5000, color: "#999999" },
   { name: "Utilities", value: 5000, color: "#7D67FF" },

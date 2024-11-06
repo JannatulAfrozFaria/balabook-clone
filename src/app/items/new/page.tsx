@@ -47,8 +47,8 @@ const data = [
 ];
 
 export default function CreateItem() {
-  const items = useSelector((state: RootState) => state.item);
-  const dispatch = useDispatch<AppDispatch>();
+  // const items = useSelector((state: RootState) => state.item);
+  // const dispatch = useDispatch<AppDispatch>();
 
   const [description, setDescription] = useState("");
   const [account, setAccount] = useState("");

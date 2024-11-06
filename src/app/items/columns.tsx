@@ -45,6 +45,10 @@ export const columns: any = [
     accessorKey: "price",
     header: "Price",
   },
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
  
   
   // {

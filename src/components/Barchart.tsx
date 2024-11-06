@@ -35,7 +35,7 @@ const MyBarChart = () => {
           <YAxis />
           <Tooltip />
       
-          <Bar dataKey="Income" fill="#FFED37" />
+          <Bar dataKey="Income" fill="#9ECE39" />
           <Bar dataKey="Expense" fill="#7D67FF" />
         </BarChart>
       </ResponsiveContainer>

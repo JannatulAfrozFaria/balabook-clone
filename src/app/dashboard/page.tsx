@@ -106,7 +106,7 @@ export default async function Dashboard() {
           <MyBarChart/>
           <div className="w-full h-[100px] flex items-center justify-center">
             <div className="flex items-center">
-              <div className="h-[25px] w-[25px] rounded-full bg-[#FFED37]"></div>
+              <div className="h-[25px] w-[25px] rounded-full bg-[#9ECE39]"></div>
               <p className="text-[16px] text-semibold ml-2">Income</p>
             </div>
             <div className="flex items-center ml-12">
@@ -168,7 +168,7 @@ export default async function Dashboard() {
           </div>
           <div className="w-full md:w-1/2 flex flex-col md:flex-row justify-center ">
           <div className="flex items-center mt-4  ">
-              <div className="h-[25px] w-[25px] rounded-full bg-[#FFED37]"></div>
+              <div className="h-[25px] w-[25px] rounded-full bg-[#9ECE39]"></div>
               <p className="text-[16px] text-bold ml-2">Telephone & Internet</p>
             </div>
             <div className="flex items-center mt-4  ">

@@ -31,21 +31,24 @@ function Sidebar() {
           isCollapsed ? "min-w-[80px] max-w-[80px]" : "min-w-[260px] max-w-[260px]"
         }`}
       >
-        <div className="flex gap-3 justify-start">
-          <img
+        <div className="flex gap-3 justify-start mb-8">
+          {/* <img
             src="https://my.balabook.com/assets/balabook_logomark_main_rgb-3cd81c5087139c4d4724f0fd9dcceadba6dedc42d835079a40db432e7d2a867c.svg"
             alt="Logo"
             className="max-h-[90px] max-w-[90px]"
-          />
+          /> */}
+          <h1 className="text-3xl font-bold uppercase">Logo</h1>
         </div>
 
-        <div className="h-[40px] w-[40px] border-4 border-[#6366F1] flex items-center justify-center rounded-full bg-gray mt-10">
+        {/* <div className="h-[40px] w-[40px] border-4 border-[#6366F1] flex items-center justify-center rounded-full bg-gray mt-10">
           <h1 className="text-bold text-[16px] text-[#6366F1]">NI</h1>
-        </div>
+        </div> */}
+        <hr  className="border-black "/>
 
-        <div className="pt-12 md:pt-4">
+        <div className="pt-12 md:pt-0">
           <Nav
             isCollapsed={isCollapsed}
+            // @ts-ignore
             links={[
               {
                 title: "Dashboard",
@@ -59,6 +62,57 @@ function Sidebar() {
                 variant: "",
                 href: "/items",
               },
+              {
+                title: "Partners",
+                label: "",
+                variant: "",
+                href: "/partners",
+              },
+              {
+                title: "Sales",
+                label: "",
+                variant: "",
+                href: "/sales",
+              },
+              {
+                title: "Purchases",
+                label: "",
+                variant: "",
+                href: "/purchases",
+              },
+              {
+                title: "Reports",
+                label: "",
+                variant: "",
+                href: "/reports",
+              },
+              {
+                title: "Accountant",
+                label: "",
+                variant: "",
+                href: "/accountant",
+              },
+            ].filter(Boolean)}
+          />
+          <hr  className="border-black "/>
+          <h1 className="uppercase font-semibold px-2 pt-4">Others</h1>
+          <Nav
+            isCollapsed={isCollapsed}
+            // @ts-ignore
+            links={[
+              {
+                title: "Support",
+                label: "",
+                variant: "",
+                href: "/support",
+              },
+              {
+                title: "Settings",
+                label: "",
+                variant: "",
+                href: "/settings",
+              },
+              
             ].filter(Boolean)}
           />
         </div>
